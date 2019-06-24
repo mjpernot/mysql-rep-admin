@@ -10,7 +10,6 @@
   * Prerequisites
   * Installation
   * Configuration
-  * Program Description
   * Program Help Function
   * Help Message
   * Testing
@@ -116,11 +115,6 @@ chmod 600 mysql.cfg
 ```
 
 
-# Program Descriptions:
-### Program: mysql_rep_admin.py
-##### Description: Replication administration program for a MySQL replication setup.
-
-
 # Program Help Function:
 
   The program has a -h (Help option) that will show display an usage message.  The help message will usually consist of a description, usage, arugments to the program, example, notes about the program, and any known bugs not yet fixed.  To run the help command:
@@ -131,106 +125,7 @@ chmod 600 mysql.cfg
 ```
 
 
-# Help Message:
-  Below is the help message for the program the program.  Run the program with the -h option get the latest help message for the program.
-
-    Program:  mysql_rep_admin.py
-
-    Description:  Administration program for MySQL Replication system.  Has a
-        number of functions to monitor the status of the replication
-        between master and slaves (replicas).  The program can monitor
-        and check on a number of different aspects in replication to
-        include checking binary log status, slave status, master status,
-        time lag between master and slave, errors detected within
-        replication, binary log positions, and replication configuration
-        status.  The program is setup to monitor between a master
-        database and multiple slave (replica) databases.
-
-    Usage:
-        mysql_rep_admin.py -d path {-c file | -s path/file} [-p path
-            | -C | -S | -B | -D | -T | -R | -E | -A | -I | -O |
-            -f {JSON|standard | -b db:coll | -m file} | -o dir_path/file]
-            [-v | -h]
-
-    Arguments:
-        -d dir path => Directory path to the config files (-c and -s).
-            Required arg.
-        -c file => Master config file.  Is loaded as a python, do not
-            include the .py extension with the name.
-        -s file => Slave config file.  Will be a text file.  Include the
-            file extension with the name.                   
-        -C => Compare master binlog position to the slaves'.
-        -S => Check the slave(s) IO and SQL threads.
-        -B => Display the master binlog filename and position.
-        -D => Display the slave(s) binlog filename and position.
-        -T => Check time lag for the slave(s).
-        -R => Replication check using the mysqlrplcheck program.
-        -E => Check for errors on the slave(s).
-        -I => Display server information for master and/or slave(s).
-        -A => Does multiple checks which include the following options:
-            (-C, -S, -T, -R, -E)
-        -O => Other slave replication checks.
-        -f JSON|standard => Output format as JSON or standard. (only
-            used with option -T)
-        -o path/file => Directory path and file name for output.
-        -b database:collection => Name of database and collection.
-            Delimited by colon (:).  Default: sysmon:mysql_rep_lag
-        -m file => Mongo config file.  Is loaded as a python, do not
-            include the .py extension with the name.
-        -p dir_path => Directory path to the mysql binary programs.
-        -v => Display version of this program.
-        -h => Help and usage message.
-
-        NOTE 1:  Will require -c and/or -s option to be included.
-        NOTE 2:  -v or -h overrides the other options.
-        NOTE 3:  -o and -f options is only available for -T option.
-        NOTE 4:  -b option requires -m option to be included.
-
-    Notes:
-        Master configuration file format (filename.py):
-            # Configuration file for {Database Name/Server}
-            user = "root"
-            passwd = "ROOT_PASSWORD"
-            # DO NOT USE 127.0.0.1 for the master/source, use actual IP.
-            host = "IP_ADDRESS"
-            serv_os = "Linux" or "Solaris"
-            name = "HOSTNAME"
-            port = PORT_NUMBER (default of mysql is 3306)
-            cfg_file = "DIRECTORY_PATH/my.cnf"
-            sid = "SERVER_ID"
-            extra_def_file = "DIRECTORY_PATH/myextra.cfg"
-
-        NOTE 1:  Include the cfg_file even if running remotely as the
-            file will be used in future releases.
-        NOTE 2:  In MySQL 5.6 - it now gives warning if password is passed on
-            the command line.  To suppress this warning, will require the use
-            of the --defaults-extra-file option (i.e. extra_def_file) in the
-            database configuration file.  See below for the
-            defaults-extra-file format.
-
-
-        Slave(s) configuration file format (filename.txt)
-            # Slave 1 configuration {Database Name/Server}
-            user = root
-            passwd = ROOT_PASSWORD
-            host = IP_ADDRESS
-            serv_os = Linux or Solaris
-            name = HOSTNAME
-            port = PORT_NUMBER
-            cfg_file DIRECTORY_PATH/my.cnf
-            sid = SERVER_ID
-            # Slave N configuration {Database Name/Server}
-               Repeat rest of above section for Slave 1.
-
-        NOTE:  Include the cfg_file even if running remotely as the file
-            will be used in future releases.
-
-    Example:
-        mysql_rep_admin.py -c master -d config  -s slaves.txt -A
-
-
 # Testing:
-
 
 # Unit Testing:
 
@@ -272,33 +167,13 @@ pip install -r requirements-python-lib.txt --target mongo_lib/lib --trusted-host
 # Unit test runs for mysql_rep_admin.py:
   * Replace **{Python_Project}** with the baseline path of the python program.
 
+### Unit testing:
 ```
 cd {Python_Project}/mysql-rep-admin
-```
-
-
-### Unit:  help_message
-```
 test/unit/mysql_rep_admin/help_message.py
-```
-
-### Unit:  
-```
 test/unit/mysql_rep_admin/
-```
-
-### Unit:  
-```
 test/unit/mysql_rep_admin/
-```
-
-### Unit:  run_program
-```
 test/unit/mysql_rep_admin/run_program.py
-```
-
-### Unit:  main
-```
 test/unit/mysql_rep_admin/main.py
 ```
 
@@ -391,13 +266,9 @@ chmod 600 mysql.cfg
 # Integration test runs for mysql_rep_admin.py:
   * Replace **{Python_Project}** with the baseline path of the python program.
 
+### Integration testing:  
 ```
 cd {Python_Project}/mysql-rep-admin
-```
-
-
-### Integration:  
-```
 test/integration/mysql_rep_admin/
 ```
 
@@ -489,13 +360,9 @@ chmod 600 mysql.cfg
 # Blackbox test run for mysql_rep_admin.py:
   * Replace **{Python_Project}** with the baseline path of the python program.
 
+### Blackbox testing:  
 ```
 cd {Python_Project}/mysql-rep-admin
-```
-
-
-### Blackbox:  
-```
 test/blackbox/mysql_rep_admin/blackbox_test.sh
 ```
 
