@@ -119,7 +119,6 @@ import mysql_lib.mysql_class as mysql_class
 import mongo_lib.mongo_libs as mongo_libs
 import version
 
-# Version
 __version__ = version.__version__
 
 
@@ -146,8 +145,6 @@ def rpt_mst_log(MASTER, SLAVE, **kwargs):
     Arguments:
         (input) MASTER -> Master class instance.
         (input) SLAVE -> Slave class instance(s).
-        (input) **kwargs:
-            None
 
     """
 
@@ -176,8 +173,6 @@ def rpt_slv_log(MASTER, SLAVE, **kwargs):
     Arguments:
         (input) MASTER -> Master class instance.
         (input) SLAVE -> Slave class instance(s).
-        (input) **kwargs:
-            None.
 
     """
 
@@ -214,8 +209,6 @@ def chk_slv(SLAVE, **kwargs):
 
     Arguments:
         (input) SLAVE -> Slave class instance.
-        (input) **kwargs:
-            None
 
     """
 
@@ -250,8 +243,6 @@ def chk_mst_log(MASTER, SLAVE, **kwargs):
     Arguments:
         (input) MASTER -> Master class instance.
         (input) SLAVE -> Slave class instance(s).
-        (input) **kwargs:
-            None
 
     """
 
@@ -297,8 +288,6 @@ def chk_slv_thr(MASTER, SLAVE, **kwargs):
     Arguments:
         (input) MASTER -> Master class instance.
         (input) SLAVE -> Slave class instance(s).
-        (input) **kwargs:
-            None
 
     """
 
@@ -336,8 +325,6 @@ def chk_slv_err(MASTER, SLAVE, **kwargs):
     Arguments:
         (input) MASTER -> Master class instance.
         (input) SLAVE -> Slave class instance(s).
-        (input) **kwargs:
-            None
 
     """
 
@@ -378,8 +365,6 @@ def rpt_srv_info(MASTER, SLAVE, **kwargs):
     Arguments:
         (input) MASTER -> Master class instance.
         (input) SLAVE -> Slave class instance(s).
-        (input) **kwargs:
-            None
 
     """
 
@@ -421,7 +406,6 @@ def add_miss_slaves(MASTER, outdata, **kwargs):
     Arguments:
         (input) MASTER -> Master class instance.
         (input) outdata -> JSON document of Check Slave Time output.
-        (input) **kwargs:  None
         (output) outdata -> JSON document of Check Slave Time output.
 
     """
@@ -506,8 +490,6 @@ def chk_slv_other(MASTER, SLAVE, **kwargs):
     Arguments:
         (input) MASTER -> Master class instance.
         (input) SLAVE -> Slave class instance(s).
-        (input) **kwargs:
-            None
 
     """
 
