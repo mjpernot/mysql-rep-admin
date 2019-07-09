@@ -167,11 +167,18 @@ pip install -r requirements-python-lib.txt --target mongo_lib/lib --trusted-host
 ### Unit testing:
 ```
 cd {Python_Project}/mysql-rep-admin
+test/unit/mysql_rep_admin/add_miss_slaves.py
+test/unit/mysql_rep_admin/call_run_chk.py
+test/unit/mysql_rep_admin/chk_mst_log.py
+test/unit/mysql_rep_admin/chk_slv.py
+test/unit/mysql_rep_admin/chk_slv_err.py
+test/unit/mysql_rep_admin/chk_slv_other.py
+test/unit/mysql_rep_admin/chk_slv_thr.py
+test/unit/mysql_rep_admin/chk_slv_time.py
 test/unit/mysql_rep_admin/help_message.py
-test/unit/mysql_rep_admin/
-test/unit/mysql_rep_admin/
-test/unit/mysql_rep_admin/run_program.py
 test/unit/mysql_rep_admin/main.py
+test/unit/mysql_rep_admin/rpt_mst_log.py
+test/unit/mysql_rep_admin/rpt_slv_log.py
 ```
 
 ### All unit testing
