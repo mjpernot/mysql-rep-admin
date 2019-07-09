@@ -579,69 +579,22 @@ def run_program(args_array, func_dict):
 
     MASTER = None
 
-    #if "-c" in args_array:
-        #mst_cfg = gen_libs.load_module(args_array["-c"], args_array["-d"])
+    if "-c" in args_array:
+        mst_cfg = gen_libs.load_module(args_array["-c"], args_array["-d"])
 
-        #MASTER = mysql_class.MasterRep(mst_cfg.name, mst_cfg.sid,
-        #                               mst_cfg.user, mst_cfg.passwd,
-        #                               getattr(machine, mst_cfg.serv_os)(),
-        #                               mst_cfg.host, mst_cfg.port,
-        #                               mst_cfg.cfg_file)
+        MASTER = mysql_class.MasterRep(mst_cfg.name, mst_cfg.sid,
+                                       mst_cfg.user, mst_cfg.passwd,
+                                       getattr(machine, mst_cfg.serv_os)(),
+                                       mst_cfg.host, mst_cfg.port,
+                                       mst_cfg.cfg_file)
 
     SLAVE = []
-    slv_cfg = []
 
     if "-s" in args_array:
-
-        ################################
-        ################################
-        cfg_dict = {}
-
-        if os.path.isfile(args_array["-s"]):
-            fname = open(args_array["-s"], "r")
-
-        # Assume to join directory path and slave file name.
-        else:
-            fname = open(os.path.join(args_array["-d"], args_array["-s"]), "r")
-
-        for line in fname:
-
-            # Ignore comment lines.
-            if line[0] != "#":
-                # Split line using the equal sign as delimiter.
-                key, value = line.split("=")
-
-                # Set each slave config to it's own array based on "user" key.
-                if key.strip() == "user" and cfg_dict:
-                    slv_cfg.append(cfg_dict)
-                    cfg_dict = {}
-
-                cfg_dict[key.strip()] = value.strip().rstrip()
-
-        # "else" is attached to "for" loop.
-        else:
-            # Add config dictionary to slave configuration array.
-            slv_cfg.append(cfg_dict)
-
-        fname.close()
-        ################################
-
-        ################################
-        ################################
-        slv_array = cmds_gen.create_cfg_array(args_array["-s"],
-                                              cfg_path=args_array["-d"])
-        ################################
-
-        ################################
-        print(slv_cfg)
-        print(slv_array)
-        if slv_cfg == slv_array:
-            print("Good")
-        ################################
-        sys.exit()
+        slv_cfg = cmds_gen.create_cfg_array(args_array["-s"],
+                                            cfg_path=args_array["-d"])
 
         for slv in slv_cfg:
-
             slv_inst = mysql_class.SlaveRep(slv["name"], slv["sid"],
                                             slv["user"], slv["passwd"],
                                             getattr(machine,
