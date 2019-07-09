@@ -579,19 +579,22 @@ def run_program(args_array, func_dict):
 
     MASTER = None
 
-    if "-c" in args_array:
-        mst_cfg = gen_libs.load_module(args_array["-c"], args_array["-d"])
+    #if "-c" in args_array:
+        #mst_cfg = gen_libs.load_module(args_array["-c"], args_array["-d"])
 
-        MASTER = mysql_class.MasterRep(mst_cfg.name, mst_cfg.sid,
-                                       mst_cfg.user, mst_cfg.passwd,
-                                       getattr(machine, mst_cfg.serv_os)(),
-                                       mst_cfg.host, mst_cfg.port,
-                                       mst_cfg.cfg_file)
+        #MASTER = mysql_class.MasterRep(mst_cfg.name, mst_cfg.sid,
+        #                               mst_cfg.user, mst_cfg.passwd,
+        #                               getattr(machine, mst_cfg.serv_os)(),
+        #                               mst_cfg.host, mst_cfg.port,
+        #                               mst_cfg.cfg_file)
 
     SLAVE = []
     slv_cfg = []
 
     if "-s" in args_array:
+
+        ################################
+        ################################
         cfg_dict = {}
 
         if os.path.isfile(args_array["-s"]):
@@ -621,6 +624,21 @@ def run_program(args_array, func_dict):
             slv_cfg.append(cfg_dict)
 
         fname.close()
+        ################################
+
+        ################################
+        ################################
+        slv_array = cmds_gen.create_cfg_array(args_array["-s"],
+                                              cfg_path=args_array["-d"])
+        ################################
+
+        ################################
+        print(slv_cfg)
+        print(slv_array)
+        if slv_cfg == slv_array:
+            print("Good")
+        ################################
+        sys.exit()
 
         for slv in slv_cfg:
 

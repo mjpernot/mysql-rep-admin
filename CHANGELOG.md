@@ -4,7 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
-## [2.1.0] - 2019-06-24
+## [3.0.0] - 2019-07-09
+Breaking Change
+
+- Modified program to use the mysql_class v4.0.0 version.  The v4.0.0 replaces the MySQLdb support library with the mysql.connector support library.
+
+### Changed
+- run_program:  Replaced the code to load the slave files into an array with a call to cmds_gen.create_cfg_array().
 
 
 ## [2.0.1] - 2018-12-06
