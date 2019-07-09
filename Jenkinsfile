@@ -28,6 +28,7 @@ pipeline {
                 source test_env/bin/activate
                 pip2 install mock --user
                 pip2 install mysql-connector-python --user
+                pip2 install pymongo --user
                 ./test/unit/mysql_rep_admin/add_miss_slaves.py
                 ./test/unit/mysql_rep_admin/call_run_chk.py
                 ./test/unit/mysql_rep_admin/chk_mst_log.py
