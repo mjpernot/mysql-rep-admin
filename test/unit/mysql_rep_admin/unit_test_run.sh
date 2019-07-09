@@ -18,3 +18,4 @@ test/unit/mysql_rep_admin/help_message.py
 test/unit/mysql_rep_admin/main.py
 test/unit/mysql_rep_admin/rpt_mst_log.py
 test/unit/mysql_rep_admin/rpt_slv_log.py
+test/unit/mysql_rep_admin/run_program.py
