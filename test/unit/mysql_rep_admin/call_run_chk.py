@@ -181,8 +181,8 @@ class UnitTest(unittest.TestCase):
         self.slave = SlaveRep()
         self.func_dict = {"-A": ["-C", "-S"], "-C": chk_mst_log,
                           "-S": chk_slv_thr, "-D": rpt_slv_log}
-        self.args_array = {"-A": True, "-D": True}
-        self.args_array2 = {"-D": True}
+        self.args_array = {"-A": True, "-D": True, "-m": "Mongo", "-d": "cfg"}
+        self.args_array2 = {"-D": True, "-m": "Mongo", "-d": "cfg"}
 
     @mock.patch("mysql_rep_admin.gen_libs.load_module")
     def test_single_func(self, mock_cfg):
