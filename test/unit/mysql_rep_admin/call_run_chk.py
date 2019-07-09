@@ -197,7 +197,7 @@ class UnitTest(unittest.TestCase):
 
         mock_cfg.return_value = "MongoCfg"
 
-        self.assertFalse(mysql_rep_admin.call_run_chk(self.args_array,
+        self.assertFalse(mysql_rep_admin.call_run_chk(self.args_array2,
                                                       self.func_dict,
                                                       self.master,
                                                       [self.slave]))
