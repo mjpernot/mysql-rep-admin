@@ -27,7 +27,7 @@ pipeline {
                 virtualenv test_env
                 source test_env/bin/activate
                 pip2 install mock --user
-                pip2 install MySQL-python --user
+                pip2 install mysql-connector-python --user
                 ./test/unit/mysql_rep_admin/add_miss_slaves.py
                 ./test/unit/mysql_rep_admin/call_run_chk.py
                 ./test/unit/mysql_rep_admin/chk_mst_log.py
