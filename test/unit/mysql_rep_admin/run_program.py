@@ -84,7 +84,7 @@ class MstCfg(object):
         self.sid = 11
         self.user = "UserName"
         self.passwd = "pwd"
-        self.server_os = "Linux"
+        self.serv_os = "Linux"
         self.host = "HostName"
         self.port = 3306
         self.cfg_file = "CfgFile"
@@ -119,7 +119,8 @@ class UnitTest(unittest.TestCase):
 
         self.mstcfg = MstCfg()
         self.func_dict = {"-D": rpt_slv_log}
-        self.args_array = {"-D": True, "-m": "Mongo", "-d": "cfg"}
+        self.args_array = {"-D": True, "-m": "Mongo", "-d": "cfg",
+                           "-c": "configfile", "-s": "slavefile"}
         self.cfg_array = [{"name": "HOST_NAME", "passwd": "PWD",
                            "cfg_file": "None", "host": "SERVER",
                            "user": "root", "serv_os": "Linux", "sid": "11",
