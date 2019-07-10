@@ -54,6 +54,56 @@ def rpt_slv_log(master, slaves, form, ofile, db_tbl, class_cfg):
     return True
 
 
+class MasterRep(object):
+
+    """Class:  MasterRep
+
+    Description:  Class stub holder for mysql_class.MasterRep class.
+
+    Super-Class:  None
+
+    Sub-Classes:  None
+
+    Methods:
+        __init__ -> Class initialization.
+        connect -> Stub method holder for MasterRep.connect.
+
+    """
+
+    def __init__(self, name=None, sid=None, user=None, passwd=None,
+                 serv_os=None, host=None, port=None, cfg_file=None):
+
+        """Method:  __init__
+
+        Description:  Class initialization.
+
+        Arguments:
+            name -> Stub holder.
+            sid -> Stub holder.
+            user -> Stub holder.
+            passwd -> Stub holder.
+            serv_os -> Stub holder.
+            host -> Stub holder.
+            port -> Stub holder.
+            cfg_file -> Stub holder.
+
+        """
+
+        self.name = name
+
+    def connect(self):
+
+        """Method:  connect
+
+        Description:  Stub method holder for MasterRep.connect.
+
+        Arguments:
+
+        """
+
+        return True
+
+
 class MstCfg(object):
 
     """Class:  MstCfg
@@ -130,11 +180,13 @@ class UnitTest(unittest.TestCase):
                            "user": "root", "serv_os": "Linux", "sid": "21",
                            "port": "3306"}]
 
+    @mock.patch("mysql_rep_admin.mysql_class.MasterRep")
     @mock.patch("mysql_rep_admin.cmds_gen.disconnect")
     @mock.patch("mysql_rep_admin.call_run_chk")
     @mock.patch("mysql_rep_admin.cmds_gen.create_cfg_array")
     @mock.patch("mysql_rep_admin.gen_libs.load_module")
-    def test_single_func(self, mock_cfg, mock_array, mock_call, mock_dis):
+    def test_single_func(self, mock_cfg, mock_array, mock_call, mock_dis,
+                         mock_rep):
 
         """Function:  test_single_func
 
@@ -148,6 +200,7 @@ class UnitTest(unittest.TestCase):
         mock_array.return_value = self.cfg_array
         mock_call.return_value = True
         mock_dis.return_value = True
+        mock_rep.return_value = MasterRep()
 
         self.assertFalse(mysql_rep_admin.run_program(self.args_array,
                                                       self.func_dict))
