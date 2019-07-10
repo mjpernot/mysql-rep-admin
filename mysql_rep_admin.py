@@ -587,6 +587,7 @@ def run_program(args_array, func_dict):
                                        getattr(machine, mst_cfg.serv_os)(),
                                        mst_cfg.host, mst_cfg.port,
                                        mst_cfg.cfg_file)
+        MASTER.connect()
 
     SLAVE = []
 
