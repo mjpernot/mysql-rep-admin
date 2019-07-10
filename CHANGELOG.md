@@ -44,7 +44,7 @@ Breaking Change
 - Call_Run_Chk:  Change MONGO_SVR to Mongo_Cfg to be standardized.
 - Convert program to use local libraries from ./lib directory.
 - Change single quotes to double quotes.
-- Help_Message:  Replace docstring with printing the programs __doc__.
+- Help_Message:  Replace docstring with printing the programs \_\_doc\_\_.
 
 
 ## [1.7.0] - 2016-11-04
@@ -89,7 +89,7 @@ Breaking Change
 ## [1.2.0] - 2016-03-16
 ### Changed
 - Setup_Class_Run_Chks:  Do not add slave instance to slave array if not able to connect to the database server.
-- Modified a number of function calls and added '**kwargs' to the argument list to allow the additional parameters for the "-f" and "-o" options to be passed.
+- Modified a number of function calls and added "\*\*kwargs" to the argument list to allow the additional parameters for the "-f" and "-o" options to be passed.
 - Main program:  Added sys.exit call.
 
 
