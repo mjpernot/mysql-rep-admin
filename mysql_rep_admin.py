@@ -133,36 +133,36 @@ def help_message():
     print(__doc__)
 
 
-def rpt_mst_log(MASTER, SLAVE, **kwargs):
+def rpt_mst_log(master, slaves, **kwargs):
 
     """Function:  rpt_mst_log
 
     Description:  Returns the master log file name and position.
 
     Arguments:
-        (input) MASTER -> Master class instance.
-        (input) SLAVE -> Slave class instance(s).
+        (input) master -> Master instance.
+        (input) slaves -> Slave instances.
 
     """
 
-    SLAVE = list(SLAVE)
+    slaves = list(slaves)
 
-    if MASTER:
-        fname, log_pos = MASTER.get_log_info()
-        name = MASTER.get_name()
+    if master:
+        fname, log_pos = master.get_log_info()
+        name = master.get_name()
 
         print("\nMaster: {0}".format(name))
         print("\tMaster Log:\t{0}".format(fname))
         print("\tLog Position:\t{0}".format(log_pos))
 
-        if MASTER.gtid_mode:
-            print("\tGTID Position:\t{0}".format(MASTER.exe_gtid))
+        if master.gtid_mode:
+            print("\tGTID Position:\t{0}".format(master.exe_gtid))
 
     else:
         print("\nrpt_mst_log:  Warning:  No Master instance detected.")
 
 
-def rpt_slv_log(MASTER, SLAVE, **kwargs):
+def rpt_slv_log(master, slaves, **kwargs):
 
     """Function:  rpt_slv_log
 
@@ -170,16 +170,16 @@ def rpt_slv_log(MASTER, SLAVE, **kwargs):
         the read and exec master log positions.
 
     Arguments:
-        (input) MASTER -> Master class instance.
-        (input) SLAVE -> Slave class instance(s).
+        (input) master -> Master instance.
+        (input) slaves -> Slave instances.
 
     """
 
-    SLAVE = list(SLAVE)
+    slaves = list(slaves)
 
-    if SLAVE:
+    if slaves:
 
-        for slv in SLAVE:
+        for slv in slaves:
             mst_file, relay_file, read_pos, exec_pos = slv.get_log_info()
             name = slv.get_name()
 
@@ -200,7 +200,7 @@ def rpt_slv_log(MASTER, SLAVE, **kwargs):
         print("\nrpt_slv_log:  Warning:  No Slave instance detected.")
 
 
-def chk_slv(SLAVE, **kwargs):
+def chk_slv(slave, **kwargs):
 
     """Function:  chk_slv
 
@@ -209,12 +209,12 @@ def chk_slv(SLAVE, **kwargs):
         5.6 this will be NULL.
 
     Arguments:
-        (input) SLAVE -> Slave class instance.
+        (input) slave -> Slave instance.
 
     """
 
-    mst_file, relay_file, read_pos, exec_pos = SLAVE.get_log_info()
-    name = SLAVE.get_name()
+    mst_file, relay_file, read_pos, exec_pos = slave.get_log_info()
+    name = slave.get_name()
 
     # If slave's master info does not equal slave's relay info.
     if mst_file != relay_file or read_pos != exec_pos:
@@ -223,17 +223,17 @@ def chk_slv(SLAVE, **kwargs):
         print("\tRead Log:\t{0}".format(mst_file))
         print("\tRead Pos:\t{0}".format(read_pos))
 
-        if SLAVE.gtid_mode:
-            print("\tRetrieved GTID:\t{0}".format(SLAVE.retrieved_gtid))
+        if slave.gtid_mode:
+            print("\tRetrieved GTID:\t{0}".format(slave.retrieved_gtid))
 
         print("\tExec Log:\t{0}".format(relay_file))
         print("\tExec Pos:\t{0}".format(exec_pos))
 
-        if SLAVE.gtid_mode:
-            print("\tExecuted GTID:\t{0}".format(SLAVE.exe_gtid))
+        if slave.gtid_mode:
+            print("\tExecuted GTID:\t{0}".format(slave.exe_gtid))
 
 
-def chk_mst_log(MASTER, SLAVE, **kwargs):
+def chk_mst_log(master, slaves, **kwargs):
 
     """Function:  chk_mst_log
 
@@ -242,17 +242,17 @@ def chk_mst_log(MASTER, SLAVE, **kwargs):
         the log on the slave itself.
 
     Arguments:
-        (input) MASTER -> Master class instance.
-        (input) SLAVE -> Slave class instance(s).
+        (input) master -> Master instance.
+        (input) slaves -> Slave instances.
 
     """
 
-    SLAVE = list(SLAVE)
+    slaves = list(slaves)
 
-    if MASTER and SLAVE:
-        fname, log_pos = MASTER.get_log_info()
+    if master and slaves:
+        fname, log_pos = master.get_log_info()
 
-        for slv in SLAVE:
+        for slv in slaves:
             mst_file, relay_file, read_pos, exec_pos = slv.get_log_info()
             name = slv.get_name()
 
@@ -260,7 +260,7 @@ def chk_mst_log(MASTER, SLAVE, **kwargs):
             if fname != mst_file or log_pos != read_pos:
 
                 print("\nWarning:  Slave lagging in reading master log.")
-                print("Master: {0}".format(MASTER.name))
+                print("Master: {0}".format(master.name))
                 print("\tMaster Log: {0}".format(fname))
                 print("\t\tMaster Pos: {0}".format(log_pos))
                 print("Slave: {0}".format(name))
@@ -269,10 +269,10 @@ def chk_mst_log(MASTER, SLAVE, **kwargs):
 
             chk_slv(slv, **kwargs)
 
-    elif SLAVE:
+    elif slaves:
         print("\nchk_mst_log:  Warning:  Missing Master instance.")
 
-        for slv in SLAVE:
+        for slv in slaves:
             mst_file, relay_file, read_pos, exec_pos = slv.get_log_info()
             name = slv.get_name()
 
@@ -282,23 +282,23 @@ def chk_mst_log(MASTER, SLAVE, **kwargs):
         print("\nchk_mst_log:  Warning:  Missing Master and Slave instances.")
 
 
-def chk_slv_thr(MASTER, SLAVE, **kwargs):
+def chk_slv_thr(master, slaves, **kwargs):
 
     """Function:  chk_slv_thr
 
     Description:  Checks the status of the Slave(s) IO and SQL threads.
 
     Arguments:
-        (input) MASTER -> Master class instance.
-        (input) SLAVE -> Slave class instance(s).
+        (input) master -> Master instance.
+        (input) slaves -> Slave instances.
 
     """
 
-    SLAVE = list(SLAVE)
+    slaves = list(slaves)
 
-    if SLAVE:
+    if slaves:
 
-        for slv in SLAVE:
+        for slv in slaves:
             thr, io_thr, sql_thr, run = slv.get_thr_stat()
             name = slv.get_name()
 
@@ -321,23 +321,23 @@ def chk_slv_thr(MASTER, SLAVE, **kwargs):
         print("\nchk_slv_thr:  Warning:  No Slave instance detected.")
 
 
-def chk_slv_err(MASTER, SLAVE, **kwargs):
+def chk_slv_err(master, slaves, **kwargs):
 
     """Function:  chk_slv_err
 
     Description:  Check the Slave's IO and SQL threads for errors.
 
     Arguments:
-        (input) MASTER -> Master class instance.
-        (input) SLAVE -> Slave class instance(s).
+        (input) master -> Master instance.
+        (input) slaves -> Slave instances.
 
     """
 
-    SLAVE = list(SLAVE)
+    slaves = list(slaves)
 
-    if SLAVE:
+    if slaves:
 
-        for slv in SLAVE:
+        for slv in slaves:
 
             # For pre-MySQL 5.6 versions, will be NULL for these two entries.
             io, sql, io_msg, sql_msg, io_time, sql_time = slv.get_err_stat()
@@ -363,14 +363,14 @@ def chk_slv_err(MASTER, SLAVE, **kwargs):
         print("\nchk_slv_err:  Warning:  No Slave instance detected.")
 
 
-def add_miss_slaves(MASTER, outdata, **kwargs):
+def add_miss_slaves(master, outdata, **kwargs):
 
     """Function:  add_miss_slaves
 
     Description:  Adds any down slave hosts to the JSON's slave list.
 
     Arguments:
-        (input) MASTER -> Master class instance.
+        (input) master -> Master instance.
         (input) outdata -> JSON document of Check Slave Time output.
         (output) outdata -> JSON document of Check Slave Time output.
 
@@ -380,7 +380,7 @@ def add_miss_slaves(MASTER, outdata, **kwargs):
     all_list = []
     slv_list = []
 
-    for x in MASTER.show_slv_hosts():
+    for x in master.show_slv_hosts():
         all_list.append(x["Host"])
 
     for y in outdata["slaves"]:
@@ -394,15 +394,15 @@ def add_miss_slaves(MASTER, outdata, **kwargs):
     return outdata
 
 
-def chk_slv_time(MASTER, SLAVE, **kwargs):
+def chk_slv_time(master, slaves, **kwargs):
 
     """Function:  chk_slv_time
 
     Description:  Checks for time delays on the slave(s).
 
     Arguments:
-        (input) MASTER -> Master class instance.
-        (input) SLAVE -> Slave class instance(s).
+        (input) master -> Master instance.
+        (input) slaves -> Slave instances.
         (input) **kwargs:
             form -> JSON|standard - JSON format or standard output.
             ofile -> file name - Name of output file.
@@ -411,19 +411,19 @@ def chk_slv_time(MASTER, SLAVE, **kwargs):
 
     """
 
-    SLAVE = list(SLAVE)
+    slaves = list(slaves)
     frmt = kwargs.get("form", "standard")
 
     if frmt == "JSON":
         outdata = {"application": "MySQL Replication",
-                   "master": MASTER.name,
+                   "master": master.name,
                    "asOf": datetime.datetime.strftime(datetime.datetime.now(),
                                                       "%Y-%m-%d %H:%M:%S"),
                    "slaves": []}
 
-    if SLAVE:
+    if slaves:
 
-        for slv in SLAVE:
+        for slv in slaves:
             time_lag = slv.get_time()
             name = slv.get_name()
 
@@ -444,11 +444,11 @@ def chk_slv_time(MASTER, SLAVE, **kwargs):
         print("\nchk_slv_time:  Warning:  No Slave instance detected.")
 
     if frmt == "JSON":
-        outdata = add_miss_slaves(MASTER, outdata)
+        outdata = add_miss_slaves(master, outdata)
         mongo_libs.json_prt_ins_2_db(outdata, **kwargs)
 
 
-def chk_slv_other(MASTER, SLAVE, **kwargs):
+def chk_slv_other(master, slaves, **kwargs):
 
     """Function:  chk_slv_other
 
@@ -456,16 +456,16 @@ def chk_slv_other(MASTER, SLAVE, **kwargs):
         a problem on the slave(s).
 
     Arguments:
-        (input) MASTER -> Master class instance.
-        (input) SLAVE -> Slave class instance(s).
+        (input) master -> Master instance.
+        (input) slaves -> Slave instances.
 
     """
 
-    SLAVE = list(SLAVE)
+    slaves = list(slaves)
 
-    if SLAVE:
+    if slaves:
 
-        for slv in SLAVE:
+        for slv in slaves:
             skip, tmp_tbl, retry = slv.get_others()
             name = slv.get_name()
 
@@ -485,47 +485,47 @@ def chk_slv_other(MASTER, SLAVE, **kwargs):
         print("\nchk_slv_other:  Warning:  No Slave instance detected.")
 
 
-def call_run_chk(args_array, func_dict, MASTER, SLAVE):
+def call_run_chk(args_array, func_dict, master, slaves):
 
     """Function:  call_run_chk
 
     Description:  Calls the specified option function calls based on what
-        instances are available.  Both the MASTER and SLAVE(s)
+        instances are available.  Both the master and slaves
         instances are passed to the functions, the functions will
         determine what instances to be used.
 
     Arguments:
         (input) args_array -> Array of command line options and values.
         (input) func_dict -> Dictionary list of functions and options.
-        (input) MASTER -> Master class instance.
-        (input) SLAVE -> Slave class instance(s).
+        (input) master -> Master instance.
+        (input) slaves -> Slave instances.
 
     """
 
     args_array = dict(args_array)
     func_dict = dict(func_dict)
-    SLAVE = list(SLAVE)
+    slaves = list(slaves)
     frmt = args_array.get("-f", "standard")
     outfile = args_array.get("-o", None)
     db_tbl = args_array.get("-b", None)
-    Mongo_Cfg = None
+    mongo_cfg = None
 
     if args_array.get("-m", None):
-        Mongo_Cfg = gen_libs.load_module(args_array["-m"], args_array["-d"])
+        mongo_cfg = gen_libs.load_module(args_array["-m"], args_array["-d"])
 
     if "-A" in args_array:
 
         for x in func_dict["-A"]:
-            func_dict[x](MASTER, SLAVE, form=frmt, ofile=outfile,
-                         db_tbl=db_tbl, class_cfg=Mongo_Cfg)
+            func_dict[x](master, slaves, form=frmt, ofile=outfile,
+                         db_tbl=db_tbl, class_cfg=mongo_cfg)
 
         for y in args_array:
 
             # If argument is in func_dict dictionary and not under the ALL
             #   option and is not the ALL option itself.
             if y in func_dict and y not in func_dict["-A"] and y != "-A":
-                func_dict[y](MASTER, SLAVE, form=frmt, ofile=outfile,
-                             db_tbl=db_tbl, class_cfg=Mongo_Cfg)
+                func_dict[y](master, slaves, form=frmt, ofile=outfile,
+                             db_tbl=db_tbl, class_cfg=mongo_cfg)
 
     # Else run each option in argument list.
     else:
@@ -533,8 +533,8 @@ def call_run_chk(args_array, func_dict, MASTER, SLAVE):
         for w in args_array:
 
             if w in func_dict:
-                func_dict[w](MASTER, SLAVE, form=frmt, ofile=outfile,
-                             db_tbl=db_tbl, class_cfg=Mongo_Cfg)
+                func_dict[w](master, slaves, form=frmt, ofile=outfile,
+                             db_tbl=db_tbl, class_cfg=mongo_cfg)
 
 
 def run_program(args_array, func_dict):
@@ -551,19 +551,19 @@ def run_program(args_array, func_dict):
 
     args_array = dict(args_array)
     func_dict = dict(func_dict)
-    MASTER = None
+    master = None
 
     if "-c" in args_array:
         mst_cfg = gen_libs.load_module(args_array["-c"], args_array["-d"])
 
-        MASTER = mysql_class.MasterRep(mst_cfg.name, mst_cfg.sid,
+        master = mysql_class.MasterRep(mst_cfg.name, mst_cfg.sid,
                                        mst_cfg.user, mst_cfg.passwd,
                                        getattr(machine, mst_cfg.serv_os)(),
                                        mst_cfg.host, mst_cfg.port,
                                        mst_cfg.cfg_file)
-        MASTER.connect()
+        master.connect()
 
-    SLAVE = []
+    slaves = []
 
     if "-s" in args_array:
         slv_cfg = cmds_gen.create_cfg_array(args_array["-s"],
@@ -579,11 +579,11 @@ def run_program(args_array, func_dict):
             slv_inst.connect()
 
             if slv_inst.conn:
-                SLAVE.append(slv_inst)
+                slaves.append(slv_inst)
 
-    call_run_chk(args_array, func_dict, MASTER, SLAVE)
+    call_run_chk(args_array, func_dict, master, slaves)
 
-    cmds_gen.disconnect(MASTER, SLAVE)
+    cmds_gen.disconnect(master, slaves)
 
 
 def main():
