@@ -15,9 +15,8 @@
 
     Usage:
         mysql_rep_admin.py -d path {-c file | -s path/file} [-p path
-            | -C | -S | -B | -D | -T | -R | -E | -A | -I | -O |
-            -f {JSON|standard | -b db:coll | -m file} | -o dir_path/file]
-            [-v | -h]
+            | -C | -S | -B | -D | -T | -E | -A | -O | -o dir_path/file]
+            -f {JSON|standard | -b db:coll | -m file} [-v | -h]
 
     Arguments:
         -d dir path => Directory path to the config files (-c and -s).
@@ -31,11 +30,9 @@
         -B => Display the master binlog filename and position.
         -D => Display the slave(s) binlog filename and position.
         -T => Check time lag for the slave(s).
-        -R => Replication check using the mysqlrplcheck program.
         -E => Check for errors on the slave(s).
-        -I => Display server information for master and/or slave(s).
         -A => Does multiple checks which include the following options:
-            (-C, -S, -T, -R, -E)
+            (-C, -S, -T, -E)
         -O => Other slave replication checks.
         -f JSON|standard => Output format as JSON or standard. (only
             used with option -T)
@@ -637,11 +634,9 @@ def main():
     dir_chk_list = ["-d", "-p"]
     file_chk_list = ["-o"]
     file_crt_list = ["-o"]
-    # NOTE:  Removed "-R" from the "-A" option as it is not implemented yet.
     func_dict = {"-A": ["-C", "-S", "-E", "-T", "-O"], "-B": rpt_mst_log,
                  "-D": rpt_slv_log, "-C": chk_mst_log, "-S": chk_slv_thr,
-                 "-E": chk_slv_err, "-I": rpt_srv_info, "-R": chk_rep,
-                 "-T": chk_slv_time, "-O": chk_slv_other}
+                 "-E": chk_slv_err, "-T": chk_slv_time, "-O": chk_slv_other}
     opt_con_req_list = {"-b": ["-m"]}
     opt_def_dict = {"-f": "standard", "-b": "sysmon:mysql_rep_lag"}
     opt_or_dict_list = {"-c": ["-s"]}
