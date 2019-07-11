@@ -10,6 +10,7 @@ Breaking Change
 - Modified program to use the mysql_class v4.0.0 version.  The v4.0.0 replaces the MySQLdb support library with the mysql.connector support library.
 
 ### Changed
+- add_miss_slaves:  Changed output to camelCase.
 - run_program:  Modified to use the updated mysql_class module.
 - main:  Removed -I and -R arguments from the program options.
 - run_program:  Modified to use the updated mysql_class module.

@@ -389,7 +389,7 @@ def add_miss_slaves(MASTER, outdata, **kwargs):
     # Loop on slaves that are in master slave list, but not in all slave list.
     for x in [val for val in all_list if val not in slv_list]:
         # Add missing slave to all slave list.
-        outdata["Slaves"].append({"Name": x, "Lag_Time": None})
+        outdata["Slaves"].append({"name": x, "lagTime": None})
 
     return outdata
 
