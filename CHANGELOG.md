@@ -21,6 +21,7 @@ Breaking Change
 - rpt_srv_info:  No longer being implemented.
 
 ### Fixed:
+- chk_slv_time:  Fixed problem with mutable default arguments issue.
 - chk_slv_other:  Fixed problem with mutable default arguments issue.
 - call_run_chk:  Fixed problem with mutable default arguments issue.
 - run_program:  Fixed problem with mutable default arguments issue.

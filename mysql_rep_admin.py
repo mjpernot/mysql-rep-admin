@@ -400,6 +400,7 @@ def chk_slv_time(MASTER, SLAVE, **kwargs):
 
     """
 
+    SLAVE = list(SLAVE)
     frmt = kwargs.get("form", "standard")
 
     if frmt == "JSON":
