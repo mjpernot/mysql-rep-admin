@@ -55,7 +55,8 @@
             # Configuration file for {Database Name/Server}
             user = "root"
             passwd = "ROOT_PASSWORD"
-            # DO NOT USE 127.0.0.1 for the master/source, use actual IP.
+            # WARNING:  Do not use the loopback IP or 'localhost' for the
+            #    master database, use the actual IP.
             host = "IP_ADDRESS"
             serv_os = "Linux" or "Solaris"
             name = "HOSTNAME"
