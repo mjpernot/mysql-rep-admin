@@ -449,6 +449,8 @@ def chk_slv_other(MASTER, SLAVE, **kwargs):
 
     """
 
+    SLAVE = list(SLAVE)
+
     if SLAVE:
 
         for slv in SLAVE:
