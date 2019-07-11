@@ -488,9 +488,11 @@ def call_run_chk(args_array, func_dict, MASTER, SLAVE):
 
     """
 
+    args_array = dict(args_array)
+    func_dict = dict(func_dict)
+    SLAVE = list(SLAVE)
     frmt = args_array.get("-f", "standard")
     outfile = args_array.get("-o", None)
-
     db_tbl = args_array.get("-b", None)
     Mongo_Cfg = None
 
