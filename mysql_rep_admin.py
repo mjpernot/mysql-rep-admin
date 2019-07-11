@@ -366,6 +366,7 @@ def add_miss_slaves(MASTER, outdata, **kwargs):
 
     """
 
+    outdata = dict(outdata)
     all_list = []
     slv_list = []
 

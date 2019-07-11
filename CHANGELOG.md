@@ -21,6 +21,7 @@ Breaking Change
 - rpt_srv_info:  No longer being implemented.
 
 ### Fixed:
+- add_miss_slaves:  Fixed problem with mutable default arguments issue.
 - chk_slv_time:  Fixed problem with mutable default arguments issue.
 - chk_slv_other:  Fixed problem with mutable default arguments issue.
 - call_run_chk:  Fixed problem with mutable default arguments issue.
