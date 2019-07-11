@@ -10,6 +10,7 @@ Breaking Change
 - Modified program to use the mysql_class v4.0.0 version.  The v4.0.0 replaces the MySQLdb support library with the mysql.connector support library.
 
 ### Changed
+- run_program:  Modified to use the updated mysql_class module.
 - main:  Removed -I and -R arguments from the program options.
 - run_program:  Modified to use the updated mysql_class module.
 - run_program:  Replaced the code to load the slave files into an array with a call to cmds_gen.create_cfg_array().

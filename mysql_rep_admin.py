@@ -558,6 +558,7 @@ def run_program(args_array, func_dict):
                                                     slv["serv_os"])(),
                                             slv["host"], int(slv["port"]),
                                             slv["cfg_file"])
+            slv_inst.connect()
 
             if slv_inst.conn:
                 SLAVE.append(slv_inst)
