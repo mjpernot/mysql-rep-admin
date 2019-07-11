@@ -243,6 +243,8 @@ def chk_mst_log(MASTER, SLAVE, **kwargs):
 
     """
 
+    SLAVE = list(SLAVE)
+
     if MASTER and SLAVE:
         fname, log_pos = MASTER.get_log_info()
 
