@@ -354,26 +354,6 @@ def chk_slv_err(MASTER, SLAVE, **kwargs):
         print("\nchk_slv_err:  Warning:  No Slave instance detected.")
 
 
-def rpt_srv_info(MASTER, SLAVE, **kwargs):
-
-    """Function:  rpt_srv_info
-
-    Description:  Returns information about the server.
-
-    Arguments:
-        (input) MASTER -> Master class instance.
-        (input) SLAVE -> Slave class instance(s).
-
-    """
-
-    # The super Server class will hold the attributes and methods to deal with
-    #   the server information fields.  The Server __init__ will setup the
-    #   attributes as empty fields.  There will be methods in the Server class
-    #   to populate these attributes.
-    # Will need to populate these attributes earlier in the program.
-    raise errors.NotYetImplementedError
-
-
 def chk_rep(MASTER, SLAVE, **kwargs):
 
     """Function:  chk_rep

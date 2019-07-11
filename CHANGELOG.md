@@ -14,6 +14,9 @@ Breaking Change
 - run_program:  Modified to use the updated mysql_class module.
 - run_program:  Replaced the code to load the slave files into an array with a call to cmds_gen.create_cfg_array().
 
+### Removed
+- rpt_srv_info:  No longer being implemented.
+
 
 ## [2.0.1] - 2018-12-06
 - Documentation updates.
