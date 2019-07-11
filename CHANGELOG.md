@@ -21,6 +21,7 @@ Breaking Change
 - rpt_srv_info:  No longer being implemented.
 
 ### Fixed:
+- rpt_slv_log:  Fixed problem with mutable default arguments issue.
 - chk_mst_log:  Fixed problem with mutable default arguments issue.
 - chk_slv_thr:  Fixed problem with mutable default arguments issue.
 - chk_slv_err:  Fixed problem with mutable default arguments issue.

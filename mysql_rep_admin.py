@@ -173,6 +173,8 @@ def rpt_slv_log(MASTER, SLAVE, **kwargs):
 
     """
 
+    SLAVE = list(SLAVE)
+
     if SLAVE:
 
         for slv in SLAVE:
