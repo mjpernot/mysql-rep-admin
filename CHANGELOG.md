@@ -20,6 +20,9 @@ Breaking Change
 - chk_rep:  No longer being implemented.
 - rpt_srv_info:  No longer being implemented.
 
+### Fixed:
+- run_program:  Fixed problem with mutable default arguments issue.
+
 
 ## [2.0.1] - 2018-12-06
 - Documentation updates.

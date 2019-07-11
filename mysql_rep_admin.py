@@ -533,6 +533,8 @@ def run_program(args_array, func_dict):
 
     """
 
+    args_array = dict(args_array)
+    func_dict = dict(func_dict)
     MASTER = None
 
     if "-c" in args_array:
