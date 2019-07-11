@@ -105,14 +105,14 @@ class UnitTest(unittest.TestCase):
         """
 
         self.master = MasterRep()
-        self.outdata = {"Slaves": [{"Name": "slave1", "Lag_Time": None},
-                                   {"Name": "slave2", "Lag_Time": None}]}
-        self.outdata2 = {"Slaves": [{"Name": "slave1", "Lag_Time": None},
-                                    {"Name": "slave2", "Lag_Time": None},
-                                    {"Name": "slave3", "Lag_Time": None}]}
-        self.final_list = {"Slaves": [{"Name": "slave1", "Lag_Time": None},
-                                      {"Name": "slave2", "Lag_Time": None},
-                                      {"Name": "slave3", "Lag_Time": None}]}
+        self.outdata = {"slaves": [{"name": "slave1", "lagTime": None},
+                                   {"name": "slave2", "lagTime": None}]}
+        self.outdata2 = {"slaves": [{"name": "slave1", "lagTime": None},
+                                    {"name": "slave2", "lagTime": None},
+                                    {"name": "slave3", "lagTime": None}]}
+        self.final_list = {"slaves": [{"name": "slave1", "lagTime": None},
+                                      {"name": "slave2", "lagTime": None},
+                                      {"name": "slave3", "lagTime": None}]}
 
     def test_no_slv_miss(self):
 

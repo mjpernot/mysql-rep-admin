@@ -383,13 +383,13 @@ def add_miss_slaves(MASTER, outdata, **kwargs):
     for x in MASTER.show_slv_hosts():
         all_list.append(x["Host"])
 
-    for y in outdata["Slaves"]:
-        slv_list.append(y["Name"])
+    for y in outdata["slaves"]:
+        slv_list.append(y["name"])
 
     # Loop on slaves that are in master slave list, but not in all slave list.
     for x in [val for val in all_list if val not in slv_list]:
         # Add missing slave to all slave list.
-        outdata["Slaves"].append({"name": x, "lagTime": None})
+        outdata["slaves"].append({"name": x, "lagTime": None})
 
     return outdata
 
@@ -415,11 +415,11 @@ def chk_slv_time(MASTER, SLAVE, **kwargs):
     frmt = kwargs.get("form", "standard")
 
     if frmt == "JSON":
-        outdata = {"Application": "MySQL Replication",
-                   "Master": MASTER.name,
-                   "Asof": datetime.datetime.strftime(datetime.datetime.now(),
+        outdata = {"application": "MySQL Replication",
+                   "master": MASTER.name,
+                   "asOf": datetime.datetime.strftime(datetime.datetime.now(),
                                                       "%Y-%m-%d %H:%M:%S"),
-                   "Slaves": []}
+                   "slaves": []}
 
     if SLAVE:
 
@@ -437,8 +437,8 @@ def chk_slv_time(MASTER, SLAVE, **kwargs):
                     print("\tTime Lag:  {0}".format(time_lag))
 
             if frmt == "JSON":
-                outdata["Slaves"].append({"Name": slv.name,
-                                          "Lag_Time": time_lag})
+                outdata["slaves"].append({"name": slv.name,
+                                          "lagTime": time_lag})
 
     elif frmt == "standard":
         print("\nchk_slv_time:  Warning:  No Slave instance detected.")
