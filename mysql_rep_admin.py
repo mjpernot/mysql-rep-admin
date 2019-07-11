@@ -354,27 +354,6 @@ def chk_slv_err(MASTER, SLAVE, **kwargs):
         print("\nchk_slv_err:  Warning:  No Slave instance detected.")
 
 
-def chk_rep(MASTER, SLAVE, **kwargs):
-
-    """Function:  chk_rep
-
-    Description:  Returns the output of the mysqlrplcheck program between each
-        combination of master-slave connection.
-
-    Arguments:
-        (input) MASTER -> Master class instance.
-        (input) SLAVE -> Slave class instance(s).
-        (input) **kwargs:
-            None
-
-    """
-
-    # Do I want to implement this option?  If so, where do I store the info in
-    #   the class and which class.  When do I run the program to populate the
-    #   attributes?
-    raise errors.NotYetImplementedError
-
-
 def add_miss_slaves(MASTER, outdata, **kwargs):
 
     """Function:  add_miss_slaves

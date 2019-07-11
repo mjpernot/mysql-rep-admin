@@ -15,6 +15,7 @@ Breaking Change
 - run_program:  Replaced the code to load the slave files into an array with a call to cmds_gen.create_cfg_array().
 
 ### Removed
+- chk_rep:  No longer being implemented.
 - rpt_srv_info:  No longer being implemented.
 
 
