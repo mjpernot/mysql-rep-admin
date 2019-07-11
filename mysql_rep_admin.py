@@ -112,7 +112,6 @@ import lib.arg_parser as arg_parser
 import lib.gen_libs as gen_libs
 import lib.cmds_gen as cmds_gen
 import lib.machine as machine
-import lib.errors as errors
 import mysql_lib.mysql_class as mysql_class
 import mongo_lib.mongo_libs as mongo_libs
 import version
