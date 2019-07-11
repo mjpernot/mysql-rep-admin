@@ -163,7 +163,7 @@ class UnitTest(unittest.TestCase):
         """
 
         with gen_libs.no_std_out():
-            self.assertFalse(mysql_rep_admin.rpt_mst_log(None, self.slave))
+            self.assertFalse(mysql_rep_admin.rpt_mst_log(None, [self.slave]))
 
     def test_rpt_mst_log(self):
 
@@ -177,7 +177,7 @@ class UnitTest(unittest.TestCase):
 
         with gen_libs.no_std_out():
             self.assertFalse(mysql_rep_admin.rpt_mst_log(self.master,
-                                                         self.slave))
+                                                         [self.slave]))
 
 
 if __name__ == "__main__":
