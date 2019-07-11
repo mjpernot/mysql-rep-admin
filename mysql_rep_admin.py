@@ -145,6 +145,8 @@ def rpt_mst_log(MASTER, SLAVE, **kwargs):
 
     """
 
+    SLAVE = list(SLAVE)
+
     if MASTER:
         fname, log_pos = MASTER.get_log_info()
         name = MASTER.get_name()
