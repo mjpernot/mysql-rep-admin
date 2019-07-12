@@ -71,7 +71,7 @@ class SlaveRep(object):
     """
 
     def __init__(self, name=None, sid=None, user=None, passwd=None,
-                 serv_os=None, host=None, **kwargs):
+                 serv_os=None, **kwargs):
 
         """Method:  __init__
 
@@ -83,10 +83,10 @@ class SlaveRep(object):
             (input) user -> Stub holder.
             (input) passwd -> Stub holder.
             (input) serv_os -> Stub holder.
-            (input) host -> Stub holder.
             (input) **kwargs:
                 port -> Stub holder.
                 cfg_file -> Stub holder.
+                host -> Stub holder.
 
         """
 
@@ -95,7 +95,7 @@ class SlaveRep(object):
         self.user = user
         self.passwd = passwd
         self.serv_os = serv_os
-        self.host = host
+        self.host = kwargs.get("host", None)
         self.port = kwargs.get("port", None)
         self.cfg_file = kwargs.get("cfg_file", None)
         self.conn = True
@@ -130,7 +130,7 @@ class MasterRep(object):
     """
 
     def __init__(self, name=None, sid=None, user=None, passwd=None,
-                 serv_os=None, host=None, **kwargs):
+                 serv_os=None, **kwargs):
 
         """Method:  __init__
 
@@ -142,10 +142,10 @@ class MasterRep(object):
             (input) user -> Stub holder.
             (input) passwd -> Stub holder.
             (input) serv_os -> Stub holder.
-            (input) host -> Stub holder.
             (input) **kwargs:
                 port -> Stub holder.
                 cfg_file -> Stub holder.
+                host -> Stub holder.
 
         """
 
@@ -154,7 +154,7 @@ class MasterRep(object):
         self.user = user
         self.passwd = passwd
         self.serv_os = serv_os
-        self.host = host
+        self.host = kwargs.get("host", None)
         self.port = kwargs.get("port", None)
         self.cfg_file = kwargs.get("cfg_file", None)
 
