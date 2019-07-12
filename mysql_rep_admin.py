@@ -413,7 +413,6 @@ def chk_slv_time(master, slaves, **kwargs):
 
     slaves = list(slaves)
     frmt = kwargs.get("form", "standard")
-#    outdata = {}
 
     if frmt == "JSON":
         outdata = {"application": "MySQL Replication",
@@ -424,21 +423,11 @@ def chk_slv_time(master, slaves, **kwargs):
 
     if slaves:
 
-#        outdata = _process_slaves(slaves, outdata, frmt)
         for slv in slaves:
             time_lag = slv.get_time()
             name = slv.get_name()
-
             _process_time_lag(slv, time_lag, name, frmt)
-#            if time_lag:
-#                time.sleep(5)
-#                slv.upd_slv_time()
-#                time_lag = slv.get_time()
-#
-#                if time_lag and frmt == "standard":
-#                    print("\nSlave:  {0}".format(name))
-#                    print("\tTime Lag:  {0}".format(time_lag))
-#
+
             if frmt == "JSON":
                 outdata["slaves"].append({"name": slv.name,
                                           "lagTime": time_lag})
@@ -484,43 +473,6 @@ def _process_time_lag(slv, time_lag, name, frmt, **kwargs):
         if time_lag and frmt == "standard":
             print("\nSlave:  {0}".format(name))
             print("\tTime Lag:  {0}".format(time_lag))
-
-
-def _process_slaves(slaves, outdata, frmt, **kwargs):
-
-    """Function:  _process_slaves
-
-    Description:  Private function for chk_slv_time().  Process slaves in the
-        slave list.
-
-    Arguments:
-        (input) slaves -> Slave instances.
-        (input) outdata -> Dictionary of slave instances.
-        (input) frmt -> JSON|standard - JSON format or standard output.
-        (output) outdata -> Dictionary of slave instances.
-
-    """
-
-    slaves = list(slaves)
-    outdata = dict(outdata)
-
-    for slv in slaves:
-        time_lag = slv.get_time()
-        name = slv.get_name()
-
-        if time_lag:
-            time.sleep(5)
-            slv.upd_slv_time()
-            time_lag = slv.get_time()
-
-            if time_lag and frmt == "standard":
-                print("\nSlave:  {0}".format(name))
-                print("\tTime Lag:  {0}".format(time_lag))
-
-        if frmt == "JSON":
-            outdata["slaves"].append({"name": slv.name, "lagTime": time_lag})
-
-    return outdata
 
 
 def chk_slv_other(master, slaves, **kwargs):
