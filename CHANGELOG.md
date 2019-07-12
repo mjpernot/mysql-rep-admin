@@ -26,7 +26,7 @@ Breaking Change
 - run_program:  Replaced the code to load the slave files into an array with a call to cmds_gen.create_cfg_array().
 
 ### Removed
-- Removed the imported module gen_libs.errors.
+- Removed the imported modules os and gen_libs.errors.
 - chk_rep:  No longer being implemented.
 - rpt_srv_info:  No longer being implemented.
 

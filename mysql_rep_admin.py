@@ -102,7 +102,6 @@ from __future__ import print_function
 import sys
 import time
 import datetime
-import os
 
 # Third party
 import json
@@ -216,7 +215,7 @@ def chk_slv(slave, **kwargs):
     mst_file, relay_file, read_pos, exec_pos = slave.get_log_info()
     name = slave.get_name()
 
-    # If slave's master info does not equal slave's relay info.
+    # Slave's master info doesn't match slave's relay info.
     if mst_file != relay_file or read_pos != exec_pos:
         print("\nSlave: {0}".format(name))
         print("Warning:  Slave might be lagging in execution of log.")
@@ -256,7 +255,7 @@ def chk_mst_log(master, slaves, **kwargs):
             mst_file, relay_file, read_pos, exec_pos = slv.get_log_info()
             name = slv.get_name()
 
-            # If master's log file or position doesn't match slave's log info.
+            # Master's log file or position doesn't match slave's log info.
             if fname != mst_file or log_pos != read_pos:
 
                 print("\nWarning:  Slave lagging in reading master log.")
@@ -302,17 +301,17 @@ def chk_slv_thr(master, slaves, **kwargs):
             thr, io_thr, sql_thr, run = slv.get_thr_stat()
             name = slv.get_name()
 
-            # Check slave IO state and slave running attributes.
+            # Slave IO and run state.
             if not thr or not gen_libs.is_true(run):
                 print("\nSlave: {0}".format(name))
                 print("Error:  Slave IO/SQL Threads are down.")
 
-            # Check slave IO running attribute.
+            # Slave IO thread.
             elif not gen_libs.is_true(io_thr):
                 print("\nSlave: {0}".format(name))
                 print("Error:  Slave IO Thread is down.")
 
-            # Check slave SQL running attribute.
+            # Slave SQL thread.
             elif not gen_libs.is_true(sql_thr):
                 print("\nSlave: {0}".format(name))
                 print("Error:  Slave SQL Thread is down.")
@@ -343,7 +342,7 @@ def chk_slv_err(master, slaves, **kwargs):
             io, sql, io_msg, sql_msg, io_time, sql_time = slv.get_err_stat()
             name = slv.get_name()
 
-            # Is there a IO error
+            # IO error
             if io:
                 print("\nSlave:\t{0}".format(name))
                 print("IO Error Detected:\t{0}".format(io))
@@ -351,7 +350,7 @@ def chk_slv_err(master, slaves, **kwargs):
 
                 print("\tIO Timestamp:\t{0}".format(io_time))
 
-            # Is there a SQL error
+            # SQL error
             if sql:
                 print("\nSlave:\t{0}".format(name))
                 print("SQL Error Detected:\t{0}".format(sql))
@@ -386,9 +385,8 @@ def add_miss_slaves(master, outdata, **kwargs):
     for y in outdata["slaves"]:
         slv_list.append(y["name"])
 
-    # Loop on slaves that are in master slave list, but not in all slave list.
+    # Add slaves from the slave list that are not in the master's slave list.
     for x in [val for val in all_list if val not in slv_list]:
-        # Add missing slave to all slave list.
         outdata["slaves"].append({"name": x, "lagTime": None})
 
     return outdata
@@ -509,10 +507,10 @@ def _chk_other(skip, tmp_tbl, retry, name, **kwargs):
         problems found.
 
     Arguments:
-        skip -> Mysql's skip count.
-        tmp_tbl -> Mysql's temp tables created count.
-        retry -> Mysql's retry count.
-        name -> Name of Mysql server.
+        (input) skip -> Mysql's skip count.
+        (input) tmp_tbl -> Mysql's temp tables created count.
+        (input) retry -> Mysql's retry count.
+        (input) name -> Name of Mysql server.
 
     """
 
@@ -565,13 +563,12 @@ def call_run_chk(args_array, func_dict, master, slaves, **kwargs):
 
         for y in args_array:
 
-            # If argument is in func_dict dictionary and not under the ALL
-            #   option and is not the ALL option itself.
+            # The option is in func_dict but not under the ALL option and is
+            #   not the ALL option itself.
             if y in func_dict and y not in func_dict["-A"] and y != "-A":
                 func_dict[y](master, slaves, form=frmt, ofile=outfile,
                              db_tbl=db_tbl, class_cfg=mongo_cfg)
 
-    # Run for each option in arg array.
     else:
 
         # Intersect args_array & func_dict to find which functions to call.
