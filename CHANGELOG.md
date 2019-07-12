@@ -4,12 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
-## [3.0.0] - 2019-07-11
+## [3.0.0] - 2019-07-12
 Breaking Change
 
 - Modified program to use the mysql_class v4.0.0 version.  The v4.0.0 replaces the MySQLdb support library with the mysql.connector support library.
 
 ### Changed
+- call_run_chk:  Added **kwargs to argument list.
 - Changed variable names to standard naming convention.
 - chk_slv_time:  Changed output to camelCase.
 - add_miss_slaves:  Changed output to camelCase.
