@@ -10,6 +10,7 @@ Breaking Change
 - Modified program to use the mysql_class v4.0.0 version.  The v4.0.0 replaces the MySQLdb support library with the mysql.connector support library.
 
 ### Changed
+- chk_slv_other:  Replaced section of code with call to _chk_other.
 - call_run_chk:  Intersect args_array & func_dict to run options.
 - main:  Refactored initial program checks.
 - run_program:  Added **kwargs to argument list.
@@ -38,6 +39,9 @@ Breaking Change
 - chk_slv_other:  Fixed problem with mutable default arguments issue.
 - call_run_chk:  Fixed problem with mutable default arguments issue.
 - run_program:  Fixed problem with mutable default arguments issue.
+- 
+### Added
+- _chk_other:  Private function for chk_slv_other().  Print any possible problems found.
 
 
 ## [2.0.1] - 2018-12-06
