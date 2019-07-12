@@ -14,8 +14,8 @@ Breaking Change
 - chk_slv_other:  Replaced section of code with call to _chk_other.
 - call_run_chk:  Intersect args_array & func_dict to run options.
 - main:  Refactored initial program checks.
-- run_program:  Added **kwargs to argument list.
-- call_run_chk:  Added **kwargs to argument list.
+- run_program:  Added \*\*kwargs to argument list.
+- call_run_chk:  Added \*\*kwargs to argument list.
 - Changed variable names to standard naming convention.
 - chk_slv_time:  Changed output to camelCase.
 - add_miss_slaves:  Changed output to camelCase.
