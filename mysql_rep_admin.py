@@ -537,7 +537,7 @@ def call_run_chk(args_array, func_dict, master, slaves, **kwargs):
                              db_tbl=db_tbl, class_cfg=mongo_cfg)
 
 
-def run_program(args_array, func_dict):
+def run_program(args_array, func_dict, **kwargs):
 
     """Function:  run_program
 
