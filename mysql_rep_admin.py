@@ -468,20 +468,7 @@ def chk_slv_other(master, slaves, **kwargs):
         for slv in slaves:
             skip, tmp_tbl, retry = slv.get_others()
             name = slv.get_name()
-
             _chk_other(skip, tmp_tbl, retry, name)
-
-#            if skip > 0 or int(tmp_tbl) > 5 or int(retry) > 0:
-#                print("\nSlave: {0}".format(name))
-#
-#                if skip > 0:
-#                    print("Skip Count:  {0}".format(skip))
-#
-#                if int(tmp_tbl) > 5:
-#                    print("Temp Table Count:  {0}".format(tmp_tbl))
-#
-#                if int(retry) > 0:
-#                    print("Retried Transaction Count:  {0}".format(retry))
 
     else:
         print("\nchk_slv_other:  Warning:  No Slave instance detected.")
@@ -557,19 +544,13 @@ def call_run_chk(args_array, func_dict, master, slaves, **kwargs):
                 func_dict[y](master, slaves, form=frmt, ofile=outfile,
                              db_tbl=db_tbl, class_cfg=mongo_cfg)
 
-    # Run each option in arg array.
+    # Run for each option in arg array.
     else:
 
         # Intersect args_array & func_dict to find which functions to call.
         for opt in set(args_array.keys()) & set(func_dict.keys()):
             func_dict[opt](master, slaves, form=frmt, ofile=outfile,
                            db_tbl=db_tbl, class_cfg=mongo_cfg)
-
-#        for w in args_array:
-#
-#            if w in func_dict:
-#                func_dict[w](master, slaves, form=frmt, ofile=outfile,
-#                             db_tbl=db_tbl, class_cfg=mongo_cfg)
 
 
 def run_program(args_array, func_dict, **kwargs):
