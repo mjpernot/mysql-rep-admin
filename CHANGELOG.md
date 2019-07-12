@@ -10,6 +10,7 @@ Breaking Change
 - Modified program to use the mysql_class v4.0.0 version.  The v4.0.0 replaces the MySQLdb support library with the mysql.connector support library.
 
 ### Changed
+- run_program:  Added **kwargs to argument list.
 - call_run_chk:  Added **kwargs to argument list.
 - Changed variable names to standard naming convention.
 - chk_slv_time:  Changed output to camelCase.
