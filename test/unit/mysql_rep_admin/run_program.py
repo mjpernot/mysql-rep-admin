@@ -71,25 +71,33 @@ class SlaveRep(object):
     """
 
     def __init__(self, name=None, sid=None, user=None, passwd=None,
-                 serv_os=None, host=None, port=None, cfg_file=None):
+                 serv_os=None, host=None, **kwargs):
 
         """Method:  __init__
 
         Description:  Class initialization.
 
         Arguments:
-            name -> Stub holder.
-            sid -> Stub holder.
-            user -> Stub holder.
-            passwd -> Stub holder.
-            serv_os -> Stub holder.
-            host -> Stub holder.
-            port -> Stub holder.
-            cfg_file -> Stub holder.
+            (input) name -> Stub holder.
+            (input) sid -> Stub holder.
+            (input) user -> Stub holder.
+            (input) passwd -> Stub holder.
+            (input) serv_os -> Stub holder.
+            (input) host -> Stub holder.
+            (input) **kwargs:
+                port -> Stub holder.
+                cfg_file -> Stub holder.
 
         """
 
         self.name = name
+        self.sid = sid
+        self.user = user
+        self.passwd = passwd
+        self.serv_os = serv_os
+        self.host = host
+        self.port = kwargs.get("port", None)
+        self.cfg_file = kwargs.get("cfg_file", None)
         self.conn = True
 
     def connect(self):
@@ -122,25 +130,33 @@ class MasterRep(object):
     """
 
     def __init__(self, name=None, sid=None, user=None, passwd=None,
-                 serv_os=None, host=None, port=None, cfg_file=None):
+                 serv_os=None, host=None, **kwargs):
 
         """Method:  __init__
 
         Description:  Class initialization.
 
         Arguments:
-            name -> Stub holder.
-            sid -> Stub holder.
-            user -> Stub holder.
-            passwd -> Stub holder.
-            serv_os -> Stub holder.
-            host -> Stub holder.
-            port -> Stub holder.
-            cfg_file -> Stub holder.
+            (input) name -> Stub holder.
+            (input) sid -> Stub holder.
+            (input) user -> Stub holder.
+            (input) passwd -> Stub holder.
+            (input) serv_os -> Stub holder.
+            (input) host -> Stub holder.
+            (input) **kwargs:
+                port -> Stub holder.
+                cfg_file -> Stub holder.
 
         """
 
         self.name = name
+        self.sid = sid
+        self.user = user
+        self.passwd = passwd
+        self.serv_os = serv_os
+        self.host = host
+        self.port = kwargs.get("port", None)
+        self.cfg_file = kwargs.get("cfg_file", None)
 
     def connect(self):
 
