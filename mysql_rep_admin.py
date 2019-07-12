@@ -102,6 +102,8 @@ from __future__ import print_function
 import sys
 import time
 import datetime
+import socket
+import getpass
 
 # Third party
 import json
@@ -111,6 +113,7 @@ import lib.arg_parser as arg_parser
 import lib.gen_libs as gen_libs
 import lib.cmds_gen as cmds_gen
 import lib.machine as machine
+import lib.gen_class as gen_class
 import mysql_lib.mysql_class as mysql_class
 import mongo_lib.mongo_libs as mongo_libs
 import version
@@ -525,6 +528,27 @@ def _chk_other(skip, tmp_tbl, retry, name, **kwargs):
 
         if int(retry) > 0:
             print("Retried Transaction Count:  {0}".format(retry))
+
+
+def setup_mail(to_line, subj=None, frm_line=None, **kwargs):
+
+    """Function:  setup_mail
+
+    Description:  Initialize a mail instance.  Provide 'from line' if one is
+        not passed.
+
+    Arguments:
+        (input) to_line -> Mail to line.
+        (input) subj -> Mail subject line.
+        (input) frm_line -> Mail from line.
+        (output) Mail instance.
+
+    """
+
+    if not frm_line:
+        frm_line = getpass.getuser() + "@" + socket.gethostname()
+
+    return gen_class.Mail(to_line, subj, frm_line)
 
 
 def call_run_chk(args_array, func_dict, master, slaves, **kwargs):

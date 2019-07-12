@@ -43,6 +43,7 @@ Breaking Change
 - run_program:  Fixed problem with mutable default arguments issue.
 - 
 ### Added
+- setup_mail:  Initialize a mail instance.
 - \_process_time_lag:  Private function for chk_slv_time().  Process time lag for slave.
 - \_chk_other:  Private function for chk_slv_other().  Print any possible problems found.
 
