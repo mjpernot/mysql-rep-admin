@@ -11,7 +11,7 @@
         time lag between master and slave, errors detected within
         replication, binary log positions, and replication configuration
         status.  The program is setup to monitor between a master
-        database and multiple slave (replica) databases.
+        database and multiple slave databases.
 
     Usage:
         mysql_rep_admin.py -d path {-c file | -s path/file} [-p path
@@ -485,7 +485,7 @@ def chk_slv_other(master, slaves, **kwargs):
         print("\nchk_slv_other:  Warning:  No Slave instance detected.")
 
 
-def call_run_chk(args_array, func_dict, master, slaves):
+def call_run_chk(args_array, func_dict, master, slaves, **kwargs):
 
     """Function:  call_run_chk
 
