@@ -469,20 +469,50 @@ def chk_slv_other(master, slaves, **kwargs):
             skip, tmp_tbl, retry = slv.get_others()
             name = slv.get_name()
 
-            if skip > 0 or int(tmp_tbl) > 5 or int(retry) > 0:
-                print("\nSlave: {0}".format(name))
+            _chk_other(skip, tmp_tbl, retry, name)
 
-                if skip > 0:
-                    print("Skip Count:  {0}".format(skip))
-
-                if int(tmp_tbl) > 5:
-                    print("Temp Table Count:  {0}".format(tmp_tbl))
-
-                if int(retry) > 0:
-                    print("Retried Transaction Count:  {0}".format(retry))
+#            if skip > 0 or int(tmp_tbl) > 5 or int(retry) > 0:
+#                print("\nSlave: {0}".format(name))
+#
+#                if skip > 0:
+#                    print("Skip Count:  {0}".format(skip))
+#
+#                if int(tmp_tbl) > 5:
+#                    print("Temp Table Count:  {0}".format(tmp_tbl))
+#
+#                if int(retry) > 0:
+#                    print("Retried Transaction Count:  {0}".format(retry))
 
     else:
         print("\nchk_slv_other:  Warning:  No Slave instance detected.")
+
+
+def _chk_other(skip, tmp_tbl, retry, name, **kwargs):
+
+    """Function:  _chk_other
+
+    Description:  Private function for chk_slv_other().  Print any possible
+        problems found.
+
+    Arguments:
+        skip -> Mysql's skip count.
+        tmp_tbl -> Mysql's temp tables created count.
+        retry -> Mysql's retry count.
+        name -> Name of Mysql server.
+
+    """
+
+    if skip > 0 or int(tmp_tbl) > 5 or int(retry) > 0:
+        print("\nSlave: {0}".format(name))
+
+        if skip > 0:
+            print("Skip Count:  {0}".format(skip))
+
+        if int(tmp_tbl) > 5:
+            print("Temp Table Count:  {0}".format(tmp_tbl))
+
+        if int(retry) > 0:
+            print("Retried Transaction Count:  {0}".format(retry))
 
 
 def call_run_chk(args_array, func_dict, master, slaves, **kwargs):
