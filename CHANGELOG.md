@@ -10,6 +10,7 @@ Breaking Change
 - Modified program to use the mysql_class v4.0.0 version.  The v4.0.0 replaces the MySQLdb support library with the mysql.connector support library.
 
 ### Changed
+- chk_slv_time:  Removed "mongo_libs.json_prt_ins_2_db" and replaced with own internal code to do the same thing.
 - chk_slv_other:  Replaced section of code with call to _chk_other.
 - call_run_chk:  Intersect args_array & func_dict to run options.
 - main:  Refactored initial program checks.
