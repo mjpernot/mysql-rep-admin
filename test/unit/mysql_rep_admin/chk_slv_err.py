@@ -110,7 +110,7 @@ class SlaveRep(object):
         """
 
         return self.io, self.sql, self.io_msg, self.sql_msg, self.io_time, \
-               self.sql_time
+            self.sql_time
 
     def get_name(self):
 

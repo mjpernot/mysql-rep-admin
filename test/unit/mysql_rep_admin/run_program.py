@@ -272,7 +272,7 @@ class UnitTest(unittest.TestCase):
         mock_slv.return_value = SlaveRep()
 
         self.assertFalse(mysql_rep_admin.run_program(self.args_array,
-                                                      self.func_dict))
+                                                     self.func_dict))
 
 
 if __name__ == "__main__":

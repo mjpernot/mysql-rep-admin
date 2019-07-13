@@ -199,8 +199,11 @@ class UnitTest(unittest.TestCase):
         mock_write.return_value = True
 
         self.assertFalse(mysql_rep_admin.chk_slv_time(self.master,
-            [self.slave], form="JSON", class_cfg="Cfg", db_tbl="db:tbl",
-            ofile="FileName"))
+                                                      [self.slave],
+                                                      form="JSON",
+                                                      class_cfg="Cfg",
+                                                      db_tbl="db:tbl",
+                                                      ofile="FileName"))
 
     @mock.patch("mysql_rep_admin.time.sleep")
     def test_std_no_lag(self, mock_sleep):
@@ -214,7 +217,7 @@ class UnitTest(unittest.TestCase):
         """
 
         mock_sleep.return_value = True
-        self.slave = SlaveRep(lag_time=None)        
+        self.slave = SlaveRep(lag_time=None)
 
         self.assertFalse(mysql_rep_admin.chk_slv_time(self.master,
                                                       [self.slave]))
