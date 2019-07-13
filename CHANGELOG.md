@@ -4,12 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
-## [3.0.0] - 2019-07-12
+## [3.0.0] - 2019-07-13
 Breaking Change
 
 - Modified program to use the mysql_class v4.0.0 version.  The v4.0.0 replaces the MySQLdb support library with the mysql.connector support library.
 
 ### Changed
+- main:  Added '-t' and '-u' options to allow for email capability for some options.
 - chk_slv_time:  Replaced section of code with call to \_process_time_lag.
 - chk_slv_time:  Removed "mongo_libs.json_prt_ins_2_db" and replaced with own internal code to do the same thing.
 - chk_slv_other:  Replaced section of code with call to \_chk_other.

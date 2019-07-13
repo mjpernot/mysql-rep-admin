@@ -16,7 +16,8 @@
     Usage:
         mysql_rep_admin.py -d path {-c file | -s path/file} [-p path
             | -C | -S | -B | -D | -T | -E | -A | -O | -o dir_path/file]
-            -f {JSON|standard | -b db:coll | -m file} [-v | -h]
+            -f {JSON|standard | -b db:coll | -m file}
+            [-t ToEmail {ToEmail2 ToEmail3 ...} {-u SubjectLine}] [-v | -h]
 
     Arguments:
         -d dir path => Directory path to the config files (-c and -s).
@@ -42,6 +43,10 @@
         -m file => Mongo config file.  Is loaded as a python, do not
             include the .py extension with the name.
         -p dir_path => Directory path to the mysql binary programs.
+        -t to_email_addresses => Enables emailing capability for an option if
+            the option allows it.  Sends output to one or more email addresses.
+        -u subject_line => Subject line of email.  Optional, will create own
+            subject line if one is not provided.
         -v => Display version of this program.
         -h => Help and usage message.
 
@@ -679,14 +684,16 @@ def main():
     func_dict = {"-A": ["-C", "-S", "-E", "-T", "-O"], "-B": rpt_mst_log,
                  "-D": rpt_slv_log, "-C": chk_mst_log, "-S": chk_slv_thr,
                  "-E": chk_slv_err, "-T": chk_slv_time, "-O": chk_slv_other}
-    opt_con_req_list = {"-b": ["-m"]}
+    opt_con_req_list = {"-b": ["-m"], "-u": ["-t"]}
     opt_def_dict = {"-f": "standard", "-b": "sysmon:mysql_rep_lag"}
+    opt_multi_list = ["-u", "-t"]
     opt_or_dict_list = {"-c": ["-s"]}
     opt_req_list = ["-d"]
-    opt_val_list = ["-d", "-c", "-p", "-s", "-f", "-o", "-b", "-m"]
+    opt_val_list = ["-d", "-c", "-p", "-s", "-f", "-o", "-b", "-m", "-u", "-t"]
 
     # Process argument list from command line.
-    args_array = arg_parser.arg_parse2(sys.argv, opt_val_list, opt_def_dict)
+    args_array = arg_parser.arg_parse2(sys.argv, opt_val_list, opt_def_dict,
+                                       multi_val=opt_multi_list)
 
     if not gen_libs.help_func(args_array, __version__, help_message) \
        and arg_parser.arg_req_or_lst(args_array, opt_or_dict_list) \
