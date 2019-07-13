@@ -48,6 +48,7 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp -> Unit testing initilization.
+        test_with_subj_list -> Test with subject line being a list.
         test_with_from_line -> Test with from line passed.
         test_no_from_line -> Test with no from line passed.
 
@@ -67,6 +68,22 @@ class UnitTest(unittest.TestCase):
         self.subj = "subject_line"
         self.frm_line = "from_email_address"
 
+    def test_with_subj_list(self):
+
+        """Function:  test_with_subj_list
+
+        Description:  Test with subject line being a list.
+
+        Arguments:
+
+        """
+
+        mail = mysql_rep_admin.setup_mail([self.to_line], [self.subj],
+                                          self.frm_line)
+
+        self.assertEqual((mail.to, mail.subj, mail.frm),
+                         ([self.to_line], [self.subj], self.frm_line))
+
     def test_with_from_line(self):
 
         """Function:  test_with_from_line
@@ -77,11 +94,11 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mail = mysql_rep_admin.setup_mail(self.to_line, self.subj,
+        mail = mysql_rep_admin.setup_mail([self.to_line], [self.subj],
                                           self.frm_line)
 
         self.assertEqual((mail.to, mail.subj, mail.frm),
-                         (self.to_line, self.subj, self.frm_line))
+                         ([self.to_line], [self.subj], self.frm_line))
 
     def test_no_from_line(self):
 
@@ -93,11 +110,11 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mail = mysql_rep_admin.setup_mail(self.to_line)
+        mail = mysql_rep_admin.setup_mail([self.to_line])
         from_line = getpass.getuser() + "@" + socket.gethostname()
 
         self.assertEqual((mail.to, mail.subj, mail.frm),
-                         (self.to_line, None, from_line))
+                         ([self.to_line], None, from_line))
 
 
 if __name__ == "__main__":
