@@ -10,6 +10,7 @@ Breaking Change
 - Modified program to use the mysql_class v4.0.0 version.  The v4.0.0 replaces the MySQLdb support library with the mysql.connector support library.
 
 ### Changed
+- chk_slv_time:  Replaced section of code with call to \_process_json.
 - chk_slv_time:  Added capability to mail out JSON formatted data.
 - call_run_chk:  Added setup of mail instance and passing mail instance to functions.
 - main:  Added '-t' and '-u' options to allow for email capability for some options.
@@ -46,6 +47,7 @@ Breaking Change
 - run_program:  Fixed problem with mutable default arguments issue.
 - 
 ### Added
+- \_process_json:  Private function for chk_slv_time().  Process JSON data.
 - setup_mail:  Initialize a mail instance.
 - \_process_time_lag:  Private function for chk_slv_time().  Process time lag for slave.
 - \_chk_other:  Private function for chk_slv_other().  Print any possible problems found.
