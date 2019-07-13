@@ -10,6 +10,7 @@ Breaking Change
 - Modified program to use the mysql_class v4.0.0 version.  The v4.0.0 replaces the MySQLdb support library with the mysql.connector support library.
 
 ### Changed
+- chk_slv_time:  Added capability to mail out JSON formatted data.
 - call_run_chk:  Added setup of mail instance and passing mail instance to functions.
 - main:  Added '-t' and '-u' options to allow for email capability for some options.
 - chk_slv_time:  Replaced section of code with call to \_process_time_lag.

@@ -419,6 +419,7 @@ def chk_slv_time(master, slaves, **kwargs):
 
     slaves = list(slaves)
     frmt = kwargs.get("form", "standard")
+    mail = kwargs.get("mail", None)
 
     if frmt == "JSON":
         outdata = {"application": "MySQL Replication",
@@ -454,6 +455,10 @@ def chk_slv_time(master, slaves, **kwargs):
 
         if ofile:
             gen_libs.write_file(ofile, "w", jdata)
+
+        if mail:
+            mail.add_2_msg(jdata)
+            mail.send_mail()
 
 
 def _process_time_lag(slv, time_lag, name, frmt, **kwargs):
