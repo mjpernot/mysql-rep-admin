@@ -414,6 +414,7 @@ def chk_slv_time(master, slaves, **kwargs):
             ofile -> file name - Name of output file.
             db_tbl -> database:collection - Name of db and collection.
             class_cfg -> Server class configuration settings.
+            mail -> Mail instance.
 
     """
 
