@@ -71,25 +71,33 @@ class SlaveRep(object):
     """
 
     def __init__(self, name=None, sid=None, user=None, passwd=None,
-                 serv_os=None, host=None, port=None, cfg_file=None):
+                 serv_os=None, **kwargs):
 
         """Method:  __init__
 
         Description:  Class initialization.
 
         Arguments:
-            name -> Stub holder.
-            sid -> Stub holder.
-            user -> Stub holder.
-            passwd -> Stub holder.
-            serv_os -> Stub holder.
-            host -> Stub holder.
-            port -> Stub holder.
-            cfg_file -> Stub holder.
+            (input) name -> Stub holder.
+            (input) sid -> Stub holder.
+            (input) user -> Stub holder.
+            (input) passwd -> Stub holder.
+            (input) serv_os -> Stub holder.
+            (input) **kwargs:
+                port -> Stub holder.
+                cfg_file -> Stub holder.
+                host -> Stub holder.
 
         """
 
         self.name = name
+        self.sid = sid
+        self.user = user
+        self.passwd = passwd
+        self.serv_os = serv_os
+        self.host = kwargs.get("host", None)
+        self.port = kwargs.get("port", None)
+        self.cfg_file = kwargs.get("cfg_file", None)
         self.conn = True
 
     def connect(self):
@@ -122,25 +130,33 @@ class MasterRep(object):
     """
 
     def __init__(self, name=None, sid=None, user=None, passwd=None,
-                 serv_os=None, host=None, port=None, cfg_file=None):
+                 serv_os=None, **kwargs):
 
         """Method:  __init__
 
         Description:  Class initialization.
 
         Arguments:
-            name -> Stub holder.
-            sid -> Stub holder.
-            user -> Stub holder.
-            passwd -> Stub holder.
-            serv_os -> Stub holder.
-            host -> Stub holder.
-            port -> Stub holder.
-            cfg_file -> Stub holder.
+            (input) name -> Stub holder.
+            (input) sid -> Stub holder.
+            (input) user -> Stub holder.
+            (input) passwd -> Stub holder.
+            (input) serv_os -> Stub holder.
+            (input) **kwargs:
+                port -> Stub holder.
+                cfg_file -> Stub holder.
+                host -> Stub holder.
 
         """
 
         self.name = name
+        self.sid = sid
+        self.user = user
+        self.passwd = passwd
+        self.serv_os = serv_os
+        self.host = kwargs.get("host", None)
+        self.port = kwargs.get("port", None)
+        self.cfg_file = kwargs.get("cfg_file", None)
 
     def connect(self):
 
@@ -256,7 +272,7 @@ class UnitTest(unittest.TestCase):
         mock_slv.return_value = SlaveRep()
 
         self.assertFalse(mysql_rep_admin.run_program(self.args_array,
-                                                      self.func_dict))
+                                                     self.func_dict))
 
 
 if __name__ == "__main__":

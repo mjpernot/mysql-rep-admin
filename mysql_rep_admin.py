@@ -11,12 +11,13 @@
         time lag between master and slave, errors detected within
         replication, binary log positions, and replication configuration
         status.  The program is setup to monitor between a master
-        database and multiple slave (replica) databases.
+        database and multiple slave databases.
 
     Usage:
         mysql_rep_admin.py -d path {-c file | -s path/file} [-p path
             | -C | -S | -B | -D | -T | -E | -A | -O | -o dir_path/file]
-            -f {JSON|standard | -b db:coll | -m file} [-v | -h]
+            -f {JSON|standard | -b db:coll | -m file}
+            [-t ToEmail {ToEmail2 ToEmail3 ...} {-u SubjectLine}] [-v | -h]
 
     Arguments:
         -d dir path => Directory path to the config files (-c and -s).
@@ -42,6 +43,10 @@
         -m file => Mongo config file.  Is loaded as a python, do not
             include the .py extension with the name.
         -p dir_path => Directory path to the mysql binary programs.
+        -t to_email_addresses => Enables emailing capability for an option if
+            the option allows it.  Sends output to one or more email addresses.
+        -u subject_line => Subject line of email.  Optional, will create own
+            subject line if one is not provided.
         -v => Display version of this program.
         -h => Help and usage message.
 
@@ -102,7 +107,8 @@ from __future__ import print_function
 import sys
 import time
 import datetime
-import os
+import socket
+import getpass
 
 # Third party
 import json
@@ -112,6 +118,7 @@ import lib.arg_parser as arg_parser
 import lib.gen_libs as gen_libs
 import lib.cmds_gen as cmds_gen
 import lib.machine as machine
+import lib.gen_class as gen_class
 import mysql_lib.mysql_class as mysql_class
 import mongo_lib.mongo_libs as mongo_libs
 import version
@@ -216,7 +223,7 @@ def chk_slv(slave, **kwargs):
     mst_file, relay_file, read_pos, exec_pos = slave.get_log_info()
     name = slave.get_name()
 
-    # If slave's master info does not equal slave's relay info.
+    # Slave's master info doesn't match slave's relay info.
     if mst_file != relay_file or read_pos != exec_pos:
         print("\nSlave: {0}".format(name))
         print("Warning:  Slave might be lagging in execution of log.")
@@ -256,7 +263,7 @@ def chk_mst_log(master, slaves, **kwargs):
             mst_file, relay_file, read_pos, exec_pos = slv.get_log_info()
             name = slv.get_name()
 
-            # If master's log file or position doesn't match slave's log info.
+            # Master's log file or position doesn't match slave's log info.
             if fname != mst_file or log_pos != read_pos:
 
                 print("\nWarning:  Slave lagging in reading master log.")
@@ -302,17 +309,17 @@ def chk_slv_thr(master, slaves, **kwargs):
             thr, io_thr, sql_thr, run = slv.get_thr_stat()
             name = slv.get_name()
 
-            # Check slave IO state and slave running attributes.
+            # Slave IO and run state.
             if not thr or not gen_libs.is_true(run):
                 print("\nSlave: {0}".format(name))
                 print("Error:  Slave IO/SQL Threads are down.")
 
-            # Check slave IO running attribute.
+            # Slave IO thread.
             elif not gen_libs.is_true(io_thr):
                 print("\nSlave: {0}".format(name))
                 print("Error:  Slave IO Thread is down.")
 
-            # Check slave SQL running attribute.
+            # Slave SQL thread.
             elif not gen_libs.is_true(sql_thr):
                 print("\nSlave: {0}".format(name))
                 print("Error:  Slave SQL Thread is down.")
@@ -343,7 +350,7 @@ def chk_slv_err(master, slaves, **kwargs):
             io, sql, io_msg, sql_msg, io_time, sql_time = slv.get_err_stat()
             name = slv.get_name()
 
-            # Is there a IO error
+            # IO error
             if io:
                 print("\nSlave:\t{0}".format(name))
                 print("IO Error Detected:\t{0}".format(io))
@@ -351,7 +358,7 @@ def chk_slv_err(master, slaves, **kwargs):
 
                 print("\tIO Timestamp:\t{0}".format(io_time))
 
-            # Is there a SQL error
+            # SQL error
             if sql:
                 print("\nSlave:\t{0}".format(name))
                 print("SQL Error Detected:\t{0}".format(sql))
@@ -386,9 +393,8 @@ def add_miss_slaves(master, outdata, **kwargs):
     for y in outdata["slaves"]:
         slv_list.append(y["name"])
 
-    # Loop on slaves that are in master slave list, but not in all slave list.
+    # Add slaves from the slave list that are not in the master's slave list.
     for x in [val for val in all_list if val not in slv_list]:
-        # Add missing slave to all slave list.
         outdata["slaves"].append({"name": x, "lagTime": None})
 
     return outdata
@@ -408,6 +414,7 @@ def chk_slv_time(master, slaves, **kwargs):
             ofile -> file name - Name of output file.
             db_tbl -> database:collection - Name of db and collection.
             class_cfg -> Server class configuration settings.
+            mail -> Mail instance.
 
     """
 
@@ -426,15 +433,7 @@ def chk_slv_time(master, slaves, **kwargs):
         for slv in slaves:
             time_lag = slv.get_time()
             name = slv.get_name()
-
-            if time_lag:
-                time.sleep(5)
-                slv.upd_slv_time()
-                time_lag = slv.get_time()
-
-                if time_lag and frmt == "standard":
-                    print("\nSlave:  {0}".format(name))
-                    print("\tTime Lag:  {0}".format(time_lag))
+            _process_time_lag(slv, time_lag, name, frmt)
 
             if frmt == "JSON":
                 outdata["slaves"].append({"name": slv.name,
@@ -445,7 +444,66 @@ def chk_slv_time(master, slaves, **kwargs):
 
     if frmt == "JSON":
         outdata = add_miss_slaves(master, outdata)
-        mongo_libs.json_prt_ins_2_db(outdata, **kwargs)
+        _process_json(outdata, **kwargs)
+
+
+def _process_json(outdata, **kwargs):
+
+    """Function:  _process_json
+
+    Description:  Private function for chk_slv_time().  Process JSON data.
+
+    Arguments:
+        (input) outdata -> JSON document of Check Slave Time output.
+        (input) **kwargs:
+            ofile -> file name - Name of output file.
+            db_tbl -> database:collection - Name of db and collection.
+            class_cfg -> Server class configuration settings.
+            mail -> Mail instance.
+
+    """
+
+    jdata = json.dumps(outdata, indent=4)
+    mongo_cfg = kwargs.get("class_cfg", None)
+    db_tbl = kwargs.get("db_tbl", None)
+    ofile = kwargs.get("ofile", None)
+    mail = kwargs.get("mail", None)
+
+    if mongo_cfg and db_tbl:
+        db, tbl = db_tbl.split(":")
+        mongo_libs.ins_doc(mongo_cfg, db, tbl, outdata)
+
+    if ofile:
+        gen_libs.write_file(ofile, "w", jdata)
+
+    if mail:
+        mail.add_2_msg(jdata)
+        mail.send_mail()
+
+
+def _process_time_lag(slv, time_lag, name, frmt, **kwargs):
+
+    """Function:  _process_time_lag
+
+    Description:  Private function for chk_slv_time().  Process time lag for
+        slave.
+
+    Arguments:
+        (input) slv -> Slave instance.
+        (input) time_lag -> Time lag between master and slave.
+        (input) name -> Name of slave.
+        (input) frmt -> JSON|standard - JSON format or standard output.
+
+    """
+
+    if time_lag:
+        time.sleep(5)
+        slv.upd_slv_time()
+        time_lag = slv.get_time()
+
+        if time_lag and frmt == "standard":
+            print("\nSlave:  {0}".format(name))
+            print("\tTime Lag:  {0}".format(time_lag))
 
 
 def chk_slv_other(master, slaves, **kwargs):
@@ -468,24 +526,67 @@ def chk_slv_other(master, slaves, **kwargs):
         for slv in slaves:
             skip, tmp_tbl, retry = slv.get_others()
             name = slv.get_name()
-
-            if skip > 0 or int(tmp_tbl) > 5 or int(retry) > 0:
-                print("\nSlave: {0}".format(name))
-
-                if skip > 0:
-                    print("Skip Count:  {0}".format(skip))
-
-                if int(tmp_tbl) > 5:
-                    print("Temp Table Count:  {0}".format(tmp_tbl))
-
-                if int(retry) > 0:
-                    print("Retried Transaction Count:  {0}".format(retry))
+            _chk_other(skip, tmp_tbl, retry, name)
 
     else:
         print("\nchk_slv_other:  Warning:  No Slave instance detected.")
 
 
-def call_run_chk(args_array, func_dict, master, slaves):
+def _chk_other(skip, tmp_tbl, retry, name, **kwargs):
+
+    """Function:  _chk_other
+
+    Description:  Private function for chk_slv_other().  Print any possible
+        problems found.
+
+    Arguments:
+        (input) skip -> Mysql's skip count.
+        (input) tmp_tbl -> Mysql's temp tables created count.
+        (input) retry -> Mysql's retry count.
+        (input) name -> Name of Mysql server.
+
+    """
+
+    if skip > 0 or int(tmp_tbl) > 5 or int(retry) > 0:
+        print("\nSlave: {0}".format(name))
+
+        if skip > 0:
+            print("Skip Count:  {0}".format(skip))
+
+        if int(tmp_tbl) > 5:
+            print("Temp Table Count:  {0}".format(tmp_tbl))
+
+        if int(retry) > 0:
+            print("Retried Transaction Count:  {0}".format(retry))
+
+
+def setup_mail(to_line, subj=None, frm_line=None, **kwargs):
+
+    """Function:  setup_mail
+
+    Description:  Initialize a mail instance.  Provide 'from line' if one is
+        not passed.
+
+    Arguments:
+        (input) to_line -> Mail to line.
+        (input) subj -> Mail subject line.
+        (input) frm_line -> Mail from line.
+        (output) Mail instance.
+
+    """
+
+    to_line = list(to_line)
+
+    if isinstance(subj, list):
+        subj = list(subj)
+
+    if not frm_line:
+        frm_line = getpass.getuser() + "@" + socket.gethostname()
+
+    return gen_class.Mail(to_line, subj, frm_line)
+
+
+def call_run_chk(args_array, func_dict, master, slaves, **kwargs):
 
     """Function:  call_run_chk
 
@@ -509,35 +610,38 @@ def call_run_chk(args_array, func_dict, master, slaves):
     outfile = args_array.get("-o", None)
     db_tbl = args_array.get("-b", None)
     mongo_cfg = None
+    mail = None
 
     if args_array.get("-m", None):
         mongo_cfg = gen_libs.load_module(args_array["-m"], args_array["-d"])
+
+    if args_array.get("-t", None):
+        mail = setup_mail(args_array.get("-t"),
+                          subj=args_array.get("-u", None))
 
     if "-A" in args_array:
 
         for x in func_dict["-A"]:
             func_dict[x](master, slaves, form=frmt, ofile=outfile,
-                         db_tbl=db_tbl, class_cfg=mongo_cfg)
+                         db_tbl=db_tbl, class_cfg=mongo_cfg, mail=mail)
 
         for y in args_array:
 
-            # If argument is in func_dict dictionary and not under the ALL
-            #   option and is not the ALL option itself.
+            # The option is in func_dict but not under the ALL option and is
+            #   not the ALL option itself.
             if y in func_dict and y not in func_dict["-A"] and y != "-A":
                 func_dict[y](master, slaves, form=frmt, ofile=outfile,
-                             db_tbl=db_tbl, class_cfg=mongo_cfg)
+                             db_tbl=db_tbl, class_cfg=mongo_cfg, mail=mail)
 
-    # Else run each option in argument list.
     else:
 
-        for w in args_array:
+        # Intersect args_array & func_dict to find which functions to call.
+        for opt in set(args_array.keys()) & set(func_dict.keys()):
+            func_dict[opt](master, slaves, form=frmt, ofile=outfile,
+                           db_tbl=db_tbl, class_cfg=mongo_cfg, mail=mail)
 
-            if w in func_dict:
-                func_dict[w](master, slaves, form=frmt, ofile=outfile,
-                             db_tbl=db_tbl, class_cfg=mongo_cfg)
 
-
-def run_program(args_array, func_dict):
+def run_program(args_array, func_dict, **kwargs):
 
     """Function:  run_program
 
@@ -615,23 +719,25 @@ def main():
     func_dict = {"-A": ["-C", "-S", "-E", "-T", "-O"], "-B": rpt_mst_log,
                  "-D": rpt_slv_log, "-C": chk_mst_log, "-S": chk_slv_thr,
                  "-E": chk_slv_err, "-T": chk_slv_time, "-O": chk_slv_other}
-    opt_con_req_list = {"-b": ["-m"]}
+    opt_con_req_list = {"-b": ["-m"], "-u": ["-t"]}
     opt_def_dict = {"-f": "standard", "-b": "sysmon:mysql_rep_lag"}
+    opt_multi_list = ["-u", "-t"]
     opt_or_dict_list = {"-c": ["-s"]}
     opt_req_list = ["-d"]
-    opt_val_list = ["-d", "-c", "-p", "-s", "-f", "-o", "-b", "-m"]
+    opt_val_list = ["-d", "-c", "-p", "-s", "-f", "-o", "-b", "-m", "-u", "-t"]
 
     # Process argument list from command line.
-    args_array = arg_parser.arg_parse2(sys.argv, opt_val_list, opt_def_dict)
+    args_array = arg_parser.arg_parse2(sys.argv, opt_val_list, opt_def_dict,
+                                       multi_val=opt_multi_list)
 
-    if not gen_libs.help_func(args_array, __version__, help_message):
-        if arg_parser.arg_req_or_lst(args_array, opt_or_dict_list) \
-           and not arg_parser.arg_require(args_array, opt_req_list) \
-           and arg_parser.arg_cond_req(args_array, opt_con_req_list) \
-           and not arg_parser.arg_dir_chk_crt(args_array, dir_chk_list) \
-           and not arg_parser.arg_file_chk(args_array, file_chk_list,
-                                           file_crt_list):
-            run_program(args_array, func_dict)
+    if not gen_libs.help_func(args_array, __version__, help_message) \
+       and arg_parser.arg_req_or_lst(args_array, opt_or_dict_list) \
+       and not arg_parser.arg_require(args_array, opt_req_list) \
+       and arg_parser.arg_cond_req(args_array, opt_con_req_list) \
+       and not arg_parser.arg_dir_chk_crt(args_array, dir_chk_list) \
+       and not arg_parser.arg_file_chk(args_array, file_chk_list,
+                                       file_crt_list):
+        run_program(args_array, func_dict)
 
 
 if __name__ == "__main__":

@@ -95,7 +95,6 @@ class SlaveRep(object):
         self.skip = skip
         self.tmp_tbl = tmp_tbl
         self.retry = retry
-        
 
     def get_name(self):
 
@@ -177,7 +176,7 @@ class UnitTest(unittest.TestCase):
 
         with gen_libs.no_std_out():
             self.assertFalse(mysql_rep_admin.chk_slv_other(self.master,
-                                                          [self.slave]))
+                                                           [self.slave]))
 
 
 if __name__ == "__main__":

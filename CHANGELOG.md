@@ -4,12 +4,23 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
-## [3.0.0] - 2019-07-11
+## [3.0.0] - 2019-07-13
 Breaking Change
 
 - Modified program to use the mysql_class v4.0.0 version.  The v4.0.0 replaces the MySQLdb support library with the mysql.connector support library.
 
 ### Changed
+- chk_slv_time:  Replaced section of code with call to \_process_json.
+- chk_slv_time:  Added capability to mail out JSON formatted data.
+- call_run_chk:  Added setup of mail instance and passing mail instance to functions.
+- main:  Added '-t' and '-u' options to allow for email capability for some options.
+- chk_slv_time:  Replaced section of code with call to \_process_time_lag.
+- chk_slv_time:  Removed "mongo_libs.json_prt_ins_2_db" and replaced with own internal code to do the same thing.
+- chk_slv_other:  Replaced section of code with call to \_chk_other.
+- call_run_chk:  Intersect args_array & func_dict to run options.
+- main:  Refactored initial program checks.
+- run_program:  Added \*\*kwargs to argument list.
+- call_run_chk:  Added \*\*kwargs to argument list.
 - Changed variable names to standard naming convention.
 - chk_slv_time:  Changed output to camelCase.
 - add_miss_slaves:  Changed output to camelCase.
@@ -19,7 +30,7 @@ Breaking Change
 - run_program:  Replaced the code to load the slave files into an array with a call to cmds_gen.create_cfg_array().
 
 ### Removed
-- Removed the imported module gen_libs.errors.
+- Removed the imported modules os and gen_libs.errors.
 - chk_rep:  No longer being implemented.
 - rpt_srv_info:  No longer being implemented.
 
@@ -34,6 +45,12 @@ Breaking Change
 - chk_slv_other:  Fixed problem with mutable default arguments issue.
 - call_run_chk:  Fixed problem with mutable default arguments issue.
 - run_program:  Fixed problem with mutable default arguments issue.
+- 
+### Added
+- \_process_json:  Private function for chk_slv_time().  Process JSON data.
+- setup_mail:  Initialize a mail instance.
+- \_process_time_lag:  Private function for chk_slv_time().  Process time lag for slave.
+- \_chk_other:  Private function for chk_slv_other().  Print any possible problems found.
 
 
 ## [2.0.1] - 2018-12-06

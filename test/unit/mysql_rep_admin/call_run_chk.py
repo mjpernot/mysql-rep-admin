@@ -35,7 +35,7 @@ import version
 __version__ = version.__version__
 
 
-def chk_mst_log(master, slaves, form, ofile, db_tbl, class_cfg):
+def chk_mst_log(master, slaves, form, ofile, db_tbl, class_cfg, **kwargs):
 
     """Method:  chk_mst_log
 
@@ -54,7 +54,7 @@ def chk_mst_log(master, slaves, form, ofile, db_tbl, class_cfg):
     return True
 
 
-def chk_slv_thr(master, slaves, form, ofile, db_tbl, class_cfg):
+def chk_slv_thr(master, slaves, form, ofile, db_tbl, class_cfg, **kwargs):
 
     """Method:  chk_slv_thr
 
@@ -73,7 +73,7 @@ def chk_slv_thr(master, slaves, form, ofile, db_tbl, class_cfg):
     return True
 
 
-def rpt_slv_log(master, slaves, form, ofile, db_tbl, class_cfg):
+def rpt_slv_log(master, slaves, form, ofile, db_tbl, class_cfg, **kwargs):
 
     """Method:  rpt_slv_log
 
@@ -182,10 +182,12 @@ class UnitTest(unittest.TestCase):
         self.func_dict = {"-A": ["-C", "-S"], "-C": chk_mst_log,
                           "-S": chk_slv_thr, "-D": rpt_slv_log}
         self.args_array = {"-A": True, "-D": True, "-m": "Mongo", "-d": "cfg"}
-        self.args_array2 = {"-D": True, "-m": "Mongo", "-d": "cfg"}
+        self.args_array2 = {"-D": True, "-m": "Mongo", "-d": "cfg",
+                            "-t": "ToMail"}
 
+    @mock.patch("mysql_rep_admin.setup_mail")
     @mock.patch("mysql_rep_admin.gen_libs.load_module")
-    def test_single_func(self, mock_cfg):
+    def test_single_func(self, mock_cfg, mock_mail):
 
         """Function:  test_single_func
 
@@ -196,6 +198,7 @@ class UnitTest(unittest.TestCase):
         """
 
         mock_cfg.return_value = "MongoCfg"
+        mock_mail.return_value = "MailInstance"
 
         self.assertFalse(mysql_rep_admin.call_run_chk(self.args_array2,
                                                       self.func_dict,
