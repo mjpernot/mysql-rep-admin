@@ -41,9 +41,9 @@ class MasterRep(object):
 
     Description:  Class stub holder for mysql_class.MasterRep class.
 
-    Super-Class:  None
+    Super-Class:
 
-    Sub-Classes:  None
+    Sub-Classes:
 
     Methods:
         __init__ -> Class initialization.
@@ -57,7 +57,6 @@ class MasterRep(object):
         Description:  Class initialization.
 
         Arguments:
-            None
 
         """
 
@@ -70,9 +69,9 @@ class SlaveRep(object):
 
     Description:  Class stub holder for mysql_class.SlaveRep class.
 
-    Super-Class:  None
+    Super-Class:
 
-    Sub-Classes:  None
+    Sub-Classes:
 
     Methods:
         __init__ -> Class initialization.
@@ -89,7 +88,6 @@ class SlaveRep(object):
         Description:  Class initialization.
 
         Arguments:
-            None
 
         """
 
@@ -133,6 +131,62 @@ class SlaveRep(object):
         return True
 
 
+class Mail(object):
+
+    """Class:  Mail
+
+    Description:  Class stub holder for gen_class.Mail class.
+
+    Super-Class:
+
+    Sub-Classes:
+
+    Methods:
+        __init__ -> Class initialization.
+        get_time -> Stub method holder for SlaveRep.get_time.
+        get_name -> Stub method holder for SlaveRep.get_name.
+        upd_slv_time -> Stub method holder for SlaveRep.upd_slv_time.
+
+    """
+
+    def __init__(self, lag_time=1):
+
+        """Method:  __init__
+
+        Description:  Class initialization.
+
+        Arguments:
+            None
+
+        """
+
+        pass
+
+    def add_2_msg(self, data):
+
+        """Method:  add_2_msg
+
+        Description:  Stub method holder for Mail.add_2_msg.
+
+        Arguments:
+
+        """
+
+        return True
+
+    def send_mail(self):
+
+        """Method:  get_name
+
+        Description:  Stub method holder for Mail.send_mail.
+
+        Arguments:
+
+        """
+
+        return True
+
+
 class UnitTest(unittest.TestCase):
 
     """Class:  UnitTest
@@ -145,6 +199,7 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp -> Initialize testing environment.
+        test_mail -> Test sending JSON data to mail.
         test_no_slv -> Test with no slaves present.
         test_json -> Test with JSON format.
         test_std_no_lag -> Test standard out with no time lag.
@@ -164,7 +219,35 @@ class UnitTest(unittest.TestCase):
 
         self.master = MasterRep()
         self.slave = SlaveRep()
+        self.mail = Mail()
         self.outdata = {"key": "value"}
+
+    @mock.patch("mysql_rep_admin.gen_libs.write_file")
+    @mock.patch("mysql_rep_admin.mongo_libs.ins_doc")
+    @mock.patch("mysql_rep_admin.add_miss_slaves")
+    @mock.patch("mysql_rep_admin.time.sleep")
+    def test_mail(self, mock_sleep, mock_miss, mock_mongo, mock_write):
+
+        """Function:  test_mail
+
+        Description:  Test sending JSON data to mail.
+
+        Arguments:
+
+        """
+
+        mock_sleep.return_value = True
+        mock_miss.return_value = self.outdata
+        mock_mongo.return_value = True
+        mock_write.return_value = True
+
+        self.assertFalse(mysql_rep_admin.chk_slv_time(self.master,
+                                                      [self.slave],
+                                                      form="JSON",
+                                                      class_cfg="Cfg",
+                                                      db_tbl="db:tbl",
+                                                      ofile="FileName",
+                                                      mail=self.mail))
 
     def test_no_slv(self):
 
