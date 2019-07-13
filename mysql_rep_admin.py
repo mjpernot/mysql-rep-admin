@@ -550,6 +550,11 @@ def setup_mail(to_line, subj=None, frm_line=None, **kwargs):
 
     """
 
+    to_line = list(to_line)
+
+    if isinstance(subj, list):
+        subj = list(subj)
+
     if not frm_line:
         frm_line = getpass.getuser() + "@" + socket.gethostname()
 
