@@ -120,6 +120,7 @@ import lib.cmds_gen as cmds_gen
 import lib.machine as machine
 import lib.gen_class as gen_class
 import mysql_lib.mysql_class as mysql_class
+import mysql_lib.mysql_libs as mysql_libs
 import mongo_lib.mongo_libs as mongo_libs
 import version
 
@@ -672,18 +673,7 @@ def run_program(args_array, func_dict, **kwargs):
     if "-s" in args_array:
         slv_cfg = cmds_gen.create_cfg_array(args_array["-s"],
                                             cfg_path=args_array["-d"])
-
-        for slv in slv_cfg:
-            slv_inst = mysql_class.SlaveRep(slv["name"], slv["sid"],
-                                            slv["user"], slv["passwd"],
-                                            getattr(machine,
-                                                    slv["serv_os"])(),
-                                            slv["host"], int(slv["port"]),
-                                            slv["cfg_file"])
-            slv_inst.connect()
-
-            if slv_inst.conn:
-                slaves.append(slv_inst)
+        slaves = mysql_libs.create_slv_array(slv_cfg)
 
     call_run_chk(args_array, func_dict, master, slaves)
 
