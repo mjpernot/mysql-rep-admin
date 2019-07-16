@@ -4,6 +4,56 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
+## [3.0.0] - 2019-07-13
+Breaking Change
+
+- Modified program to use the mysql_class v4.0.0 version.  The v4.0.0 replaces the MySQLdb support library with the mysql.connector support library.
+
+### Changed
+- run_program:  Replaced section of code with call to mysql_libs.create_slv_array.
+- chk_slv_time:  Replaced section of code with call to \_process_json.
+- chk_slv_time:  Added capability to mail out JSON formatted data.
+- call_run_chk:  Added setup of mail instance and passing mail instance to functions.
+- main:  Added '-t' and '-u' options to allow for email capability for some options.
+- chk_slv_time:  Replaced section of code with call to \_process_time_lag.
+- chk_slv_time:  Removed "mongo_libs.json_prt_ins_2_db" and replaced with own internal code to do the same thing.
+- chk_slv_other:  Replaced section of code with call to \_chk_other.
+- call_run_chk:  Intersect args_array & func_dict to run options.
+- main:  Refactored initial program checks.
+- run_program:  Added \*\*kwargs to argument list.
+- call_run_chk:  Added \*\*kwargs to argument list.
+- Changed variable names to standard naming convention.
+- chk_slv_time:  Changed output to camelCase.
+- add_miss_slaves:  Changed output to camelCase.
+- run_program:  Modified to use the updated mysql_class module.
+- main:  Removed -I and -R arguments from the program options.
+- run_program:  Modified to use the updated mysql_class module.
+- run_program:  Replaced the code to load the slave files into an array with a call to cmds_gen.create_cfg_array().
+
+### Removed
+- Removed the imported modules os and gen_libs.errors.
+- chk_rep:  No longer being implemented.
+- rpt_srv_info:  No longer being implemented.
+
+### Fixed:
+- rpt_mst_log:  Fixed problem with mutable default arguments issue.
+- rpt_slv_log:  Fixed problem with mutable default arguments issue.
+- chk_mst_log:  Fixed problem with mutable default arguments issue.
+- chk_slv_thr:  Fixed problem with mutable default arguments issue.
+- chk_slv_err:  Fixed problem with mutable default arguments issue.
+- add_miss_slaves:  Fixed problem with mutable default arguments issue.
+- chk_slv_time:  Fixed problem with mutable default arguments issue.
+- chk_slv_other:  Fixed problem with mutable default arguments issue.
+- call_run_chk:  Fixed problem with mutable default arguments issue.
+- run_program:  Fixed problem with mutable default arguments issue.
+- 
+### Added
+- \_process_json:  Private function for chk_slv_time().  Process JSON data.
+- setup_mail:  Initialize a mail instance.
+- \_process_time_lag:  Private function for chk_slv_time().  Process time lag for slave.
+- \_chk_other:  Private function for chk_slv_other().  Print any possible problems found.
+
+
 ## [2.0.1] - 2018-12-06
 - Documentation updates.
 
@@ -35,7 +85,7 @@ Breaking Change
 - Call_Run_Chk:  Change MONGO_SVR to Mongo_Cfg to be standardized.
 - Convert program to use local libraries from ./lib directory.
 - Change single quotes to double quotes.
-- Help_Message:  Replace docstring with printing the programs __doc__.
+- Help_Message:  Replace docstring with printing the programs \_\_doc\_\_.
 
 
 ## [1.7.0] - 2016-11-04
@@ -80,7 +130,7 @@ Breaking Change
 ## [1.2.0] - 2016-03-16
 ### Changed
 - Setup_Class_Run_Chks:  Do not add slave instance to slave array if not able to connect to the database server.
-- Modified a number of function calls and added '**kwargs' to the argument list to allow the additional parameters for the "-f" and "-o" options to be passed.
+- Modified a number of function calls and added "\*\*kwargs" to the argument list to allow the additional parameters for the "-f" and "-o" options to be passed.
 - Main program:  Added sys.exit call.
 
 
