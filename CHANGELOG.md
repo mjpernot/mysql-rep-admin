@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
+## [3.1.0] - 2019-12-04
+### Added
+- Added suppress standard out option.
+
+
 ## [3.0.0] - 2019-07-13
 Breaking Change
 
