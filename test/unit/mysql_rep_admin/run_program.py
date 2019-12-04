@@ -60,10 +60,6 @@ class MasterRep(object):
 
     Description:  Class stub holder for mysql_class.MasterRep class.
 
-    Super-Class:  None
-
-    Sub-Classes:  None
-
     Methods:
         __init__ -> Class initialization.
         connect -> Stub method holder for MasterRep.connect.
@@ -118,10 +114,6 @@ class MstCfg(object):
 
     Description:  Class stub holder for gen_libs.load_module class.
 
-    Super-Class:  None
-
-    Sub-Classes:  None
-
     Methods:
         __init__ -> Class initialization.
 
@@ -134,7 +126,6 @@ class MstCfg(object):
         Description:  Class initialization.
 
         Arguments:
-            None
 
         """
 
@@ -153,10 +144,6 @@ class UnitTest(unittest.TestCase):
     """Class:  UnitTest
 
     Description:  Class which is a representation of a unit testing.
-
-    Super-Class:  unittest.TestCase
-
-    Sub-Classes:
 
     Methods:
         setUp -> Initialize testing environment.
