@@ -611,6 +611,7 @@ def call_run_chk(args_array, func_dict, master, slaves, **kwargs):
     frmt = args_array.get("-f", "standard")
     outfile = args_array.get("-o", None)
     db_tbl = args_array.get("-b", None)
+    sup_std = args_array.get("-z", False)
     mongo_cfg = None
     mail = None
 
@@ -625,7 +626,8 @@ def call_run_chk(args_array, func_dict, master, slaves, **kwargs):
 
         for x in func_dict["-A"]:
             func_dict[x](master, slaves, form=frmt, ofile=outfile,
-                         db_tbl=db_tbl, class_cfg=mongo_cfg, mail=mail)
+                         db_tbl=db_tbl, class_cfg=mongo_cfg, mail=mail,
+                         sup_std=sup_std)
 
         for y in args_array:
 
@@ -633,14 +635,16 @@ def call_run_chk(args_array, func_dict, master, slaves, **kwargs):
             #   not the ALL option itself.
             if y in func_dict and y not in func_dict["-A"] and y != "-A":
                 func_dict[y](master, slaves, form=frmt, ofile=outfile,
-                             db_tbl=db_tbl, class_cfg=mongo_cfg, mail=mail)
+                             db_tbl=db_tbl, class_cfg=mongo_cfg, mail=mail,
+                             sup_std=sup_std)
 
     else:
 
         # Intersect args_array & func_dict to find which functions to call.
         for opt in set(args_array.keys()) & set(func_dict.keys()):
             func_dict[opt](master, slaves, form=frmt, ofile=outfile,
-                           db_tbl=db_tbl, class_cfg=mongo_cfg, mail=mail)
+                           db_tbl=db_tbl, class_cfg=mongo_cfg, mail=mail,
+                           sup_std=sup_std)
 
 
 def run_program(args_array, func_dict, **kwargs):
