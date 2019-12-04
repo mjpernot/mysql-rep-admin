@@ -35,7 +35,6 @@
     - lib/cmds_gen
     - lib/arg_parser
     - lib/gen_libs
-    - lib/errors
     - lib/machine
     - mysql_lib/mysql_libs
     - mysql_lib/mysql_class
