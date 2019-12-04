@@ -201,6 +201,8 @@ class UnitTest(unittest.TestCase):
         setUp -> Initialize testing environment.
         test_mail -> Test sending JSON data to mail.
         test_no_slv -> Test with no slaves present.
+        test_json_stdout -> Test with JSON format with standard out.
+        test_json_no_stdout -> Test JSON format with standard out suppressed.
         test_json -> Test with JSON format.
         test_std_no_lag -> Test standard out with no time lag.
         test_std_out -> Test standard out.
@@ -257,6 +259,55 @@ class UnitTest(unittest.TestCase):
 
         with gen_libs.no_std_out():
             self.assertFalse(mysql_rep_admin.chk_slv_time(self.master, []))
+
+    @mock.patch("mysql_rep_admin.gen_libs.write_file")
+    @mock.patch("mysql_rep_admin.mongo_libs.ins_doc")
+    @mock.patch("mysql_rep_admin.add_miss_slaves")
+    @mock.patch("mysql_rep_admin.time.sleep")
+    def test_json_stdout(self, mock_sleep, mock_miss, mock_mongo,
+                            mock_write):
+
+        """Function:  test_json_stdout
+
+        Description:  Test with JSON format with standard out.
+
+        Arguments:
+
+        """
+
+        mock_sleep.return_value = True
+        mock_miss.return_value = self.outdata
+        mock_mongo.return_value = True
+        mock_write.return_value = True
+
+        with gen_libs.no_std_out():
+            self.assertFalse(mysql_rep_admin.chk_slv_time(
+                self.master, [self.slave], form="JSON", class_cfg="Cfg",
+                db_tbl="db:tbl", ofile="FileName", sup_std=False))
+
+    @mock.patch("mysql_rep_admin.gen_libs.write_file")
+    @mock.patch("mysql_rep_admin.mongo_libs.ins_doc")
+    @mock.patch("mysql_rep_admin.add_miss_slaves")
+    @mock.patch("mysql_rep_admin.time.sleep")
+    def test_json_no_stdout(self, mock_sleep, mock_miss, mock_mongo,
+                            mock_write):
+
+        """Function:  test_json_no_stdout
+
+        Description:  Test with JSON format with standard out suppressed.
+
+        Arguments:
+
+        """
+
+        mock_sleep.return_value = True
+        mock_miss.return_value = self.outdata
+        mock_mongo.return_value = True
+        mock_write.return_value = True
+
+        self.assertFalse(mysql_rep_admin.chk_slv_time(
+            self.master, [self.slave], form="JSON", class_cfg="Cfg",
+            db_tbl="db:tbl", ofile="FileName", sup_std=True))
 
     @mock.patch("mysql_rep_admin.gen_libs.write_file")
     @mock.patch("mysql_rep_admin.mongo_libs.ins_doc")
