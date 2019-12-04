@@ -41,10 +41,6 @@ class MasterRep(object):
 
     Description:  Class stub holder for mysql_class.MasterRep class.
 
-    Super-Class:
-
-    Sub-Classes:
-
     Methods:
         __init__ -> Class initialization.
 
@@ -68,10 +64,6 @@ class SlaveRep(object):
     """Class:  SlaveRep
 
     Description:  Class stub holder for mysql_class.SlaveRep class.
-
-    Super-Class:
-
-    Sub-Classes:
 
     Methods:
         __init__ -> Class initialization.
@@ -137,10 +129,6 @@ class Mail(object):
 
     Description:  Class stub holder for gen_class.Mail class.
 
-    Super-Class:
-
-    Sub-Classes:
-
     Methods:
         __init__ -> Class initialization.
         get_time -> Stub method holder for SlaveRep.get_time.
@@ -156,7 +144,6 @@ class Mail(object):
         Description:  Class initialization.
 
         Arguments:
-            None
 
         """
 
@@ -192,10 +179,6 @@ class UnitTest(unittest.TestCase):
     """Class:  UnitTest
 
     Description:  Class which is a representation of a unit testing.
-
-    Super-Class:  unittest.TestCase
-
-    Sub-Classes:
 
     Methods:
         setUp -> Initialize testing environment.
