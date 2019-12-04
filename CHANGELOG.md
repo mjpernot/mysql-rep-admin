@@ -7,7 +7,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 ## [3.1.0] - 2019-12-04
 ### Added
 - Added suppress standard out option.
-- 
+
 ### Changed
 - call_run_chk:  Added suppress standard out option to function calls.
 
