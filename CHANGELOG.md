@@ -14,6 +14,9 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - \_process_json:  Added suppress standard out option.
 - call_run_chk:  Added suppress standard out option to function calls.
 
+### Removed
+- setup_mail:  No longer required, replaced by gen_class.setup_mail call.
+
 
 ## [3.0.0] - 2019-07-13
 Breaking Change
