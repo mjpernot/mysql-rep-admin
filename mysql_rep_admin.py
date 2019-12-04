@@ -624,8 +624,8 @@ def call_run_chk(args_array, func_dict, master, slaves, **kwargs):
         mongo_cfg = gen_libs.load_module(args_array["-m"], args_array["-d"])
 
     if args_array.get("-t", None):
-        mail = setup_mail(args_array.get("-t"),
-                          subj=args_array.get("-u", None))
+        mail = gen_class.setup_mail(args_array.get("-t"),
+                                    subj=args_array.get("-u", None))
 
     if "-A" in args_array:
 
