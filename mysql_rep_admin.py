@@ -17,7 +17,7 @@
         mysql_rep_admin.py -d path {-c file | -s path/file} [-p path
             | -C | -S | -B | -D | -T | -E | -A | -O | -o dir_path/file]
             -f {JSON|standard | -b db:coll | -m file}
-            [-t ToEmail {ToEmail2 ToEmail3 ...} {-u SubjectLine}] [-v | -h]
+            [-t ToEmail {ToEmail2 ToEmail3 ...} {-u SubjectLine}] -z [-v | -h]
 
     Arguments:
         -d dir path => Directory path to the config files (-c and -s).
@@ -47,6 +47,7 @@
             the option allows it.  Sends output to one or more email addresses.
         -u subject_line => Subject line of email.  Optional, will create own
             subject line if one is not provided.
+        -z => Suppress standard out.
         -v => Display version of this program.
         -h => Help and usage message.
 
@@ -95,7 +96,7 @@
             will be used in future releases.
 
     Example:
-        mysql_rep_admin.py -c master -d config  -s slaves.txt -A
+        mysql_rep_admin.py -c master -d config  -s slave.txt -A
 
 """
 
@@ -416,6 +417,7 @@ def chk_slv_time(master, slaves, **kwargs):
             db_tbl -> database:collection - Name of db and collection.
             class_cfg -> Server class configuration settings.
             mail -> Mail instance.
+            sup_std -> Suppress standard out.
 
     """
 
@@ -461,6 +463,7 @@ def _process_json(outdata, **kwargs):
             db_tbl -> database:collection - Name of db and collection.
             class_cfg -> Server class configuration settings.
             mail -> Mail instance.
+            sup_std -> Suppress standard out.
 
     """
 
@@ -480,6 +483,9 @@ def _process_json(outdata, **kwargs):
     if mail:
         mail.add_2_msg(jdata)
         mail.send_mail()
+
+    if kwargs.get("sup_std", False):
+        gen_libs.print_data(jdata)
 
 
 def _process_time_lag(slv, time_lag, name, frmt, **kwargs):
@@ -561,32 +567,6 @@ def _chk_other(skip, tmp_tbl, retry, name, **kwargs):
             print("Retried Transaction Count:  {0}".format(retry))
 
 
-def setup_mail(to_line, subj=None, frm_line=None, **kwargs):
-
-    """Function:  setup_mail
-
-    Description:  Initialize a mail instance.  Provide 'from line' if one is
-        not passed.
-
-    Arguments:
-        (input) to_line -> Mail to line.
-        (input) subj -> Mail subject line.
-        (input) frm_line -> Mail from line.
-        (output) Mail instance.
-
-    """
-
-    to_line = list(to_line)
-
-    if isinstance(subj, list):
-        subj = list(subj)
-
-    if not frm_line:
-        frm_line = getpass.getuser() + "@" + socket.gethostname()
-
-    return gen_class.Mail(to_line, subj, frm_line)
-
-
 def call_run_chk(args_array, func_dict, master, slaves, **kwargs):
 
     """Function:  call_run_chk
@@ -610,6 +590,7 @@ def call_run_chk(args_array, func_dict, master, slaves, **kwargs):
     frmt = args_array.get("-f", "standard")
     outfile = args_array.get("-o", None)
     db_tbl = args_array.get("-b", None)
+    sup_std = args_array.get("-z", False)
     mongo_cfg = None
     mail = None
 
@@ -617,14 +598,15 @@ def call_run_chk(args_array, func_dict, master, slaves, **kwargs):
         mongo_cfg = gen_libs.load_module(args_array["-m"], args_array["-d"])
 
     if args_array.get("-t", None):
-        mail = setup_mail(args_array.get("-t"),
-                          subj=args_array.get("-u", None))
+        mail = gen_class.setup_mail(args_array.get("-t"),
+                                    subj=args_array.get("-u", None))
 
     if "-A" in args_array:
 
         for x in func_dict["-A"]:
             func_dict[x](master, slaves, form=frmt, ofile=outfile,
-                         db_tbl=db_tbl, class_cfg=mongo_cfg, mail=mail)
+                         db_tbl=db_tbl, class_cfg=mongo_cfg, mail=mail,
+                         sup_std=sup_std)
 
         for y in args_array:
 
@@ -632,14 +614,16 @@ def call_run_chk(args_array, func_dict, master, slaves, **kwargs):
             #   not the ALL option itself.
             if y in func_dict and y not in func_dict["-A"] and y != "-A":
                 func_dict[y](master, slaves, form=frmt, ofile=outfile,
-                             db_tbl=db_tbl, class_cfg=mongo_cfg, mail=mail)
+                             db_tbl=db_tbl, class_cfg=mongo_cfg, mail=mail,
+                             sup_std=sup_std)
 
     else:
 
         # Intersect args_array & func_dict to find which functions to call.
         for opt in set(args_array.keys()) & set(func_dict.keys()):
             func_dict[opt](master, slaves, form=frmt, ofile=outfile,
-                           db_tbl=db_tbl, class_cfg=mongo_cfg, mail=mail)
+                           db_tbl=db_tbl, class_cfg=mongo_cfg, mail=mail,
+                           sup_std=sup_std)
 
 
 def run_program(args_array, func_dict, **kwargs):
