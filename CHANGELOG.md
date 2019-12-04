@@ -9,6 +9,8 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - Added suppress standard out option.
 
 ### Changed
+- \_process_json:  Added gen_libs.print_data call for JSON format.
+- \_process_json:  Added suppress standard out option.
 - call_run_chk:  Added suppress standard out option to function calls.
 
 
