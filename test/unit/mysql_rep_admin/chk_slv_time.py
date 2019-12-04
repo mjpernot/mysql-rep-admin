@@ -241,13 +241,9 @@ class UnitTest(unittest.TestCase):
         mock_mongo.return_value = True
         mock_write.return_value = True
 
-        self.assertFalse(mysql_rep_admin.chk_slv_time(self.master,
-                                                      [self.slave],
-                                                      form="JSON",
-                                                      class_cfg="Cfg",
-                                                      db_tbl="db:tbl",
-                                                      ofile="FileName",
-                                                      mail=self.mail))
+        self.assertFalse(mysql_rep_admin.chk_slv_time(
+            self.master, [self.slave], form="JSON", class_cfg="Cfg",
+            db_tbl="db:tbl", ofile="FileName", mail=self.mail, sup_std=True))
 
     def test_no_slv(self):
 
@@ -281,12 +277,9 @@ class UnitTest(unittest.TestCase):
         mock_mongo.return_value = True
         mock_write.return_value = True
 
-        self.assertFalse(mysql_rep_admin.chk_slv_time(self.master,
-                                                      [self.slave],
-                                                      form="JSON",
-                                                      class_cfg="Cfg",
-                                                      db_tbl="db:tbl",
-                                                      ofile="FileName"))
+        self.assertFalse(mysql_rep_admin.chk_slv_time(
+            self.master, [self.slave], form="JSON", class_cfg="Cfg",
+            db_tbl="db:tbl", ofile="FileName", sup_std=True))
 
     @mock.patch("mysql_rep_admin.time.sleep")
     def test_std_no_lag(self, mock_sleep):
