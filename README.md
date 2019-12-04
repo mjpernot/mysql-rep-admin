@@ -110,6 +110,28 @@ vim mysql.cfg
 chmod 600 mysql.cfg
 ```
 
+Create Slave definition file.
+
+```
+cp slave.txt.TEMPLATE slave.txt
+```
+
+Make the appropriate change for a slave connection.
+Add a new section for each slave in the replication domain.
+  * Change these entries in the slave definition file:
+    - passwd = ROOT_PASSWORD
+    - host = IP_ADDRESS
+    - serv_os = Linux
+    - name = HOSTNAME
+    - port = PORT_NUMBER
+    - cfg_file DIRECTORY_PATH/my.cnf
+    - sid = SERVER_ID
+
+```
+vim slave.txt
+chmod 600 slave.txt
+```
+
 
 # Program Help Function:
 
