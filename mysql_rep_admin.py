@@ -17,7 +17,7 @@
         mysql_rep_admin.py -d path {-c file | -s path/file} [-p path
             | -C | -S | -B | -D | -T | -E | -A | -O | -o dir_path/file]
             -f {JSON|standard | -b db:coll | -m file}
-            [-t ToEmail {ToEmail2 ToEmail3 ...} {-u SubjectLine}] [-v | -h]
+            [-t ToEmail {ToEmail2 ToEmail3 ...} {-u SubjectLine}] -z [-v | -h]
 
     Arguments:
         -d dir path => Directory path to the config files (-c and -s).
@@ -47,6 +47,7 @@
             the option allows it.  Sends output to one or more email addresses.
         -u subject_line => Subject line of email.  Optional, will create own
             subject line if one is not provided.
+        -z => Suppress standard out.
         -v => Display version of this program.
         -h => Help and usage message.
 
