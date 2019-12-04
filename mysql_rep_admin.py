@@ -417,6 +417,7 @@ def chk_slv_time(master, slaves, **kwargs):
             db_tbl -> database:collection - Name of db and collection.
             class_cfg -> Server class configuration settings.
             mail -> Mail instance.
+            sup_std -> Suppress standard out.
 
     """
 
@@ -462,6 +463,7 @@ def _process_json(outdata, **kwargs):
             db_tbl -> database:collection - Name of db and collection.
             class_cfg -> Server class configuration settings.
             mail -> Mail instance.
+            sup_std -> Suppress standard out.
 
     """
 
@@ -481,6 +483,9 @@ def _process_json(outdata, **kwargs):
     if mail:
         mail.add_2_msg(jdata)
         mail.send_mail()
+
+    if kwargs.get("sup_std", False):
+        gen_libs.print_data(jdata)
 
 
 def _process_time_lag(slv, time_lag, name, frmt, **kwargs):
