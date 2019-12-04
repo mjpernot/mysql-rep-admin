@@ -96,7 +96,7 @@
             will be used in future releases.
 
     Example:
-        mysql_rep_admin.py -c master -d config  -s slaves.txt -A
+        mysql_rep_admin.py -c master -d config  -s slave.txt -A
 
 """
 
