@@ -171,7 +171,7 @@ class UnitTest(unittest.TestCase):
         self.args_array2 = {"-D": True, "-m": "Mongo", "-d": "cfg",
                             "-t": "ToMail"}
 
-    @mock.patch("mysql_rep_admin.setup_mail")
+    @mock.patch("gen_class.setup_mail")
     @mock.patch("mysql_rep_admin.gen_libs.load_module")
     def test_single_func(self, mock_cfg, mock_mail):
 
@@ -186,10 +186,8 @@ class UnitTest(unittest.TestCase):
         mock_cfg.return_value = "MongoCfg"
         mock_mail.return_value = "MailInstance"
 
-        self.assertFalse(mysql_rep_admin.call_run_chk(self.args_array2,
-                                                      self.func_dict,
-                                                      self.master,
-                                                      [self.slave]))
+        self.assertFalse(mysql_rep_admin.call_run_chk(
+            self.args_array2, self.func_dict, self.master, [self.slave]))
 
     @mock.patch("mysql_rep_admin.gen_libs.load_module")
     def test_argsarray_all(self, mock_cfg):
@@ -204,10 +202,8 @@ class UnitTest(unittest.TestCase):
 
         mock_cfg.return_value = "MongoCfg"
 
-        self.assertFalse(mysql_rep_admin.call_run_chk(self.args_array,
-                                                      self.func_dict,
-                                                      self.master,
-                                                      [self.slave]))
+        self.assertFalse(mysql_rep_admin.call_run_chk(
+            self.args_array, self.func_dict, self.master, [self.slave]))
 
 
 if __name__ == "__main__":
