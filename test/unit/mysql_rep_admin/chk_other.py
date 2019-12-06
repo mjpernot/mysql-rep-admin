@@ -77,7 +77,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-    with gen_libs.no_std_out():
+        with gen_libs.no_std_out():
             self.assertFalse(mysql_rep_admin._chk_other(
                 self.skip0, self.tmp_tbl0, self.retry1, self.name))
 
@@ -91,7 +91,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-    with gen_libs.no_std_out():
+        with gen_libs.no_std_out():
             self.assertFalse(mysql_rep_admin._chk_other(
                 self.skip0, self.tmp_tbl6, self.retry0, self.name))
 
@@ -105,7 +105,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-    with gen_libs.no_std_out():
+        with gen_libs.no_std_out():
             self.assertFalse(mysql_rep_admin._chk_other(
                 self.skip1, self.tmp_tbl0, self.retry0, self.name))
 
