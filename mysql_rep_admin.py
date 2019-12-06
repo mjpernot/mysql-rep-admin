@@ -500,6 +500,7 @@ def _process_time_lag(slv, time_lag, name, frmt, **kwargs):
         (input) time_lag -> Time lag between master and slave.
         (input) name -> Name of slave.
         (input) frmt -> JSON|standard - JSON format or standard output.
+        (output) time_lag -> Time lag between master and slave.
 
     """
 
@@ -511,6 +512,8 @@ def _process_time_lag(slv, time_lag, name, frmt, **kwargs):
         if time_lag and frmt == "standard":
             print("\nSlave:  {0}".format(name))
             print("\tTime Lag:  {0}".format(time_lag))
+
+    return time_lag
 
 
 def chk_slv_other(master, slaves, **kwargs):
