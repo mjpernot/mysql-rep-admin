@@ -131,9 +131,8 @@ class Mail(object):
 
     Methods:
         __init__ -> Class initialization.
-        get_time -> Stub method holder for SlaveRep.get_time.
-        get_name -> Stub method holder for SlaveRep.get_name.
-        upd_slv_time -> Stub method holder for SlaveRep.upd_slv_time.
+        add_2_msg -> Stub method holder for Mail.add_2_msg.
+        send_mail -> Stub method holder for Mail.send_mail.
 
     """
 
