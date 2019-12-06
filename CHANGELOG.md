@@ -10,9 +10,11 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - \_process_time_lag:  Return updated time lag to calling function.
 
 ### Added
-- Added suppress standard out option (-z).
+- Added -j option to change output to JSON format.
+- Added -z option to suppress standard out.
 
 ### Changed
+- call_run_chk:  Added -j option to function.
 - call_run_chk:  Replaced setup_mail with call to gen_class.setup_mail.
 - \_process_json:  Added gen_libs.print_data call for JSON format.
 - \_process_json:  Added suppress standard out option.

@@ -16,7 +16,7 @@
     Usage:
         mysql_rep_admin.py -d path {-c file | -s path/file} [-p path
             | -C | -S | -B | -D | -T | -E | -A | -O | -o dir_path/file]
-            -f {JSON|standard | -b db:coll | -m file}
+            -f {JSON|standard | -j | -b db:coll | -m file}
             [-t ToEmail {ToEmail2 ToEmail3 ...} {-u SubjectLine}] -z [-v | -h]
 
     Arguments:
@@ -37,6 +37,7 @@
         -O => Other slave replication checks.
         -f JSON|standard => Output format as JSON or standard. (only
             used with option -T)
+        -j => Return output in JSON format, if available.
         -o path/file => Directory path and file name for output.
         -b database:collection => Name of database and collection.
             Delimited by colon (:).  Default: sysmon:mysql_rep_lag
@@ -418,6 +419,7 @@ def chk_slv_time(master, slaves, **kwargs):
             class_cfg -> Server class configuration settings.
             mail -> Mail instance.
             sup_std -> Suppress standard out.
+            json_fmt -> True|False - convert output to JSON format.
 
     """
 
@@ -591,6 +593,7 @@ def call_run_chk(args_array, func_dict, master, slaves, **kwargs):
     func_dict = dict(func_dict)
     slaves = list(slaves)
     frmt = args_array.get("-f", "standard")
+    json_fmt = args_array.get("-j", False)
     outfile = args_array.get("-o", None)
     db_tbl = args_array.get("-b", None)
     sup_std = args_array.get("-z", False)
@@ -609,7 +612,7 @@ def call_run_chk(args_array, func_dict, master, slaves, **kwargs):
         for x in func_dict["-A"]:
             func_dict[x](master, slaves, form=frmt, ofile=outfile,
                          db_tbl=db_tbl, class_cfg=mongo_cfg, mail=mail,
-                         sup_std=sup_std)
+                         sup_std=sup_std, json_fmt=json_fmt)
 
         for y in args_array:
 
@@ -618,7 +621,7 @@ def call_run_chk(args_array, func_dict, master, slaves, **kwargs):
             if y in func_dict and y not in func_dict["-A"] and y != "-A":
                 func_dict[y](master, slaves, form=frmt, ofile=outfile,
                              db_tbl=db_tbl, class_cfg=mongo_cfg, mail=mail,
-                             sup_std=sup_std)
+                             sup_std=sup_std, json_fmt=json_fmt)
 
     else:
 
@@ -626,7 +629,7 @@ def call_run_chk(args_array, func_dict, master, slaves, **kwargs):
         for opt in set(args_array.keys()) & set(func_dict.keys()):
             func_dict[opt](master, slaves, form=frmt, ofile=outfile,
                            db_tbl=db_tbl, class_cfg=mongo_cfg, mail=mail,
-                           sup_std=sup_std)
+                           sup_std=sup_std, json_fmt=json_fmt)
 
 
 def run_program(args_array, func_dict, **kwargs):
