@@ -484,7 +484,7 @@ def _process_json(outdata, **kwargs):
         mail.add_2_msg(jdata)
         mail.send_mail()
 
-    if kwargs.get("sup_std", False):
+    if not kwargs.get("sup_std", False):
         gen_libs.print_data(jdata)
 
 
