@@ -10,7 +10,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - \_process_time_lag:  Return updated time lag to calling function.
 
 ### Added
-- Added suppress standard out option.
+- Added suppress standard out option (-z).
 
 ### Changed
 - call_run_chk:  Replaced setup_mail with call to gen_class.setup_mail.
