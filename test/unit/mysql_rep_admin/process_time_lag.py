@@ -143,8 +143,8 @@ class UnitTest(unittest.TestCase):
 
         with gen_libs.no_std_out():
             self.assertEqual(mysql_rep_admin._process_time_lag(
-                self.slave, self.time_lag1, self.name, self.frmt,
-                self.time_lag1))
+                self.slave, self.time_lag1, self.name, self.frmt),
+                self.time_lag1)
 
     def test_no_lag(self):
 
