@@ -154,7 +154,8 @@ class UnitTest(unittest.TestCase):
         self.assertFalse(mysql_rep_admin._process_json(self.outdata,
                                                        sup_std=True))
 
-    @mock.patch("gen_libs.write_file", mock.Mock(return_value=True))
+    @mock.patch("mysql_rep_admin.gen_libs.write_file",
+                mock.Mock(return_value=True))
     def test_file(self):
 
         """Function:  test_file
@@ -168,7 +169,8 @@ class UnitTest(unittest.TestCase):
         self.assertFalse(mysql_rep_admin._process_json(
             self.outdata, ofile="FileName", sup_std=True))
 
-    @mock.patch("mongo_libs.ins_doc", mock.Mock(return_value=True))
+    @mock.patch("mysql_rep_admin.mongo_libs.ins_doc",
+                mock.Mock(return_value=True))
     def test_mongo(self):
 
         """Function:  test_mongo
