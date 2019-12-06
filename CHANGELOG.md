@@ -5,6 +5,10 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 
 ## [3.1.0] - 2019-12-04
+### Fixed
+- chk_slv_time :  Capture time lag from \_process_time_lag function.
+- \_process_time_lag:  Return updated time lag to calling function.
+
 ### Added
 - Added suppress standard out option.
 
