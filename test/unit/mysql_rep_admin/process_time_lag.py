@@ -127,8 +127,8 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.assertFalse(mysql_rep_admin._process_time_lag(
-            self.slave, self.time_lag1, self.name, self.frmt2))
+        self.assertEqual(mysql_rep_admin._process_time_lag(
+            self.slave, self.time_lag1, self.name, self.frmt2), self.time_lag1)
 
     @mock.patch("time.sleep", mock.Mock(return_value=True))
     def test_lag_stdout(self):
@@ -142,8 +142,9 @@ class UnitTest(unittest.TestCase):
         """
 
         with gen_libs.no_std_out():
-            self.assertFalse(mysql_rep_admin._process_time_lag(
-                self.slave, self.time_lag1, self.name, self.frmt))
+            self.assertEqual(mysql_rep_admin._process_time_lag(
+                self.slave, self.time_lag1, self.name, self.frmt,
+                self.time_lag1))
 
     def test_no_lag(self):
 
@@ -155,8 +156,8 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.assertFalse(mysql_rep_admin._process_time_lag(
-            self.slave, self.time_lag0, self.name, self.frmt))
+        self.assertEqual(mysql_rep_admin._process_time_lag(
+            self.slave, self.time_lag0, self.name, self.frmt), self.time_lag0)
 
 
 if __name__ == "__main__":
