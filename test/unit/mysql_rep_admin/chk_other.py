@@ -42,6 +42,9 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp -> Initialize testing environment.
+        test_retry_error -> Test with retry error detected.
+        test_tmp_tbl_error -> Test with tmp table error detected.
+        test_skip_error -> Test with skip error detected.
         test_no_errors -> Test with no errors detected.
 
     """
@@ -63,6 +66,48 @@ class UnitTest(unittest.TestCase):
         self.retry0 = 0
         self.retry1 = 1
         self.name = "SlaveName"
+
+    def test_retry_error(self):
+
+        """Function:  test_retry_error
+
+        Description:  Test with retry error detected.
+
+        Arguments:
+
+        """
+
+    with gen_libs.no_std_out():
+            self.assertFalse(mysql_rep_admin._chk_other(
+                self.skip0, self.tmp_tbl0, self.retry1, self.name))
+
+    def test_tmp_tbl_error(self):
+
+        """Function:  test_tmp_tbl_error
+
+        Description:  Test with tmp table error detected.
+
+        Arguments:
+
+        """
+
+    with gen_libs.no_std_out():
+            self.assertFalse(mysql_rep_admin._chk_other(
+                self.skip0, self.tmp_tbl6, self.retry0, self.name))
+
+    def test_skip_error(self):
+
+        """Function:  test_skip_error
+
+        Description:  Test with skip error detected.
+
+        Arguments:
+
+        """
+
+    with gen_libs.no_std_out():
+            self.assertFalse(mysql_rep_admin._chk_other(
+                self.skip1, self.tmp_tbl0, self.retry0, self.name))
 
     def test_no_errors(self):
 
