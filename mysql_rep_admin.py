@@ -436,7 +436,7 @@ def chk_slv_time(master, slaves, **kwargs):
         for slv in slaves:
             time_lag = slv.get_time()
             name = slv.get_name()
-            _process_time_lag(slv, time_lag, name, frmt)
+            time_lag = _process_time_lag(slv, time_lag, name, frmt)
 
             if frmt == "JSON":
                 outdata["slaves"].append({"name": slv.name,
