@@ -171,7 +171,7 @@ class UnitTest(unittest.TestCase):
         self.args_array2 = {"-D": True, "-m": "Mongo", "-d": "cfg",
                             "-t": "ToMail"}
 
-    @mock.patch("gen_class.setup_mail")
+    @mock.patch("mysql_rep_admin.gen_class.setup_mail")
     @mock.patch("mysql_rep_admin.gen_libs.load_module")
     def test_single_func(self, mock_cfg, mock_mail):
 
