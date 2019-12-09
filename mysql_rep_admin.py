@@ -58,19 +58,19 @@
         NOTE 4:  -b option requires -m option to be included.
 
     Notes:
-        Master configuration file format (filename.py):
+        Master configuration file format (mysql_cfg.py):
+        WARNING:  Do not use the loopback IP or 'localhost' for the "host"
+        variable, use the actual IP.
             # Configuration file for {Database Name/Server}
             user = "root"
             passwd = "ROOT_PASSWORD"
-            # WARNING:  Do not use the loopback IP or 'localhost' for the
-            #    master database, use the actual IP.
             host = "IP_ADDRESS"
-            serv_os = "Linux" or "Solaris"
+            serv_os = "Linux"
             name = "HOSTNAME"
             port = PORT_NUMBER (default of mysql is 3306)
             cfg_file = "DIRECTORY_PATH/my.cnf"
             sid = "SERVER_ID"
-            extra_def_file = "DIRECTORY_PATH/myextra.cfg"
+            extra_def_file = "DIRECTORY_PATH/mysql.cfg"
 
         NOTE 1:  Include the cfg_file even if running remotely as the
             file will be used in future releases.
@@ -80,21 +80,25 @@
             database configuration file.  See below for the
             defaults-extra-file format.
 
-        Slave(s) configuration file format (filename.txt)
+        Slave configuration file format (slave.txt)
+        Make a copy of this section for each slave in the replication domain.
             # Slave 1 configuration {Database Name/Server}
             user = root
             passwd = ROOT_PASSWORD
             host = IP_ADDRESS
-            serv_os = Linux or Solaris
+            serv_os = Linux
             name = HOSTNAME
             port = PORT_NUMBER
             cfg_file DIRECTORY_PATH/my.cnf
             sid = SERVER_ID
-            # Slave N configuration {Database Name/Server}
-               Repeat rest of above section for Slave 1.
 
         NOTE:  Include the cfg_file even if running remotely as the file
             will be used in future releases.
+
+        Defaults Extra File format (mysql.cfg)
+            password="ROOT_PASSWORD"
+            socket=/BASE_PATH/mysqld/mysqld.sock
+        
 
     Example:
         mysql_rep_admin.py -c master -d config  -s slave.txt -A
