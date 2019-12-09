@@ -182,7 +182,7 @@ class UnitTest(unittest.TestCase):
         """
 
         self.assertFalse(mysql_rep_admin._process_json(
-            self.outdata, mongo_cfg ="MongoInstance",
+            self.outdata, mongo_cfg="MongoInstance",
             db_tbl="database:collection", sup_std=True))
 
     def test_mongo_missing(self):
@@ -196,7 +196,7 @@ class UnitTest(unittest.TestCase):
         """
 
         self.assertFalse(mysql_rep_admin._process_json(
-            self.outdata, mongo_cfg ="MongoInstance", sup_std=True))
+            self.outdata, mongo_cfg="MongoInstance", sup_std=True))
 
 
 if __name__ == "__main__":
