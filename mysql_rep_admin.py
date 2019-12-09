@@ -98,7 +98,6 @@
         Defaults Extra File format (mysql.cfg)
             password="ROOT_PASSWORD"
             socket=/BASE_PATH/mysqld/mysqld.sock
-        
 
     Example:
         mysql_rep_admin.py -c master -d config  -s slave.txt -A
