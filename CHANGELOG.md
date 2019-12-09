@@ -14,6 +14,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - Added -z option to suppress standard out.
 
 ### Changed
+- \_process_time_lag:  Replaced frmt with json_fmt.
 - chk_slv_time: Added json_fmt to function and replaced frmt with json_fmt.
 - call_run_chk:  Added -j option to function.
 - call_run_chk:  Replaced setup_mail with call to gen_class.setup_mail.

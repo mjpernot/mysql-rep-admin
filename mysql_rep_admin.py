@@ -491,7 +491,7 @@ def _process_json(outdata, **kwargs):
         gen_libs.print_data(jdata)
 
 
-def _process_time_lag(slv, time_lag, name, frmt, **kwargs):
+def _process_time_lag(slv, time_lag, name, json_fmt, **kwargs):
 
     """Function:  _process_time_lag
 
@@ -502,18 +502,17 @@ def _process_time_lag(slv, time_lag, name, frmt, **kwargs):
         (input) slv -> Slave instance.
         (input) time_lag -> Time lag between master and slave.
         (input) name -> Name of slave.
-        (input) frmt -> JSON|standard - JSON format or standard output.
+        (input) json_fmt -> True|False - output to JSON format.
         (output) time_lag -> Time lag between master and slave.
 
     """
 
-    # Replace frmt with json_fmt statements - also see parameter list.
     if time_lag:
         time.sleep(5)
         slv.upd_slv_time()
         time_lag = slv.get_time()
 
-        if time_lag and frmt == "standard":
+        if time_lag and not json_fmt:
             print("\nSlave:  {0}".format(name))
             print("\tTime Lag:  {0}".format(time_lag))
 
