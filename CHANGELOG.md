@@ -10,10 +10,11 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - \_process_time_lag:  Return updated time lag to calling function.
 
 ### Added
-- Added -j option to change output to JSON format.
+- Added -j option to change output to JSON format.  Uses a True|False setting instead of a string value.
 - Added -z option to suppress standard out.
 
 ### Changed
+- chk_slv_time: Added json_fmt to function and replaced frmt with json_fmt.
 - call_run_chk:  Added -j option to function.
 - call_run_chk:  Replaced setup_mail with call to gen_class.setup_mail.
 - \_process_json:  Added gen_libs.print_data call for JSON format.
@@ -21,7 +22,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - call_run_chk:  Added suppress standard out option to function calls.
 
 ### Removed
-- setup_mail:  No longer required, replaced by gen_class.setup_mail call.
+- setup_mail:  Replaced by gen_class.setup_mail call.
 
 
 ## [3.0.0] - 2019-07-13
