@@ -35,7 +35,7 @@ import version
 __version__ = version.__version__
 
 
-def chk_mst_log(master, slaves, form, ofile, db_tbl, class_cfg, **kwargs):
+def chk_mst_log(master, slaves, json_fmt, ofile, db_tbl, class_cfg, **kwargs):
 
     """Method:  chk_mst_log
 
@@ -44,7 +44,7 @@ def chk_mst_log(master, slaves, form, ofile, db_tbl, class_cfg, **kwargs):
     Arguments:
         master -> Stub holder
         slaves -> Stub holder
-        form -> Stub holder
+        json_fmt -> Stub holder
         ofile -> Stub holder
         db_tbl -> Stub holder
         class_cfg -> Stub holder
@@ -54,7 +54,7 @@ def chk_mst_log(master, slaves, form, ofile, db_tbl, class_cfg, **kwargs):
     return True
 
 
-def chk_slv_thr(master, slaves, form, ofile, db_tbl, class_cfg, **kwargs):
+def chk_slv_thr(master, slaves, json_fmt, ofile, db_tbl, class_cfg, **kwargs):
 
     """Method:  chk_slv_thr
 
@@ -63,7 +63,7 @@ def chk_slv_thr(master, slaves, form, ofile, db_tbl, class_cfg, **kwargs):
     Arguments:
         master -> Stub holder
         slaves -> Stub holder
-        form -> Stub holder
+        json_fmt -> Stub holder
         ofile -> Stub holder
         db_tbl -> Stub holder
         class_cfg -> Stub holder
@@ -73,7 +73,7 @@ def chk_slv_thr(master, slaves, form, ofile, db_tbl, class_cfg, **kwargs):
     return True
 
 
-def rpt_slv_log(master, slaves, form, ofile, db_tbl, class_cfg, **kwargs):
+def rpt_slv_log(master, slaves, json_fmt, ofile, db_tbl, class_cfg, **kwargs):
 
     """Method:  rpt_slv_log
 
@@ -82,7 +82,7 @@ def rpt_slv_log(master, slaves, form, ofile, db_tbl, class_cfg, **kwargs):
     Arguments:
         master -> Stub holder
         slaves -> Stub holder
-        form -> Stub holder
+        json_fmt -> Stub holder
         ofile -> Stub holder
         db_tbl -> Stub holder
         class_cfg -> Stub holder
