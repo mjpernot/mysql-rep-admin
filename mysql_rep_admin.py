@@ -413,7 +413,6 @@ def chk_slv_time(master, slaves, **kwargs):
         (input) master -> Master instance.
         (input) slaves -> Slave instances.
         (input) **kwargs:
-            form -> JSON|standard - JSON format or standard output.
             ofile -> file name - Name of output file.
             db_tbl -> database:collection - Name of db and collection.
             class_cfg -> Server class configuration settings.
@@ -424,7 +423,6 @@ def chk_slv_time(master, slaves, **kwargs):
     """
 
     slaves = list(slaves)
-    frmt = kwargs.get("form", "standard")
     json_fmt = kwargs.get("json_fmt", False)
 
     if json_fmt:
@@ -593,7 +591,6 @@ def call_run_chk(args_array, func_dict, master, slaves, **kwargs):
     args_array = dict(args_array)
     func_dict = dict(func_dict)
     slaves = list(slaves)
-    frmt = args_array.get("-f", "standard")
     json_fmt = args_array.get("-j", False)
     outfile = args_array.get("-o", None)
     db_tbl = args_array.get("-b", None)
@@ -611,26 +608,26 @@ def call_run_chk(args_array, func_dict, master, slaves, **kwargs):
     if "-A" in args_array:
 
         for x in func_dict["-A"]:
-            func_dict[x](master, slaves, form=frmt, ofile=outfile,
+            func_dict[x](master, slaves, json_fmt=json_fmt, ofile=outfile,
                          db_tbl=db_tbl, class_cfg=mongo_cfg, mail=mail,
-                         sup_std=sup_std, json_fmt=json_fmt)
+                         sup_std=sup_std)
 
         for y in args_array:
 
             # The option is in func_dict but not under the ALL option and is
             #   not the ALL option itself.
             if y in func_dict and y not in func_dict["-A"] and y != "-A":
-                func_dict[y](master, slaves, form=frmt, ofile=outfile,
+                func_dict[y](master, slaves, json_fmt=json_fmt, ofile=outfile,
                              db_tbl=db_tbl, class_cfg=mongo_cfg, mail=mail,
-                             sup_std=sup_std, json_fmt=json_fmt)
+                             sup_std=sup_std)
 
     else:
 
         # Intersect args_array & func_dict to find which functions to call.
         for opt in set(args_array.keys()) & set(func_dict.keys()):
-            func_dict[opt](master, slaves, form=frmt, ofile=outfile,
+            func_dict[opt](master, slaves, json_fmt=json_fmt, ofile=outfile,
                            db_tbl=db_tbl, class_cfg=mongo_cfg, mail=mail,
-                           sup_std=sup_std, json_fmt=json_fmt)
+                           sup_std=sup_std)
 
 
 def run_program(args_array, func_dict, **kwargs):

@@ -16,7 +16,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 ### Changed
 - \_process_time_lag:  Replaced frmt with json_fmt.
 - chk_slv_time: Added json_fmt to function and replaced frmt with json_fmt.
-- call_run_chk:  Added -j option to function.
+- call_run_chk:  Added -j option to function and replaced frmt with json_fmt.
 - call_run_chk:  Replaced setup_mail with call to gen_class.setup_mail.
 - \_process_json:  Added gen_libs.print_data call for JSON format.
 - \_process_json:  Added suppress standard out option.
