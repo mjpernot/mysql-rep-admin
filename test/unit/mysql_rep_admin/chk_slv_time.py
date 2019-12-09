@@ -226,7 +226,7 @@ class UnitTest(unittest.TestCase):
         mock_write.return_value = True
 
         self.assertFalse(mysql_rep_admin.chk_slv_time(
-            self.master, [self.slave], form="JSON", class_cfg="Cfg",
+            self.master, [self.slave], json_fmt=True, class_cfg="Cfg",
             db_tbl="db:tbl", ofile="FileName", mail=self.mail, sup_std=True))
 
     def test_no_slv(self):
@@ -246,8 +246,7 @@ class UnitTest(unittest.TestCase):
     @mock.patch("mysql_rep_admin.mongo_libs.ins_doc")
     @mock.patch("mysql_rep_admin.add_miss_slaves")
     @mock.patch("mysql_rep_admin.time.sleep")
-    def test_json_stdout(self, mock_sleep, mock_miss, mock_mongo,
-                            mock_write):
+    def test_json_stdout(self, mock_sleep, mock_miss, mock_mongo, mock_write):
 
         """Function:  test_json_stdout
 
@@ -264,7 +263,7 @@ class UnitTest(unittest.TestCase):
 
         with gen_libs.no_std_out():
             self.assertFalse(mysql_rep_admin.chk_slv_time(
-                self.master, [self.slave], form="JSON", class_cfg="Cfg",
+                self.master, [self.slave], json_fmt=True, class_cfg="Cfg",
                 db_tbl="db:tbl", ofile="FileName", sup_std=False))
 
     @mock.patch("mysql_rep_admin.gen_libs.write_file")
@@ -288,7 +287,7 @@ class UnitTest(unittest.TestCase):
         mock_write.return_value = True
 
         self.assertFalse(mysql_rep_admin.chk_slv_time(
-            self.master, [self.slave], form="JSON", class_cfg="Cfg",
+            self.master, [self.slave], json_fmt=True, class_cfg="Cfg",
             db_tbl="db:tbl", ofile="FileName", sup_std=True))
 
     @mock.patch("mysql_rep_admin.gen_libs.write_file")
@@ -311,7 +310,7 @@ class UnitTest(unittest.TestCase):
         mock_write.return_value = True
 
         self.assertFalse(mysql_rep_admin.chk_slv_time(
-            self.master, [self.slave], form="JSON", class_cfg="Cfg",
+            self.master, [self.slave], json_fmt=True, class_cfg="Cfg",
             db_tbl="db:tbl", ofile="FileName", sup_std=True))
 
     @mock.patch("mysql_rep_admin.time.sleep")
