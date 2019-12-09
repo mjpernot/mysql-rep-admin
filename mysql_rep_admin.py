@@ -16,8 +16,8 @@
     Usage:
         mysql_rep_admin.py -d path {-c file | -s path/file} [-p path
             | -C | -S | -B | -D | -T | -E | -A | -O | -o dir_path/file]
-            -f {JSON|standard | -b db:coll | -m file}
-            [-t ToEmail {ToEmail2 ToEmail3 ...} {-u SubjectLine}] [-v | -h]
+            -f {JSON|standard | -j | -b db:coll | -m file}
+            [-t ToEmail {ToEmail2 ToEmail3 ...} {-u SubjectLine}] -z [-v | -h]
 
     Arguments:
         -d dir path => Directory path to the config files (-c and -s).
@@ -37,6 +37,7 @@
         -O => Other slave replication checks.
         -f JSON|standard => Output format as JSON or standard. (only
             used with option -T)
+        -j => Return output in JSON format, if available.
         -o path/file => Directory path and file name for output.
         -b database:collection => Name of database and collection.
             Delimited by colon (:).  Default: sysmon:mysql_rep_lag
@@ -47,6 +48,7 @@
             the option allows it.  Sends output to one or more email addresses.
         -u subject_line => Subject line of email.  Optional, will create own
             subject line if one is not provided.
+        -z => Suppress standard out.
         -v => Display version of this program.
         -h => Help and usage message.
 
@@ -56,19 +58,19 @@
         NOTE 4:  -b option requires -m option to be included.
 
     Notes:
-        Master configuration file format (filename.py):
+        Master configuration file format (mysql_cfg.py):
+        WARNING:  Do not use the loopback IP or 'localhost' for the "host"
+        variable, use the actual IP.
             # Configuration file for {Database Name/Server}
             user = "root"
             passwd = "ROOT_PASSWORD"
-            # WARNING:  Do not use the loopback IP or 'localhost' for the
-            #    master database, use the actual IP.
             host = "IP_ADDRESS"
-            serv_os = "Linux" or "Solaris"
+            serv_os = "Linux"
             name = "HOSTNAME"
             port = PORT_NUMBER (default of mysql is 3306)
             cfg_file = "DIRECTORY_PATH/my.cnf"
             sid = "SERVER_ID"
-            extra_def_file = "DIRECTORY_PATH/myextra.cfg"
+            extra_def_file = "DIRECTORY_PATH/mysql.cfg"
 
         NOTE 1:  Include the cfg_file even if running remotely as the
             file will be used in future releases.
@@ -78,24 +80,27 @@
             database configuration file.  See below for the
             defaults-extra-file format.
 
-        Slave(s) configuration file format (filename.txt)
+        Slave configuration file format (slave.txt)
+        Make a copy of this section for each slave in the replication domain.
             # Slave 1 configuration {Database Name/Server}
             user = root
             passwd = ROOT_PASSWORD
             host = IP_ADDRESS
-            serv_os = Linux or Solaris
+            serv_os = Linux
             name = HOSTNAME
             port = PORT_NUMBER
             cfg_file DIRECTORY_PATH/my.cnf
             sid = SERVER_ID
-            # Slave N configuration {Database Name/Server}
-               Repeat rest of above section for Slave 1.
 
         NOTE:  Include the cfg_file even if running remotely as the file
             will be used in future releases.
 
+        Defaults Extra File format (mysql.cfg)
+            password="ROOT_PASSWORD"
+            socket=/BASE_PATH/mysqld/mysqld.sock
+
     Example:
-        mysql_rep_admin.py -c master -d config  -s slaves.txt -A
+        mysql_rep_admin.py -c master -d config  -s slave.txt -A
 
 """
 
@@ -411,18 +416,19 @@ def chk_slv_time(master, slaves, **kwargs):
         (input) master -> Master instance.
         (input) slaves -> Slave instances.
         (input) **kwargs:
-            form -> JSON|standard - JSON format or standard output.
             ofile -> file name - Name of output file.
             db_tbl -> database:collection - Name of db and collection.
             class_cfg -> Server class configuration settings.
             mail -> Mail instance.
+            sup_std -> Suppress standard out.
+            json_fmt -> True|False - convert output to JSON format.
 
     """
 
     slaves = list(slaves)
-    frmt = kwargs.get("form", "standard")
+    json_fmt = kwargs.get("json_fmt", False)
 
-    if frmt == "JSON":
+    if json_fmt:
         outdata = {"application": "MySQL Replication",
                    "master": master.name,
                    "asOf": datetime.datetime.strftime(datetime.datetime.now(),
@@ -434,16 +440,16 @@ def chk_slv_time(master, slaves, **kwargs):
         for slv in slaves:
             time_lag = slv.get_time()
             name = slv.get_name()
-            _process_time_lag(slv, time_lag, name, frmt)
+            time_lag = _process_time_lag(slv, time_lag, name, json_fmt)
 
-            if frmt == "JSON":
+            if json_fmt:
                 outdata["slaves"].append({"name": slv.name,
                                           "lagTime": time_lag})
 
-    elif frmt == "standard":
+    elif not json_fmt:
         print("\nchk_slv_time:  Warning:  No Slave instance detected.")
 
-    if frmt == "JSON":
+    if json_fmt:
         outdata = add_miss_slaves(master, outdata)
         _process_json(outdata, **kwargs)
 
@@ -461,6 +467,7 @@ def _process_json(outdata, **kwargs):
             db_tbl -> database:collection - Name of db and collection.
             class_cfg -> Server class configuration settings.
             mail -> Mail instance.
+            sup_std -> Suppress standard out.
 
     """
 
@@ -481,8 +488,11 @@ def _process_json(outdata, **kwargs):
         mail.add_2_msg(jdata)
         mail.send_mail()
 
+    if not kwargs.get("sup_std", False):
+        gen_libs.print_data(jdata)
 
-def _process_time_lag(slv, time_lag, name, frmt, **kwargs):
+
+def _process_time_lag(slv, time_lag, name, json_fmt, **kwargs):
 
     """Function:  _process_time_lag
 
@@ -493,7 +503,8 @@ def _process_time_lag(slv, time_lag, name, frmt, **kwargs):
         (input) slv -> Slave instance.
         (input) time_lag -> Time lag between master and slave.
         (input) name -> Name of slave.
-        (input) frmt -> JSON|standard - JSON format or standard output.
+        (input) json_fmt -> True|False - output to JSON format.
+        (output) time_lag -> Time lag between master and slave.
 
     """
 
@@ -502,9 +513,11 @@ def _process_time_lag(slv, time_lag, name, frmt, **kwargs):
         slv.upd_slv_time()
         time_lag = slv.get_time()
 
-        if time_lag and frmt == "standard":
+        if time_lag and not json_fmt:
             print("\nSlave:  {0}".format(name))
             print("\tTime Lag:  {0}".format(time_lag))
+
+    return time_lag
 
 
 def chk_slv_other(master, slaves, **kwargs):
@@ -561,32 +574,6 @@ def _chk_other(skip, tmp_tbl, retry, name, **kwargs):
             print("Retried Transaction Count:  {0}".format(retry))
 
 
-def setup_mail(to_line, subj=None, frm_line=None, **kwargs):
-
-    """Function:  setup_mail
-
-    Description:  Initialize a mail instance.  Provide 'from line' if one is
-        not passed.
-
-    Arguments:
-        (input) to_line -> Mail to line.
-        (input) subj -> Mail subject line.
-        (input) frm_line -> Mail from line.
-        (output) Mail instance.
-
-    """
-
-    to_line = list(to_line)
-
-    if isinstance(subj, list):
-        subj = list(subj)
-
-    if not frm_line:
-        frm_line = getpass.getuser() + "@" + socket.gethostname()
-
-    return gen_class.Mail(to_line, subj, frm_line)
-
-
 def call_run_chk(args_array, func_dict, master, slaves, **kwargs):
 
     """Function:  call_run_chk
@@ -607,9 +594,10 @@ def call_run_chk(args_array, func_dict, master, slaves, **kwargs):
     args_array = dict(args_array)
     func_dict = dict(func_dict)
     slaves = list(slaves)
-    frmt = args_array.get("-f", "standard")
+    json_fmt = args_array.get("-j", False)
     outfile = args_array.get("-o", None)
     db_tbl = args_array.get("-b", None)
+    sup_std = args_array.get("-z", False)
     mongo_cfg = None
     mail = None
 
@@ -617,29 +605,32 @@ def call_run_chk(args_array, func_dict, master, slaves, **kwargs):
         mongo_cfg = gen_libs.load_module(args_array["-m"], args_array["-d"])
 
     if args_array.get("-t", None):
-        mail = setup_mail(args_array.get("-t"),
-                          subj=args_array.get("-u", None))
+        mail = gen_class.setup_mail(args_array.get("-t"),
+                                    subj=args_array.get("-u", None))
 
     if "-A" in args_array:
 
         for x in func_dict["-A"]:
-            func_dict[x](master, slaves, form=frmt, ofile=outfile,
-                         db_tbl=db_tbl, class_cfg=mongo_cfg, mail=mail)
+            func_dict[x](master, slaves, json_fmt=json_fmt, ofile=outfile,
+                         db_tbl=db_tbl, class_cfg=mongo_cfg, mail=mail,
+                         sup_std=sup_std)
 
         for y in args_array:
 
             # The option is in func_dict but not under the ALL option and is
             #   not the ALL option itself.
             if y in func_dict and y not in func_dict["-A"] and y != "-A":
-                func_dict[y](master, slaves, form=frmt, ofile=outfile,
-                             db_tbl=db_tbl, class_cfg=mongo_cfg, mail=mail)
+                func_dict[y](master, slaves, json_fmt=json_fmt, ofile=outfile,
+                             db_tbl=db_tbl, class_cfg=mongo_cfg, mail=mail,
+                             sup_std=sup_std)
 
     else:
 
         # Intersect args_array & func_dict to find which functions to call.
         for opt in set(args_array.keys()) & set(func_dict.keys()):
-            func_dict[opt](master, slaves, form=frmt, ofile=outfile,
-                           db_tbl=db_tbl, class_cfg=mongo_cfg, mail=mail)
+            func_dict[opt](master, slaves, json_fmt=json_fmt, ofile=outfile,
+                           db_tbl=db_tbl, class_cfg=mongo_cfg, mail=mail,
+                           sup_std=sup_std)
 
 
 def run_program(args_array, func_dict, **kwargs):

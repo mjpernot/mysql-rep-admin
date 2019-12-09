@@ -35,7 +35,7 @@ import version
 __version__ = version.__version__
 
 
-def chk_mst_log(master, slaves, form, ofile, db_tbl, class_cfg, **kwargs):
+def chk_mst_log(master, slaves, json_fmt, ofile, db_tbl, class_cfg, **kwargs):
 
     """Method:  chk_mst_log
 
@@ -44,7 +44,7 @@ def chk_mst_log(master, slaves, form, ofile, db_tbl, class_cfg, **kwargs):
     Arguments:
         master -> Stub holder
         slaves -> Stub holder
-        form -> Stub holder
+        json_fmt -> Stub holder
         ofile -> Stub holder
         db_tbl -> Stub holder
         class_cfg -> Stub holder
@@ -54,7 +54,7 @@ def chk_mst_log(master, slaves, form, ofile, db_tbl, class_cfg, **kwargs):
     return True
 
 
-def chk_slv_thr(master, slaves, form, ofile, db_tbl, class_cfg, **kwargs):
+def chk_slv_thr(master, slaves, json_fmt, ofile, db_tbl, class_cfg, **kwargs):
 
     """Method:  chk_slv_thr
 
@@ -63,7 +63,7 @@ def chk_slv_thr(master, slaves, form, ofile, db_tbl, class_cfg, **kwargs):
     Arguments:
         master -> Stub holder
         slaves -> Stub holder
-        form -> Stub holder
+        json_fmt -> Stub holder
         ofile -> Stub holder
         db_tbl -> Stub holder
         class_cfg -> Stub holder
@@ -73,7 +73,7 @@ def chk_slv_thr(master, slaves, form, ofile, db_tbl, class_cfg, **kwargs):
     return True
 
 
-def rpt_slv_log(master, slaves, form, ofile, db_tbl, class_cfg, **kwargs):
+def rpt_slv_log(master, slaves, json_fmt, ofile, db_tbl, class_cfg, **kwargs):
 
     """Method:  rpt_slv_log
 
@@ -82,7 +82,7 @@ def rpt_slv_log(master, slaves, form, ofile, db_tbl, class_cfg, **kwargs):
     Arguments:
         master -> Stub holder
         slaves -> Stub holder
-        form -> Stub holder
+        json_fmt -> Stub holder
         ofile -> Stub holder
         db_tbl -> Stub holder
         class_cfg -> Stub holder
@@ -98,10 +98,6 @@ class MasterRep(object):
 
     Description:  Class stub holder for mysql_class.MasterRep class.
 
-    Super-Class:  None
-
-    Sub-Classes:  None
-
     Methods:
         __init__ -> Class initialization.
 
@@ -114,7 +110,6 @@ class MasterRep(object):
         Description:  Class initialization.
 
         Arguments:
-            None
 
         """
 
@@ -127,10 +122,6 @@ class SlaveRep(object):
 
     Description:  Class stub holder for mysql_class.SlaveRep class.
 
-    Super-Class:  None
-
-    Sub-Classes:  None
-
     Methods:
         __init__ -> Class initialization.
 
@@ -143,7 +134,6 @@ class SlaveRep(object):
         Description:  Class initialization.
 
         Arguments:
-            None
 
         """
 
@@ -155,10 +145,6 @@ class UnitTest(unittest.TestCase):
     """Class:  UnitTest
 
     Description:  Class which is a representation of a unit testing.
-
-    Super-Class:  unittest.TestCase
-
-    Sub-Classes:
 
     Methods:
         setUp -> Initialize testing environment.
@@ -185,7 +171,7 @@ class UnitTest(unittest.TestCase):
         self.args_array2 = {"-D": True, "-m": "Mongo", "-d": "cfg",
                             "-t": "ToMail"}
 
-    @mock.patch("mysql_rep_admin.setup_mail")
+    @mock.patch("mysql_rep_admin.gen_class.setup_mail")
     @mock.patch("mysql_rep_admin.gen_libs.load_module")
     def test_single_func(self, mock_cfg, mock_mail):
 
@@ -200,10 +186,8 @@ class UnitTest(unittest.TestCase):
         mock_cfg.return_value = "MongoCfg"
         mock_mail.return_value = "MailInstance"
 
-        self.assertFalse(mysql_rep_admin.call_run_chk(self.args_array2,
-                                                      self.func_dict,
-                                                      self.master,
-                                                      [self.slave]))
+        self.assertFalse(mysql_rep_admin.call_run_chk(
+            self.args_array2, self.func_dict, self.master, [self.slave]))
 
     @mock.patch("mysql_rep_admin.gen_libs.load_module")
     def test_argsarray_all(self, mock_cfg):
@@ -218,10 +202,8 @@ class UnitTest(unittest.TestCase):
 
         mock_cfg.return_value = "MongoCfg"
 
-        self.assertFalse(mysql_rep_admin.call_run_chk(self.args_array,
-                                                      self.func_dict,
-                                                      self.master,
-                                                      [self.slave]))
+        self.assertFalse(mysql_rep_admin.call_run_chk(
+            self.args_array, self.func_dict, self.master, [self.slave]))
 
 
 if __name__ == "__main__":
