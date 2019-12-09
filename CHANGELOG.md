@@ -4,6 +4,29 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
+## [3.1.0] - 2019-12-04
+### Fixed
+- chk_slv_time :  Capture time lag from \_process_time_lag function.
+- \_process_time_lag:  Return updated time lag to calling function.
+
+### Added
+- Added -j option to change output to JSON format.  Uses a True|False setting instead of a string value.
+- Added -z option to suppress standard out.
+
+### Changed
+- \_process_time_lag:  Replaced frmt with json_fmt.
+- chk_slv_time: Added json_fmt to function and replaced frmt with json_fmt.
+- call_run_chk:  Added -j option to function and replaced frmt with json_fmt.
+- call_run_chk:  Replaced setup_mail with call to gen_class.setup_mail.
+- \_process_json:  Added gen_libs.print_data call for JSON format.
+- \_process_json:  Added suppress standard out option.
+- call_run_chk:  Added suppress standard out option to function calls.
+- Documentation update.
+
+### Removed
+- setup_mail:  Replaced by gen_class.setup_mail call.
+
+
 ## [3.0.0] - 2019-07-13
 Breaking Change
 

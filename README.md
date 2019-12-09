@@ -35,7 +35,6 @@
     - lib/cmds_gen
     - lib/arg_parser
     - lib/gen_libs
-    - lib/errors
     - lib/machine
     - mysql_lib/mysql_libs
     - mysql_lib/mysql_class
@@ -111,6 +110,51 @@ vim mysql.cfg
 chmod 600 mysql.cfg
 ```
 
+Create Slave definition file.
+
+```
+cp slave.txt.TEMPLATE slave.txt
+```
+
+Make the appropriate change for a slave connection.
+Add a new section for each slave in the replication domain.
+  * Change these entries in the slave definition file:
+    - passwd = ROOT_PASSWORD
+    - host = IP_ADDRESS
+    - serv_os = Linux
+    - name = HOSTNAME
+    - port = PORT_NUMBER
+    - cfg_file DIRECTORY_PATH/my.cnf
+    - sid = SERVER_ID
+
+```
+vim slave.txt
+chmod 600 slave.txt
+```
+
+Create Mongodb configuration file.
+  * If submitting output to Mongo database, then require a Mongodb configuration file.
+
+```
+cp mongo.py.TEMPLATE mongo.py
+```
+
+Make the appropriate change to the environment.
+  * Make the appropriate changes to connect to a Mongo database.
+    - passwd = "ROOT_PASSWORD"
+    - host = "HOST_IP"
+    - name = "HOSTNAME"
+
+  * If connecting to a Mongo replica set, otherwise set to None.
+    - repset = "REPLICA_SET_NAME"
+    - repset_hosts = "HOST_1:PORT, HOST_2:PORT, ..."
+    - db_auth = "AUTHENTICATION_DATABASE"
+
+```
+vim mongo.py
+chmod 600 mongo.py
+```
+
 
 # Program Help Function:
 
@@ -170,6 +214,7 @@ cd {Python_Project}/mysql-rep-admin
 test/unit/mysql_rep_admin/add_miss_slaves.py
 test/unit/mysql_rep_admin/call_run_chk.py
 test/unit/mysql_rep_admin/chk_mst_log.py
+test/unit/mysql_rep_admin/chk_other.py
 test/unit/mysql_rep_admin/chk_slv.py
 test/unit/mysql_rep_admin/chk_slv_err.py
 test/unit/mysql_rep_admin/chk_slv_other.py
@@ -177,10 +222,11 @@ test/unit/mysql_rep_admin/chk_slv_thr.py
 test/unit/mysql_rep_admin/chk_slv_time.py
 test/unit/mysql_rep_admin/help_message.py
 test/unit/mysql_rep_admin/main.py
+test/unit/mysql_rep_admin/process_json.py
+test/unit/mysql_rep_admin/process_time_lag.py
 test/unit/mysql_rep_admin/rpt_mst_log.py
 test/unit/mysql_rep_admin/rpt_slv_log.py
 test/unit/mysql_rep_admin/run_program.py
-test/unit/mysql_rep_admin/setup_mail.py
 ```
 
 ### All unit testing
