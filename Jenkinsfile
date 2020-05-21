@@ -76,25 +76,25 @@ pipeline {
                                 "pattern": "./*.py",
                                 "recursive": false,
                                 "excludePatterns": [],
-                                "target": "generic-local/highpoint/mysql-rep-admin/"
+                                "target": "pypi-proj-local/highpoint/mysql-rep-admin/"
                             },
                             {
                                 "pattern": "./*.txt",
                                 "recursive": false,
                                 "excludePatterns": [],
-                                "target": "generic-local/highpoint/mysql-rep-admin/"
+                                "target": "pypi-proj-local/highpoint/mysql-rep-admin/"
                             },
                             {
                                 "pattern": "./*.md",
                                 "recursive": false,
                                 "excludePatterns": [],
-                                "target": "generic-local/highpoint/mysql-rep-admin/"
+                                "target": "pypi-proj-local/highpoint/mysql-rep-admin/"
                             },
                             {
                                 "pattern": "*.TEMPLATE",
                                 "recursive": true,
                                 "excludePatterns": [],
-                                "target": "generic-local/highpoint/mysql-rep-admin/config/"
+                                "target": "pypi-proj-local/highpoint/mysql-rep-admin/config/"
                             }
                         ]
                     }"""
