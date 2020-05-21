@@ -52,7 +52,6 @@ class MasterRep(object):
         Description:  Class initialization.
 
         Arguments:
-            None
 
         """
 
