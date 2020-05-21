@@ -3,8 +3,8 @@
 # Unclassified until filled.
 
 # All Mongo configuration settings.
-user = "root"
-passwd = "ROOT_PASSWORD"
+user = "USER"
+passwd = "PASSWORD"
 # Mongo DB host information
 host = "HOST_IP"
 name = "HOSTNAME"
