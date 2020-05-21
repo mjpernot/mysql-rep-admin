@@ -9,7 +9,6 @@
         test/unit/mysql_rep_admin/main.py
 
     Arguments:
-        None
 
 """
 
