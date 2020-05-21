@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
+## [3.1.1] - 2020-05-21
+### Changed
+- config/mongo.py.TEMPLATE:  Changed format.
+- config/mysql.cfg.TEMPLATE:  Changed format.
+- config/mysql_cfg.py.TEMPLATE:  Changed format.
+- config/slave.txt.TEMPLATE:  Changed format.
+- Documentation updates.
+
+
 ## [3.1.0] - 2019-12-04
 ### Fixed
 - chk_slv_time :  Capture time lag from \_process_time_lag function.

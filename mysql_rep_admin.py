@@ -3,7 +3,7 @@
 
 """Program:  mysql_rep_admin.py
 
-    Description:  Administration program for MySQL Replication system.  Has a
+    Description:  Administration a MySQL Replication database system.  Has a
         number of functions to monitor the status of the replication
         between master and slaves (replicas).  The program can monitor
         and check on a number of different aspects in replication to
@@ -58,19 +58,19 @@
         NOTE 4:  -b option requires -m option to be included.
 
     Notes:
-        Master configuration file format (mysql_cfg.py):
-        WARNING:  Do not use the loopback IP or 'localhost' for the "host"
+        Master configuration file format (config/mysql_cfg.py.TEMPLATE):
+        NOTE:  Do not use the loopback IP or 'localhost' for the "host"
         variable, use the actual IP.
             # Configuration file for {Database Name/Server}
-            user = "root"
-            passwd = "ROOT_PASSWORD"
+            user = "USER"
+            passwd = "PASSWORD"
             host = "IP_ADDRESS"
-            serv_os = "Linux"
             name = "HOSTNAME"
-            port = PORT_NUMBER (default of mysql is 3306)
+            sid = SERVER_ID
+            extra_def_file = "DIRECTORY_PATH/config/mysql.cfg"
+            serv_os = "Linux"
+            port = 3306
             cfg_file = "DIRECTORY_PATH/my.cnf"
-            sid = "SERVER_ID"
-            extra_def_file = "DIRECTORY_PATH/mysql.cfg"
 
         NOTE 1:  Include the cfg_file even if running remotely as the
             file will be used in future releases.
@@ -80,24 +80,55 @@
             database configuration file.  See below for the
             defaults-extra-file format.
 
-        Slave configuration file format (slave.txt)
-        Make a copy of this section for each slave in the replication domain.
+        configuration modules -> name is runtime dependent as it can be
+            used to connect to different databases with different names.
+
+        Defaults Extra File format (config/mysql.cfg.TEMPLATE):
+            [client]
+            password="PASSWORD"
+            socket="DIRECTORY_PATH/mysql.sock"
+
+        NOTE 1:  The socket information can be obtained from the my.cnf
+            file under ~/mysql directory.
+        NOTE 2:  The --defaults-extra-file option will be overridden if there
+            is a ~/.my.cnf or ~/.mylogin.cnf file located in the home directory
+            of the user running this program.  The extras file will in effect
+            be ignored.
+
+        Slave configuration file format (config/slave.txt.TEMPLATE)
+        Make a copy of this section for each slave in the replica set.
             # Slave 1 configuration {Database Name/Server}
-            user = root
-            passwd = ROOT_PASSWORD
+            user = USER
+            passwd = PASSWORD
             host = IP_ADDRESS
-            serv_os = Linux
             name = HOSTNAME
-            port = PORT_NUMBER
-            cfg_file DIRECTORY_PATH/my.cnf
             sid = SERVER_ID
+            cfg_file = None
+            port = 3306
+            serv_os = Linux
 
-        NOTE:  Include the cfg_file even if running remotely as the file
-            will be used in future releases.
+        Mongo configuration file format (config/mongo.py.TEMPLATE).  The
+            configuration file format for the Mongo connection used for
+            inserting data into a database.
+            There are two ways to connect:  single or replica set.
 
-        Defaults Extra File format (mysql.cfg)
-            password="ROOT_PASSWORD"
-            socket=/BASE_PATH/mysqld/mysqld.sock
+            1.)  Single database connection:
+
+            # Single Configuration file for Mongo Database Server.
+            user = "USER"
+            passwd = "PASSWORD"
+            host = "IP_ADDRESS"
+            name = "HOSTNAME"
+            port = 27017
+            conf_file = None
+            auth = True
+
+            2.)  Replica Set connection:  Same format as above, but with these
+                additional entries at the end of the configuration file:
+
+            repset = "REPLICA_SET_NAME"
+            repset_hosts = "HOST1:PORT, HOST2:PORT, HOST3:PORT, [...]"
+            db_auth = "AUTHENTICATION_DATABASE"
 
     Example:
         mysql_rep_admin.py -c master -d config  -s slave.txt -A
