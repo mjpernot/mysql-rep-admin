@@ -132,7 +132,7 @@ class MstCfg(object):
         self.name = "MasterName"
         self.sid = 11
         self.user = "UserName"
-        self.passwd = "pwd"
+        self.passwd = None
         self.serv_os = "Linux"
         self.host = "HostName"
         self.port = 3306
