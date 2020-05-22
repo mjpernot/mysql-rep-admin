@@ -228,8 +228,9 @@ def rpt_slv_log(master, slaves, **kwargs):
 
     """
 
-    slaves = list(slaves)
     global PRT_TEMPLATE
+
+    slaves = list(slaves)
 
     if slaves:
 
@@ -267,12 +268,14 @@ def chk_slv(slave, **kwargs):
 
     """
 
+    global PRT_TEMPLATE
+
     mst_file, relay_file, read_pos, exec_pos = slave.get_log_info()
     name = slave.get_name()
 
     # Slave's master info doesn't match slave's relay info.
     if mst_file != relay_file or read_pos != exec_pos:
-        print("\nSlave: {0}".format(name))
+        print(PRT_TEMPLATE.format(name))
         print("Warning:  Slave might be lagging in execution of log.")
         print("\tRead Log:\t{0}".format(mst_file))
         print("\tRead Pos:\t{0}".format(read_pos))
@@ -345,8 +348,9 @@ def chk_slv_thr(master, slaves, **kwargs):
 
     """
 
-    slaves = list(slaves)
     global PRT_TEMPLATE
+
+    slaves = list(slaves)
 
     if slaves:
 
