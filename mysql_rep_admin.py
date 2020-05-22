@@ -14,18 +14,27 @@
         database and multiple slave databases.
 
     Usage:
-        mysql_rep_admin.py -d path {-c file | -s path/file} [-p path
-            | -C | -S | -B | -D | -T | -E | -A | -O | -o dir_path/file]
-            -f {JSON|standard | -j | -b db:coll | -m file}
-            [-t ToEmail {ToEmail2 ToEmail3 ...} {-u SubjectLine}] -z [-v | -h]
+        mysql_rep_admin.py -c file -d path [-p path]
+            {-C -s [path]/slave.txt} |
+            {-S -s [path]/slave.txt} |
+            {-B} |
+            {-D -s [path]/slave.txt} |
+            {-T -s [path]/slave.txt [-j] [-o dir_path/file]
+                [-b db:coll | -m file]
+                [-t ToEmail {ToEmail2 ...} {-u SubjectLine}]} |
+            {-E -s [path]/slave.txt} |
+            {-A -s [path]/slave.txt} |
+            {-O -s [path]/slave.txt}
+            [-z] 
+            [-v | -h]
 
     Arguments:
         -d dir path => Directory path to the config files (-c and -s).
             Required arg.
         -c file => Master config file.  Is loaded as a python, do not
             include the .py extension with the name.
-        -s file => Slave config file.  Will be a text file.  Include the
-            file extension with the name.
+        -s [path]/slave.txt => Slave config file. Include the file extension
+            with the name.
         -C => Compare master binlog position to the slaves'.
         -S => Check the slave(s) IO and SQL threads.
         -B => Display the master binlog filename and position.
@@ -35,12 +44,10 @@
         -A => Does multiple checks which include the following options:
             (-C, -S, -T, -E)
         -O => Other slave replication checks.
-        -f JSON|standard => Output format as JSON or standard. (only
-            used with option -T)
         -j => Return output in JSON format, if available.
         -o path/file => Directory path and file name for output.
         -b database:collection => Name of database and collection.
-            Delimited by colon (:).  Default: sysmon:mysql_rep_lag
+            Default: sysmon:mysql_rep_lag
         -m file => Mongo config file.  Is loaded as a python, do not
             include the .py extension with the name.
         -p dir_path => Directory path to the mysql binary programs.
@@ -52,10 +59,7 @@
         -v => Display version of this program.
         -h => Help and usage message.
 
-        NOTE 1:  Will require -c and/or -s option to be included.
-        NOTE 2:  -v or -h overrides the other options.
-        NOTE 3:  -o and -f options is only available for -T option.
-        NOTE 4:  -b option requires -m option to be included.
+        NOTE:  -v or -h overrides the other options.
 
     Notes:
         Master configuration file format (config/mysql_cfg.py.TEMPLATE):
