@@ -736,11 +736,11 @@ def main():
                  "-D": rpt_slv_log, "-C": chk_mst_log, "-S": chk_slv_thr,
                  "-E": chk_slv_err, "-T": chk_slv_time, "-O": chk_slv_other}
     opt_con_req_list = {"-b": ["-m"], "-u": ["-t"]}
-    opt_def_dict = {"-f": "standard", "-b": "sysmon:mysql_rep_lag"}
+    opt_def_dict = {"-b": "sysmon:mysql_rep_lag"}
     opt_multi_list = ["-u", "-t"]
     opt_or_dict_list = {"-c": ["-s"]}
     opt_req_list = ["-d"]
-    opt_val_list = ["-d", "-c", "-p", "-s", "-f", "-o", "-b", "-m", "-u", "-t"]
+    opt_val_list = ["-d", "-c", "-p", "-s", "-o", "-b", "-m", "-u", "-t"]
 
     # Process argument list from command line.
     args_array = arg_parser.arg_parse2(sys.argv, opt_val_list, opt_def_dict,

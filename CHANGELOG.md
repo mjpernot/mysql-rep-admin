@@ -12,6 +12,9 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - config/slave.txt.TEMPLATE:  Changed format.
 - Documentation updates.
 
+### Removed
+- main:  Removed -f option which sets output as JSON or standard format.
+
 
 ## [3.1.0] - 2019-12-04
 ### Fixed
