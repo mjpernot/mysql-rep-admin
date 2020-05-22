@@ -170,6 +170,9 @@ import version
 
 __version__ = version.__version__
 
+# Global
+prt_template = "\nSlave: {0}"
+
 
 def help_message():
 
@@ -347,7 +350,7 @@ def chk_slv_thr(master, slaves, **kwargs):
     """
 
     slaves = list(slaves)
-    prt_template = "\nSlave: {0}"
+    global prt_template
 
     if slaves:
 

@@ -9,10 +9,11 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - run_program:  Only disconnect from master when -c option is used.
 
 ### Added
+- Added global variable for template printing.
 - Added -a option to allow for appending to output files.
 
 ### Changed
-- chk_slv_thr: Setup a print template variable.
+- chk_slv_thr: Used global variable for template printing.
 - \_process_json:  Changed hardcoded write file mode to a variable to allow for write appending.
 - call_run_chk:  Set file mode settings and passed to functions.
 - config/mongo.py.TEMPLATE:  Changed format.
