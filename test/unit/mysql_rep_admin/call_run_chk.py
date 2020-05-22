@@ -170,6 +170,24 @@ class UnitTest(unittest.TestCase):
         self.args_array = {"-A": True, "-D": True, "-m": "Mongo", "-d": "cfg"}
         self.args_array2 = {"-D": True, "-m": "Mongo", "-d": "cfg",
                             "-t": "ToMail"}
+        self.args_array3 = {"-A": True, "-D": True, "-m": "Mongo",
+                            "-d": "cfg", "-a": True}
+
+    @mock.patch("mysql_rep_admin.gen_libs.load_module")
+    def test_file_append(self, mock_cfg):
+
+        """Function:  test_file_append
+
+        Description:  Test with file append mode.
+
+        Arguments:
+
+        """
+
+        mock_cfg.return_value = "MongoCfg"
+
+        self.assertFalse(mysql_rep_admin.call_run_chk(
+            self.args_array3, self.func_dict, self.master, [self.slave]))
 
     @mock.patch("mysql_rep_admin.gen_class.setup_mail")
     @mock.patch("mysql_rep_admin.gen_libs.load_module")
