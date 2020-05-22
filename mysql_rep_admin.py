@@ -14,12 +14,12 @@
         database and multiple slave databases.
 
     Usage:
-        mysql_rep_admin.py -c file -d path [-p path]
-            {-C -s [path]/slave.txt} |
+        mysql_rep_admin.py -d path [-p path]
+            {-C -c file -s [path]/slave.txt} |
             {-S -s [path]/slave.txt} |
-            {-B} |
+            {-B -c file} |
             {-D -s [path]/slave.txt} |
-            {-T -s [path]/slave.txt [-j] [-o dir_path/file]
+            {-T -c file -s [path]/slave.txt [-j] [-o dir_path/file [-a]]
                 [-b db:coll | -m file]
                 [-t ToEmail {ToEmail2 ...} {-u SubjectLine}]} |
             {-E -s [path]/slave.txt} |
@@ -29,12 +29,10 @@
             [-v | -h]
 
     Arguments:
-        -d dir path => Directory path to the config files (-c and -s).
-            Required arg.
-        -c file => Master config file.  Is loaded as a python, do not
-            include the .py extension with the name.
-        -s [path]/slave.txt => Slave config file. Include the file extension
-            with the name.
+        -d dir path => Directory path to the config files (-c). Required arg.
+        -c file => Master config file.
+            For use with the -C, -B, and -T options.
+        -s [path]/slave.txt => Slave config file.
         -C => Compare master binlog position to the slaves'.
         -S => Check the slave(s) IO and SQL threads.
         -B => Display the master binlog filename and position.
@@ -45,14 +43,20 @@
             (-C, -S, -T, -E)
         -O => Other slave replication checks.
         -j => Return output in JSON format, if available.
+            For use with the -T option.
         -o path/file => Directory path and file name for output.
+            Use the -a option to append to an existing file.
+            For use with the -T option.
+        -a => Append output to output file.
         -b database:collection => Name of database and collection.
             Default: sysmon:mysql_rep_lag
-        -m file => Mongo config file.  Is loaded as a python, do not
-            include the .py extension with the name.
+        -m file => Insert results into a Mongo database.  File is the Mongo
+            config file.
+            For use with the -T option.
         -p dir_path => Directory path to the mysql binary programs.
         -t to_email_addresses => Enables emailing capability for an option if
             the option allows it.  Sends output to one or more email addresses.
+            For use with the -T option.
         -u subject_line => Subject line of email.  Optional, will create own
             subject line if one is not provided.
         -z => Suppress standard out.
