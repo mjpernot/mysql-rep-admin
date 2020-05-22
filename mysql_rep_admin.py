@@ -707,7 +707,11 @@ def run_program(args_array, func_dict, **kwargs):
 
     call_run_chk(args_array, func_dict, master, slaves)
 
-    cmds_gen.disconnect(master, slaves)
+    if master:
+        cmds_gen.disconnect(master, slaves)
+
+    else:
+        cmds_gen.disconnect(slaves)
 
 
 def main():

@@ -5,6 +5,9 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 
 ## [3.1.1] - 2020-05-21
+### Fixed
+- run_program:  Only disconnect from master when -c option is used.
+
 ### Changed
 - config/mongo.py.TEMPLATE:  Changed format.
 - config/mysql.cfg.TEMPLATE:  Changed format.
