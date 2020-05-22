@@ -655,8 +655,9 @@ def call_run_chk(args_array, func_dict, master, slaves, **kwargs):
 
         for x in func_dict["-A"]:
             func_dict[x](
-                master, slaves, json_fmt=json_fmt, ofile=outfile, mode=mode,
-                db_tbl=db_tbl, class_cfg=mongo_cfg, mail=mail, sup_std=sup_std)
+                master, slaves, json_fmt=json_fmt, ofile=outfile,
+                db_tbl=db_tbl, class_cfg=mongo_cfg, mail=mail, sup_std=sup_std,
+                mode=mode)
 
         for y in args_array:
 
@@ -673,8 +674,9 @@ def call_run_chk(args_array, func_dict, master, slaves, **kwargs):
         # Intersect args_array & func_dict to find which functions to call.
         for opt in set(args_array.keys()) & set(func_dict.keys()):
             func_dict[opt](
-                master, slaves, json_fmt=json_fmt, ofile=outfile, mode=mode,
-                db_tbl=db_tbl, class_cfg=mongo_cfg, mail=mail, sup_std=sup_std)
+                master, slaves, json_fmt=json_fmt, ofile=outfile,
+                db_tbl=db_tbl, class_cfg=mongo_cfg, mail=mail, sup_std=sup_std,
+                mode=mode)
 
 
 def run_program(args_array, func_dict, **kwargs):
