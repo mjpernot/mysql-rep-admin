@@ -752,6 +752,7 @@ def main():
 
     """
 
+    cmdline = gen_libs.get_inst(sys)
     dir_chk_list = ["-d", "-p"]
     file_chk_list = ["-o"]
     file_crt_list = ["-o"]
@@ -766,8 +767,8 @@ def main():
     opt_val_list = ["-d", "-c", "-p", "-s", "-o", "-b", "-m", "-u", "-t"]
 
     # Process argument list from command line.
-    args_array = arg_parser.arg_parse2(sys.argv, opt_val_list, opt_def_dict,
-                                       multi_val=opt_multi_list)
+    args_array = arg_parser.arg_parse2(cmdline.argv, opt_val_list,
+                                       opt_def_dict, multi_val=opt_multi_list)
 
     if not gen_libs.help_func(args_array, __version__, help_message) \
        and arg_parser.arg_req_or_lst(args_array, opt_or_dict_list) \
