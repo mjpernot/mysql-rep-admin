@@ -606,8 +606,10 @@ def _chk_other(skip, tmp_tbl, retry, name, **kwargs):
 
     """
 
+    global PRT_TEMPLATE
+
     if skip > 0 or int(tmp_tbl) > 5 or int(retry) > 0:
-        print("\nSlave: {0}".format(name))
+        print(PRT_TEMPLATE.format(name))
 
         if skip > 0:
             print("Skip Count:  {0}".format(skip))
