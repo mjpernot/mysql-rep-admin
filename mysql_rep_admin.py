@@ -229,6 +229,7 @@ def rpt_slv_log(master, slaves, **kwargs):
     """
 
     slaves = list(slaves)
+    global PRT_TEMPLATE
 
     if slaves:
 
@@ -236,7 +237,7 @@ def rpt_slv_log(master, slaves, **kwargs):
             mst_file, relay_file, read_pos, exec_pos = slv.get_log_info()
             name = slv.get_name()
 
-            print("\nSlave: {0}".format(name))
+            print(PRT_TEMPLATE.format(name))
             print("\tMaster File:\t\t{0}".format(mst_file))
             print("\tMaster Position:\t{0}".format(read_pos))
 
