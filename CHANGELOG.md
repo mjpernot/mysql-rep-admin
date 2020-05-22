@@ -8,7 +8,11 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 ### Fixed
 - run_program:  Only disconnect from master when -c option is used.
 
+### Added
+- Added -a option to allow for appending to output files.
+
 ### Changed
+- call_run_chk:  Set file mode settings and passed to functions.
 - config/mongo.py.TEMPLATE:  Changed format.
 - config/mysql.cfg.TEMPLATE:  Changed format.
 - config/mysql_cfg.py.TEMPLATE:  Changed format.
