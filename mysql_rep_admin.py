@@ -25,7 +25,7 @@
             {-E -s [path]/slave.txt} |
             {-A -s [path]/slave.txt} |
             {-O -s [path]/slave.txt}
-            [-z] 
+            [-z]
             [-v | -h]
 
     Arguments:
@@ -151,8 +151,6 @@ from __future__ import print_function
 import sys
 import time
 import datetime
-import socket
-import getpass
 
 # Third party
 import json
@@ -171,7 +169,7 @@ import version
 __version__ = version.__version__
 
 # Global
-prt_template = "\nSlave: {0}"
+PRT_TEMPLATE = "\nSlave: {0}"
 
 
 def help_message():
@@ -350,7 +348,7 @@ def chk_slv_thr(master, slaves, **kwargs):
     """
 
     slaves = list(slaves)
-    global prt_template
+    global PRT_TEMPLATE
 
     if slaves:
 
@@ -360,17 +358,17 @@ def chk_slv_thr(master, slaves, **kwargs):
 
             # Slave IO and run state.
             if not thr or not gen_libs.is_true(run):
-                print(prt_template.format(name))
+                print(PRT_TEMPLATE.format(name))
                 print("Error:  Slave IO/SQL Threads are down.")
 
             # Slave IO thread.
             elif not gen_libs.is_true(io_thr):
-                print(prt_template.format(name))
+                print(PRT_TEMPLATE.format(name))
                 print("Error:  Slave IO Thread is down.")
 
             # Slave SQL thread.
             elif not gen_libs.is_true(sql_thr):
-                print(prt_template.format(name))
+                print(PRT_TEMPLATE.format(name))
                 print("Error:  Slave SQL Thread is down.")
 
     else:

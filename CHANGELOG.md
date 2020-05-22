@@ -23,6 +23,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - Documentation updates.
 
 ### Removed
+- Removed unused library modules.
 - main:  Removed -f option which sets output as JSON or standard format.
 
 
