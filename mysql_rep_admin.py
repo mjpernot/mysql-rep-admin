@@ -507,6 +507,7 @@ def _process_json(outdata, **kwargs):
             class_cfg -> Server class configuration settings.
             mail -> Mail instance.
             sup_std -> Suppress standard out.
+            mode -> File write mode.
 
     """
 
@@ -515,13 +516,14 @@ def _process_json(outdata, **kwargs):
     db_tbl = kwargs.get("db_tbl", None)
     ofile = kwargs.get("ofile", None)
     mail = kwargs.get("mail", None)
+    mode = kwargs.get("mode", "w")
 
     if mongo_cfg and db_tbl:
         db, tbl = db_tbl.split(":")
         mongo_libs.ins_doc(mongo_cfg, db, tbl, outdata)
 
     if ofile:
-        gen_libs.write_file(ofile, "w", jdata)
+        gen_libs.write_file(ofile, mode, jdata)
 
     if mail:
         mail.add_2_msg(jdata)

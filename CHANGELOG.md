@@ -12,6 +12,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - Added -a option to allow for appending to output files.
 
 ### Changed
+- \_process_json:  Changed hardcoded write file mode to a variable to allow for write appending.
 - call_run_chk:  Set file mode settings and passed to functions.
 - config/mongo.py.TEMPLATE:  Changed format.
 - config/mysql.cfg.TEMPLATE:  Changed format.
