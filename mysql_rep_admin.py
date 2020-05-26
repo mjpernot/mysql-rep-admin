@@ -694,15 +694,15 @@ def call_run_chk(args_array, func_dict, master, slaves, **kwargs):
                 db_tbl=db_tbl, class_cfg=mongo_cfg, mail=mail,
                 sup_std=sup_std, mode=mode, indent=indent)
 
-#        for y in args_array:
-#
-#            # The option is in func_dict but not under the ALL option and is
-#            #   not the ALL option itself.
-#            if y in func_dict and y not in func_dict["-A"] and y != "-A":
-#                func_dict[y](
-#                    master, slaves, json_fmt=json_fmt, ofile=outfile,
-#                    db_tbl=db_tbl, class_cfg=mongo_cfg, mail=mail,
-#                    sup_std=sup_std, mode=mode, indent=indent)
+        for y in args_array:
+
+            # The option is in func_dict but not under the ALL option and is
+            #   not the ALL option itself.
+            if y in func_dict and y not in func_dict["-A"] and y != "-A":
+                func_dict[y](
+                    master, slaves, json_fmt=json_fmt, ofile=outfile,
+                    db_tbl=db_tbl, class_cfg=mongo_cfg, mail=mail,
+                    sup_std=sup_std, mode=mode, indent=indent)
 
     else:
 
