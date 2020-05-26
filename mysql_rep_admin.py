@@ -473,11 +473,11 @@ def chk_slv_time(master, slaves, **kwargs):
     json_fmt = kwargs.get("json_fmt", False)
 
     if json_fmt:
-        outdata = {"application": "MySQL Replication",
-                   "master": master.name,
-                   "asOf": datetime.datetime.strftime(datetime.datetime.now(),
+        outdata = {"Application": "MySQL Replication",
+                   "Master": master.name,
+                   "AsOf": datetime.datetime.strftime(datetime.datetime.now(),
                                                       "%Y-%m-%d %H:%M:%S"),
-                   "slaves": []}
+                   "Slaves": []}
 
     if slaves:
 
@@ -487,8 +487,8 @@ def chk_slv_time(master, slaves, **kwargs):
             time_lag = _process_time_lag(slv, time_lag, name, json_fmt)
 
             if json_fmt:
-                outdata["slaves"].append({"name": slv.name,
-                                          "lagTime": time_lag})
+                outdata["Slaves"].append({"Same": slv.name,
+                                          "LagTime": time_lag})
 
     elif not json_fmt:
         print("\nchk_slv_time:  Warning:  No Slave instance detected.")
