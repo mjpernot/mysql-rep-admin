@@ -320,7 +320,7 @@ def chk_mst_log(master, slaves, **kwargs):
         fname, log_pos = master.get_log_info()
 
         for slv in slaves:
-            mst_file, relay_file, read_pos, exec_pos = slv.get_log_info()
+            mst_file, _, read_pos, _ = slv.get_log_info()
             name = slv.get_name()
 
             # Master's log file or position doesn't match slave's log info.

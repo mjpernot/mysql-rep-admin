@@ -16,6 +16,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - Added -a option to allow for appending to output files.
 
 ### Changed
+- chk_mst_log: Replaced returning unused arguments into placeholders.
 - call_run_chk:  Refactored "for" and "if" statements into a generator.
 - \_process_json:  Added flattening of JSON structure to standard out and to file.
 - call_run_chk:  Checked for "-f" option and passed JSON identation setting to functions.
