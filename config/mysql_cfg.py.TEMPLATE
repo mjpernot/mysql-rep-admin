@@ -16,4 +16,4 @@ serv_os = 'Linux'
 port = 3306
 # MySQL configuration settings
 # Example: cfg_file = '/opt/lamp/mysql/my.cnf'
-cfg_file = 'DIRECTORY_PATH/my.cnf'
+cfg_file = 'MYSQL_DIRECTORY/mysqld.cnf'
