@@ -10,6 +10,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - run_program:  Only disconnect from master when -c option is used.
 
 ### Added
+- Added -f option to Flatten the JSON data structure to file and standard out.
 - Added ProgramLock class to prevent multiple runs at the same time.
 - Added global variable for template printing.
 - Added -a option to allow for appending to output files.

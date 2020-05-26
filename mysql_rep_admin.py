@@ -19,7 +19,7 @@
             {-S -s [path]/slave.txt} |
             {-B -c file} |
             {-D -s [path]/slave.txt} |
-            {-T -c file -s [path]/slave.txt [-j] [-o dir_path/file [-a]]
+            {-T -c file -s [path]/slave.txt [-j [-f]] [-o dir_path/file [-a]]
                 [-b db:coll | -m file]
                 [-t ToEmail {ToEmail2 ...} {-u SubjectLine}]} |
             {-E -s [path]/slave.txt} |
@@ -47,6 +47,8 @@
         -O => Other slave replication checks and return any errors detected.
         -j => Return output in JSON format, if available.
             For use with the -T option.
+        -f => Flatten the JSON data structure to file and standard out.
+            For use with the -j option.
         -o path/file => Directory path and file name for output.
             Use the -a option to append to an existing file.
             For use with the -T option.
