@@ -75,16 +75,16 @@
         Master configuration file format (config/mysql_cfg.py.TEMPLATE):
         NOTE:  Do not use the loopback IP or 'localhost' for the "host"
         variable, use the actual IP.
-            # Configuration file for {Database Name/Server}
+            # Configuration file for Database:
             user = "USER"
             passwd = "PASSWORD"
             host = "IP_ADDRESS"
             name = "HOSTNAME"
             sid = SERVER_ID
-            extra_def_file = "DIRECTORY_PATH/config/mysql.cfg"
+            extra_def_file = "PYTHON_PROJECT/config/mysql.cfg"
             serv_os = "Linux"
             port = 3306
-            cfg_file = "DIRECTORY_PATH/my.cnf"
+            cfg_file = "MYSQL_DIRECTORY/my.cnf"
 
         NOTE 1:  Include the cfg_file even if running remotely as the
             file will be used in future releases.
@@ -95,7 +95,8 @@
             defaults-extra-file format.
         NOTE 3:  For the -T option to determine if slaves are missing, the
             "report-host" and "report-port" must be added to the mysqld.cnf
-            file and the database restarted for it to take effect.
+            file on each of the slaves and the database restarted for it to
+            take effect.
 
         configuration modules -> name is runtime dependent as it can be
             used to connect to different databases with different names.
@@ -103,7 +104,7 @@
         Defaults Extra File format (config/mysql.cfg.TEMPLATE):
             [client]
             password="PASSWORD"
-            socket="DIRECTORY_PATH/mysql.sock"
+            socket="MYSQL_DIRECTORY/mysql.sock"
 
         NOTE 1:  The socket information can be obtained from the my.cnf
             file under ~/mysql directory.
@@ -114,7 +115,7 @@
 
         Slave configuration file format (config/slave.txt.TEMPLATE)
         Make a copy of this section for each slave in the replica set.
-            # Slave 1 configuration {Database Name/Server}
+            # Slave 1 configuration
             user = USER
             passwd = PASSWORD
             host = IP_ADDRESS
