@@ -654,9 +654,13 @@ def call_run_chk(args_array, func_dict, master, slaves, **kwargs):
     mongo_cfg = None
     mail = None
     mode = "w"
+    indent = 4
 
     if args_array.get("-a", False):
         mode = "a"
+
+    if args_array.get("-f", False):
+        indent = None
 
     if args_array.get("-m", None):
         mongo_cfg = gen_libs.load_module(args_array["-m"], args_array["-d"])
@@ -671,7 +675,7 @@ def call_run_chk(args_array, func_dict, master, slaves, **kwargs):
             func_dict[x](
                 master, slaves, json_fmt=json_fmt, ofile=outfile,
                 db_tbl=db_tbl, class_cfg=mongo_cfg, mail=mail, sup_std=sup_std,
-                mode=mode)
+                mode=mode, indent=indent)
 
         for y in args_array:
 
@@ -681,7 +685,7 @@ def call_run_chk(args_array, func_dict, master, slaves, **kwargs):
                 func_dict[y](
                     master, slaves, json_fmt=json_fmt, ofile=outfile,
                     db_tbl=db_tbl, class_cfg=mongo_cfg, mail=mail,
-                    sup_std=sup_std, mode=mode)
+                    sup_std=sup_std, mode=mode, indent=indent)
 
     else:
 
@@ -690,7 +694,7 @@ def call_run_chk(args_array, func_dict, master, slaves, **kwargs):
             func_dict[opt](
                 master, slaves, json_fmt=json_fmt, ofile=outfile,
                 db_tbl=db_tbl, class_cfg=mongo_cfg, mail=mail, sup_std=sup_std,
-                mode=mode)
+                mode=mode, indent=indent)
 
 
 def run_program(args_array, func_dict, **kwargs):
