@@ -15,6 +15,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - Added -a option to allow for appending to output files.
 
 ### Changed
+- main:  Added ProgramLock class to implement program locking.
 - main:  Made "-c" option a requirement for "-B", "-C", and "-T" options.
 - \_chk_other: Used global variable for template printing.
 - chk_slv: Used global variable for template printing.

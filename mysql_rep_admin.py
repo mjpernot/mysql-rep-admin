@@ -766,7 +766,7 @@ def main():
     opt_multi_list = ["-u", "-t"]
     opt_or_dict_list = {"-c": ["-s"]}
     opt_req_list = ["-d"]
-    opt_val_list = ["-d", "-c", "-p", "-s", "-o", "-b", "-m", "-u", "-t"]
+    opt_val_list = ["-d", "-c", "-p", "-s", "-o", "-b", "-m", "-u", "-t", "-y"]
 
     # Process argument list from command line.
     args_array = arg_parser.arg_parse2(cmdline.argv, opt_val_list,
@@ -779,7 +779,16 @@ def main():
        and not arg_parser.arg_dir_chk_crt(args_array, dir_chk_list) \
        and not arg_parser.arg_file_chk(args_array, file_chk_list,
                                        file_crt_list):
-        run_program(args_array, func_dict)
+
+        try:
+            proglock = gen_class.ProgramLock(cmdline.argv,
+                                             args_array.get("-y", ""))
+            run_program(args_array, func_dict)
+            del proglock
+
+        except gen_class.SingleInstanceException:
+            print("WARNING:  lock in place for mysql_rep_admin with id of: %s"
+                  % (args_array.get("-y", "")))
 
 
 if __name__ == "__main__":
