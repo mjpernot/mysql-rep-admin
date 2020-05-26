@@ -678,8 +678,8 @@ def call_run_chk(args_array, func_dict, master, slaves, **kwargs):
 
     if "-A" in args_array:
 
-        for x in func_dict["-A"]:
-            func_dict[x](
+        for opt in func_dict["-A"]:
+            func_dict[opt](
                 master, slaves, json_fmt=json_fmt, ofile=outfile,
                 db_tbl=db_tbl, class_cfg=mongo_cfg, mail=mail, sup_std=sup_std,
                 mode=mode, indent=indent)
