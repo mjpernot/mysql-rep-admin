@@ -474,7 +474,7 @@ def chk_slv_time(master, slaves, **kwargs):
 
     if json_fmt:
         outdata = {"Application": "MySQL Replication",
-                   "Master": master.name,
+                   "Server": master.name,
                    "AsOf": datetime.datetime.strftime(datetime.datetime.now(),
                                                       "%Y-%m-%d %H:%M:%S"),
                    "Slaves": []}
