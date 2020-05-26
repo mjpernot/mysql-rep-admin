@@ -760,8 +760,9 @@ def main():
     func_dict = {"-A": ["-C", "-S", "-E", "-T", "-O"], "-B": rpt_mst_log,
                  "-D": rpt_slv_log, "-C": chk_mst_log, "-S": chk_slv_thr,
                  "-E": chk_slv_err, "-T": chk_slv_time, "-O": chk_slv_other}
-    opt_con_req_list = {"-b": ["-m"], "-u": ["-t"], "-B": ["-c"], "-C": ["-c"],
-                        "-T": ["-c"]}
+    opt_con_req_list = {"-b": ["-m"], "-u": ["-t"], "-A": ["-s"], "-B": ["-c"],
+                        "-C": ["-c", "-s"], "-D": ["-s"], "-E": ["-s"],
+                        "-O": ["-s"], "-T": ["-c", "-s"]}
     opt_def_dict = {"-b": "sysmon:mysql_rep_lag"}
     opt_multi_list = ["-u", "-t"]
     opt_or_dict_list = {"-c": ["-s"]}
