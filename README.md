@@ -88,7 +88,7 @@ Make the appropriate change to the environment.
     - name = "HOST_NAME"
     - sid = SERVER_ID
     - extra_def_file = "PYTHON_PROJECT/config/mysql.cfg"
-    - cfg_file = "DIRECTORY_PATH/my.cnf"
+    - cfg_file = "MYSQL_DIRECTORY/mysqld.cnf"
   * Change these entries only if required:
     - serv_os = "Linux"
     - port = 3306
@@ -169,14 +169,15 @@ chmod 600 mongo.py
 
 ### Database Configuration
 
-For some options to work correctly the report-host and report-port options must be added to each of the slaves mysqld.cnf file and the database restarted.  It is recommended to add these entries to all slaves including the master database.
+For some options to work correctly the report-host and report-port options must be added to each of the slaves mysqld.cnf file and the database restarted.
+It is recommended to add these entries to all slaves including the master database.
 
 ```
 sudo bash
 vim MYSQL_DIRECTORY/mysqld.cnf
 ```
 
-Add the following lines to the file.
+Add the following lines to the mysqld.cnf file under the [mysqld] section.
   * report-host and report-port must match up with "name" and "port" entries respectively from the mysql_cfg.py/slave.txt file.
 
 report-host = HOSTNAME
