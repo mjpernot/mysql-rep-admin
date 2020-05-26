@@ -685,24 +685,15 @@ def call_run_chk(args_array, func_dict, master, slaves, **kwargs):
                 mode=mode, indent=indent)
 
 
-        gen = (x for x in args_array if x in func_dict and
-               x not in func_dict["-A"] and x != "-A")
-        for item in gen:
-            # print(item)
+        # The option is in func_dict but not under the ALL option and is not
+        #   the ALL option itself.
+        for item in (opt for opt in args_array if opt in func_dict and
+                     opt not in func_dict["-A"] and opt != "-A"):
+
             func_dict[item](
                 master, slaves, json_fmt=json_fmt, ofile=outfile,
                 db_tbl=db_tbl, class_cfg=mongo_cfg, mail=mail,
                 sup_std=sup_std, mode=mode, indent=indent)
-
-        for y in args_array:
-
-            # The option is in func_dict but not under the ALL option and is
-            #   not the ALL option itself.
-            if y in func_dict and y not in func_dict["-A"] and y != "-A":
-                func_dict[y](
-                    master, slaves, json_fmt=json_fmt, ofile=outfile,
-                    db_tbl=db_tbl, class_cfg=mongo_cfg, mail=mail,
-                    sup_std=sup_std, mode=mode, indent=indent)
 
     else:
 
