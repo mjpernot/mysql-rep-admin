@@ -446,15 +446,15 @@ def add_miss_slaves(master, outdata, **kwargs):
     all_list = []
     slv_list = []
 
-    for x in master.show_slv_hosts():
-        all_list.append(x["Host"])
+    for slv in master.show_slv_hosts():
+        all_list.append(slv["Host"])
 
-    for y in outdata["Slaves"]:
-        slv_list.append(y["Name"])
+    for slv in outdata["Slaves"]:
+        slv_list.append(slv["Name"])
 
     # Add slaves from the slave list that are not in the master's slave list.
-    for x in [val for val in all_list if val not in slv_list]:
-        outdata["Slaves"].append({"Name": x, "LagTime": None})
+    for item in [val for val in all_list if val not in slv_list]:
+        outdata["Slaves"].append({"Name": item, "LagTime": None})
 
     return outdata
 
