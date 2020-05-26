@@ -16,6 +16,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - Added -a option to allow for appending to output files.
 
 ### Changed
+- chk_slv_err:  Changed variable name to standard naming convention.
 - add_miss_slaves:  Changed variable name to standard naming convention.
 - chk_mst_log: Replaced returning unused arguments into placeholders.
 - call_run_chk:  Refactored "for" and "if" statements into a generator.

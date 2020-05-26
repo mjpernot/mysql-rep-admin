@@ -406,13 +406,13 @@ def chk_slv_err(master, slaves, **kwargs):
         for slv in slaves:
 
             # For pre-MySQL 5.6 versions, will be NULL for these two entries.
-            io, sql, io_msg, sql_msg, io_time, sql_time = slv.get_err_stat()
+            iost, sql, io_msg, sql_msg, io_time, sql_time = slv.get_err_stat()
             name = slv.get_name()
 
             # IO error
-            if io:
+            if iost:
                 print("\nSlave:\t{0}".format(name))
-                print("IO Error Detected:\t{0}".format(io))
+                print("IO Error Detected:\t{0}".format(iost))
                 print("\tIO Message:\t{0}".format(io_msg))
 
                 print("\tIO Timestamp:\t{0}".format(io_time))
