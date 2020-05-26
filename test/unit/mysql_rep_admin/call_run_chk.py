@@ -28,14 +28,13 @@ import mock
 
 # Local
 sys.path.append(os.getcwd())
-import lib.gen_libs as gen_libs
 import mysql_rep_admin
 import version
 
 __version__ = version.__version__
 
 
-def chk_mst_log(master, slaves, json_fmt, ofile, db_tbl, class_cfg, **kwargs):
+def chk_mst_log(master, slaves, **kwargs):
 
     """Method:  chk_mst_log
 
@@ -44,17 +43,19 @@ def chk_mst_log(master, slaves, json_fmt, ofile, db_tbl, class_cfg, **kwargs):
     Arguments:
         master -> Stub holder
         slaves -> Stub holder
-        json_fmt -> Stub holder
-        ofile -> Stub holder
-        db_tbl -> Stub holder
-        class_cfg -> Stub holder
 
     """
 
-    return True
+    status = True
+    json_fmt = kwargs.get("json_fmt", None)
+
+    if master and slaves and json_fmt:
+        status = True
+
+    return status
 
 
-def chk_slv_thr(master, slaves, json_fmt, ofile, db_tbl, class_cfg, **kwargs):
+def chk_slv_thr(master, slaves, **kwargs):
 
     """Method:  chk_slv_thr
 
@@ -63,17 +64,19 @@ def chk_slv_thr(master, slaves, json_fmt, ofile, db_tbl, class_cfg, **kwargs):
     Arguments:
         master -> Stub holder
         slaves -> Stub holder
-        json_fmt -> Stub holder
-        ofile -> Stub holder
-        db_tbl -> Stub holder
-        class_cfg -> Stub holder
 
     """
 
-    return True
+    status = True
+    json_fmt = kwargs.get("json_fmt", None)
+
+    if master and slaves and json_fmt:
+        status = True
+
+    return status
 
 
-def rpt_slv_log(master, slaves, json_fmt, ofile, db_tbl, class_cfg, **kwargs):
+def rpt_slv_log(master, slaves, **kwargs):
 
     """Method:  rpt_slv_log
 
@@ -82,14 +85,16 @@ def rpt_slv_log(master, slaves, json_fmt, ofile, db_tbl, class_cfg, **kwargs):
     Arguments:
         master -> Stub holder
         slaves -> Stub holder
-        json_fmt -> Stub holder
-        ofile -> Stub holder
-        db_tbl -> Stub holder
-        class_cfg -> Stub holder
 
     """
 
-    return True
+    status = True
+    json_fmt = kwargs.get("json_fmt", None)
+
+    if master and slaves and json_fmt:
+        status = True
+
+    return status
 
 
 class MasterRep(object):
