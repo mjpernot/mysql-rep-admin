@@ -148,6 +148,8 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp -> Initialize testing environment.
+        test_flatten_json -> Test with flatten option for JSON format.
+        test_file_append -> Test with file append mode.
         test_single_func -> Test with single function call.
         test_argsarray_all -> Test with all option in args_array.
 
@@ -172,6 +174,24 @@ class UnitTest(unittest.TestCase):
                             "-t": "ToMail"}
         self.args_array3 = {"-A": True, "-D": True, "-m": "Mongo",
                             "-d": "cfg", "-a": True}
+        self.args_array4 = {"-A": True, "-D": True, "-m": "Mongo",
+                            "-d": "cfg", "-f": True}
+
+    @mock.patch("mysql_rep_admin.gen_libs.load_module")
+    def test_flatten_json(self, mock_cfg):
+
+        """Function:  test_flatten_json
+
+        Description:  Test with flatten option for JSON format.
+
+        Arguments:
+
+        """
+
+        mock_cfg.return_value = "MongoCfg"
+
+        self.assertFalse(mysql_rep_admin.call_run_chk(
+            self.args_array4, self.func_dict, self.master, [self.slave]))
 
     @mock.patch("mysql_rep_admin.gen_libs.load_module")
     def test_file_append(self, mock_cfg):
