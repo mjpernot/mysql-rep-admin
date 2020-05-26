@@ -33,15 +33,18 @@
         -c file => Master config file.
             For use with the -C, -B, and -T options.
         -s [path]/slave.txt => Slave config file.
-        -C => Compare master binlog position to the slaves'.
-        -S => Check the slave(s) IO and SQL threads.
+        -C => Compare master binlog position to the slaves' and return any
+            differences detected if not the same positions.
+        -S => Check the slave(s) IO and SQL threads and return any errors or
+            warnings detected.
         -B => Display the master binlog filename and position.
         -D => Display the slave(s) binlog filename and position.
-        -T => Check time lag for the slave(s).
-        -E => Check for errors on the slave(s).
+        -T => Check time lag for the slave(s) and return any differences
+            detected.
+        -E => Check for any replication errors on the slave(s).
         -A => Does multiple checks which include the following options:
             (-C, -S, -T, -E)
-        -O => Other slave replication checks.
+        -O => Other slave replication checks and return any errors detected.
         -j => Return output in JSON format, if available.
             For use with the -T option.
         -o path/file => Directory path and file name for output.
