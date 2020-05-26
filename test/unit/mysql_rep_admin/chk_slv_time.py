@@ -205,6 +205,7 @@ class UnitTest(unittest.TestCase):
         self.slave = SlaveRep()
         self.mail = Mail()
         self.outdata = {"key": "value"}
+        self.db_tbl = "db:tbl"
 
     @mock.patch("mysql_rep_admin.gen_libs.write_file")
     @mock.patch("mysql_rep_admin.mongo_libs.ins_doc")
@@ -227,7 +228,8 @@ class UnitTest(unittest.TestCase):
 
         self.assertFalse(mysql_rep_admin.chk_slv_time(
             self.master, [self.slave], json_fmt=True, class_cfg="Cfg",
-            db_tbl="db:tbl", ofile="FileName", mail=self.mail, sup_std=True))
+            db_tbl=self.db_tbl, ofile="FileName", mail=self.mail,
+            sup_std=True))
 
     def test_no_slv(self):
 
@@ -264,7 +266,7 @@ class UnitTest(unittest.TestCase):
         with gen_libs.no_std_out():
             self.assertFalse(mysql_rep_admin.chk_slv_time(
                 self.master, [self.slave], json_fmt=True, class_cfg="Cfg",
-                db_tbl="db:tbl", ofile="FileName", sup_std=False))
+                db_tbl=self.db_tbl, ofile="FileName", sup_std=False))
 
     @mock.patch("mysql_rep_admin.gen_libs.write_file")
     @mock.patch("mysql_rep_admin.mongo_libs.ins_doc")
@@ -288,7 +290,7 @@ class UnitTest(unittest.TestCase):
 
         self.assertFalse(mysql_rep_admin.chk_slv_time(
             self.master, [self.slave], json_fmt=True, class_cfg="Cfg",
-            db_tbl="db:tbl", ofile="FileName", sup_std=True))
+            db_tbl=self.db_tbl, ofile="FileName", sup_std=True))
 
     @mock.patch("mysql_rep_admin.gen_libs.write_file")
     @mock.patch("mysql_rep_admin.mongo_libs.ins_doc")
@@ -311,7 +313,7 @@ class UnitTest(unittest.TestCase):
 
         self.assertFalse(mysql_rep_admin.chk_slv_time(
             self.master, [self.slave], json_fmt=True, class_cfg="Cfg",
-            db_tbl="db:tbl", ofile="FileName", sup_std=True))
+            db_tbl=self.db_tbl, ofile="FileName", sup_std=True))
 
     @mock.patch("mysql_rep_admin.time.sleep")
     def test_std_no_lag(self, mock_sleep):
