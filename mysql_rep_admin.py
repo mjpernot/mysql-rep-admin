@@ -25,7 +25,7 @@
             {-E -s [path]/slave.txt} |
             {-A -s [path]/slave.txt} |
             {-O -s [path]/slave.txt}
-            [-z]
+            [-y flavor_id] [-z]
             [-v | -h]
 
     Arguments:
@@ -59,6 +59,7 @@
             For use with the -T option.
         -u subject_line => Subject line of email.  Optional, will create own
             subject line if one is not provided.
+        -y value => A flavor id for the program lock.  To create unique lock.
         -z => Suppress standard out.
         -v => Display version of this program.
         -h => Help and usage message.
