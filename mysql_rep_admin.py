@@ -93,6 +93,9 @@
             of the --defaults-extra-file option (i.e. extra_def_file) in the
             database configuration file.  See below for the
             defaults-extra-file format.
+        NOTE 3:  For the -T option to determine if slaves are missing, the
+            "report-host" and "report-port" must be added to the mysqld.cnf
+            file and the database restarted for it to take effect.
 
         configuration modules -> name is runtime dependent as it can be
             used to connect to different databases with different names.
