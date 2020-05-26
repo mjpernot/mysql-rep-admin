@@ -471,6 +471,7 @@ def chk_slv_time(master, slaves, **kwargs):
             mail -> Mail instance.
             sup_std -> Suppress standard out.
             json_fmt -> True|False - convert output to JSON format.
+            indent -> Indentation level for JSON document.
 
     """
 
@@ -518,10 +519,12 @@ def _process_json(outdata, **kwargs):
             mail -> Mail instance.
             sup_std -> Suppress standard out.
             mode -> File write mode.
+            indent -> Indentation level for JSON document.
 
     """
 
-    jdata = json.dumps(outdata, indent=4)
+    indent = kwargs.get("indent", None)
+    jdata = json.dumps(outdata, indent=indent)
     mongo_cfg = kwargs.get("class_cfg", None)
     db_tbl = kwargs.get("db_tbl", None)
     ofile = kwargs.get("ofile", None)
