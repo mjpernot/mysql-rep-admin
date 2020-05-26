@@ -16,6 +16,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - Added -a option to allow for appending to output files.
 
 ### Changed
+- run_program: Converted positional args to kwargs in mysql_class.MasterRep call.
 - call_run_chk:  Changed variable name to standard naming convention.
 - \_process_json:  Changed variable name to standard naming convention.
 - chk_slv_err:  Changed variable name to standard naming convention.

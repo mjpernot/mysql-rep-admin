@@ -723,11 +723,10 @@ def run_program(args_array, func_dict, **kwargs):
     if "-c" in args_array:
         mst_cfg = gen_libs.load_module(args_array["-c"], args_array["-d"])
 
-        master = mysql_class.MasterRep(mst_cfg.name, mst_cfg.sid,
-                                       mst_cfg.user, mst_cfg.passwd,
-                                       getattr(machine, mst_cfg.serv_os)(),
-                                       mst_cfg.host, mst_cfg.port,
-                                       mst_cfg.cfg_file)
+        master = mysql_class.MasterRep(
+            mst_cfg.name, mst_cfg.sid, mst_cfg.user, mst_cfg.passwd,
+            machine=getattr(machine, mst_cfg.serv_os)(), host=mst_cfg.host,
+            port=mst_cfg.port, defaults_file=mst_cfg.cfg_file)
         master.connect()
 
     slaves = []
