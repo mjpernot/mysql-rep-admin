@@ -440,12 +440,12 @@ def add_miss_slaves(master, outdata, **kwargs):
     for x in master.show_slv_hosts():
         all_list.append(x["Host"])
 
-    for y in outdata["slaves"]:
-        slv_list.append(y["name"])
+    for y in outdata["Slaves"]:
+        slv_list.append(y["Name"])
 
     # Add slaves from the slave list that are not in the master's slave list.
     for x in [val for val in all_list if val not in slv_list]:
-        outdata["slaves"].append({"name": x, "lagTime": None})
+        outdata["Slaves"].append({"Name": x, "LagTime": None})
 
     return outdata
 
@@ -487,7 +487,7 @@ def chk_slv_time(master, slaves, **kwargs):
             time_lag = _process_time_lag(slv, time_lag, name, json_fmt)
 
             if json_fmt:
-                outdata["Slaves"].append({"Same": slv.name,
+                outdata["Slaves"].append({"Name": slv.name,
                                           "LagTime": time_lag})
 
     elif not json_fmt:
