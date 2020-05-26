@@ -684,7 +684,6 @@ def call_run_chk(args_array, func_dict, master, slaves, **kwargs):
                 db_tbl=db_tbl, class_cfg=mongo_cfg, mail=mail, sup_std=sup_std,
                 mode=mode, indent=indent)
 
-
         # The option is in func_dict but not under the ALL option and is not
         #   the ALL option itself.
         for item in (opt for opt in args_array if opt in func_dict and
