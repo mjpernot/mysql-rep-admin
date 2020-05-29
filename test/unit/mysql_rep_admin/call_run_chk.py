@@ -28,14 +28,13 @@ import mock
 
 # Local
 sys.path.append(os.getcwd())
-import lib.gen_libs as gen_libs
 import mysql_rep_admin
 import version
 
 __version__ = version.__version__
 
 
-def chk_mst_log(master, slaves, json_fmt, ofile, db_tbl, class_cfg, **kwargs):
+def chk_mst_log(master, slaves, **kwargs):
 
     """Method:  chk_mst_log
 
@@ -44,17 +43,19 @@ def chk_mst_log(master, slaves, json_fmt, ofile, db_tbl, class_cfg, **kwargs):
     Arguments:
         master -> Stub holder
         slaves -> Stub holder
-        json_fmt -> Stub holder
-        ofile -> Stub holder
-        db_tbl -> Stub holder
-        class_cfg -> Stub holder
 
     """
 
-    return True
+    status = True
+    json_fmt = kwargs.get("json_fmt", None)
+
+    if master and slaves and json_fmt:
+        status = True
+
+    return status
 
 
-def chk_slv_thr(master, slaves, json_fmt, ofile, db_tbl, class_cfg, **kwargs):
+def chk_slv_thr(master, slaves, **kwargs):
 
     """Method:  chk_slv_thr
 
@@ -63,17 +64,19 @@ def chk_slv_thr(master, slaves, json_fmt, ofile, db_tbl, class_cfg, **kwargs):
     Arguments:
         master -> Stub holder
         slaves -> Stub holder
-        json_fmt -> Stub holder
-        ofile -> Stub holder
-        db_tbl -> Stub holder
-        class_cfg -> Stub holder
 
     """
 
-    return True
+    status = True
+    json_fmt = kwargs.get("json_fmt", None)
+
+    if master and slaves and json_fmt:
+        status = True
+
+    return status
 
 
-def rpt_slv_log(master, slaves, json_fmt, ofile, db_tbl, class_cfg, **kwargs):
+def rpt_slv_log(master, slaves, **kwargs):
 
     """Method:  rpt_slv_log
 
@@ -82,14 +85,16 @@ def rpt_slv_log(master, slaves, json_fmt, ofile, db_tbl, class_cfg, **kwargs):
     Arguments:
         master -> Stub holder
         slaves -> Stub holder
-        json_fmt -> Stub holder
-        ofile -> Stub holder
-        db_tbl -> Stub holder
-        class_cfg -> Stub holder
 
     """
 
-    return True
+    status = True
+    json_fmt = kwargs.get("json_fmt", None)
+
+    if master and slaves and json_fmt:
+        status = True
+
+    return status
 
 
 class MasterRep(object):
@@ -148,6 +153,8 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp -> Initialize testing environment.
+        test_flatten_json -> Test with flatten option for JSON format.
+        test_file_append -> Test with file append mode.
         test_single_func -> Test with single function call.
         test_argsarray_all -> Test with all option in args_array.
 
@@ -170,6 +177,42 @@ class UnitTest(unittest.TestCase):
         self.args_array = {"-A": True, "-D": True, "-m": "Mongo", "-d": "cfg"}
         self.args_array2 = {"-D": True, "-m": "Mongo", "-d": "cfg",
                             "-t": "ToMail"}
+        self.args_array3 = {"-A": True, "-D": True, "-m": "Mongo",
+                            "-d": "cfg", "-a": True}
+        self.args_array4 = {"-A": True, "-D": True, "-m": "Mongo",
+                            "-d": "cfg", "-f": True}
+
+    @mock.patch("mysql_rep_admin.gen_libs.load_module")
+    def test_flatten_json(self, mock_cfg):
+
+        """Function:  test_flatten_json
+
+        Description:  Test with flatten option for JSON format.
+
+        Arguments:
+
+        """
+
+        mock_cfg.return_value = "MongoCfg"
+
+        self.assertFalse(mysql_rep_admin.call_run_chk(
+            self.args_array4, self.func_dict, self.master, [self.slave]))
+
+    @mock.patch("mysql_rep_admin.gen_libs.load_module")
+    def test_file_append(self, mock_cfg):
+
+        """Function:  test_file_append
+
+        Description:  Test with file append mode.
+
+        Arguments:
+
+        """
+
+        mock_cfg.return_value = "MongoCfg"
+
+        self.assertFalse(mysql_rep_admin.call_run_chk(
+            self.args_array3, self.func_dict, self.master, [self.slave]))
 
     @mock.patch("mysql_rep_admin.gen_class.setup_mail")
     @mock.patch("mysql_rep_admin.gen_libs.load_module")

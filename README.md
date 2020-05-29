@@ -2,7 +2,7 @@
 # Classification (U)
 
 # Description:
-  This program is used for replication administration in a MySQL replication setup to include checking binary log status, slave status, master status, time lag between master and slave, errors detected within replication, binary log positions, and replication configuration status.
+  Used for replication administration in a MySQL replication setup to include checking binary log status, slave status, master status, time lag between master and slave, errors detected within replication, binary log positions, and replication configuration status.
 
 
 ###  This README file is broken down into the following sections:
@@ -26,8 +26,6 @@
 # Prerequisites:
 
   * List of Linux packages that need to be installed on the server.
-    - python-libs
-    - python-devel
     - git
     - python-pip
 
@@ -36,6 +34,7 @@
     - lib/arg_parser
     - lib/gen_libs
     - lib/machine
+    - lib/gen_class
     - mysql_lib/mysql_libs
     - mysql_lib/mysql_class
     - mongo_lib/mongo_libs
@@ -74,7 +73,7 @@ pip install -r requirements-python-lib.txt --target mongo_lib/lib --trusted-host
 # Configuration:
 
 Create MySQL configuration file.
-  * Replace **{Python_Project}** with the baseline path of the python program.
+  * Replace **PYTHON_PROJECT** with the baseline path of the python program.
 
 ```
 cd config
@@ -83,11 +82,16 @@ cp mysql_cfg.py.TEMPLATE mysql_cfg.py
 
 Make the appropriate change to the environment.
   * Change these entries in the MySQL setup:
-    - passwd = "ROOT_PASSWORD"
+    - user = "USER"
+    - passwd = "PASSWORD"
     - host = "SERVER_IP"
     - name = "HOST_NAME"
     - sid = SERVER_ID
-    - extra_def_file = "{Python_Project}/config/mysql.cfg"
+    - extra_def_file = "PYTHON_PROJECT/config/mysql.cfg"
+    - cfg_file = "MYSQL_DIRECTORY/mysqld.cnf"
+  * Change these entries only if required:
+    - serv_os = "Linux"
+    - port = 3306
 
 ```
 vim mysql_cfg.py
@@ -102,8 +106,8 @@ cp mysql.cfg.TEMPLATE mysql.cfg
 
 Make the appropriate change to the environment.
   * Change these entries in the MySQL definition file:
-    - password="ROOT_PASSWORD"
-    - socket={BASE_DIR}/mysql/tmp/mysql.sock
+    - password="PASSWORD"
+    - socket="DIRECTORY_PATH/mysql.sock"
 
 ```
 vim mysql.cfg
@@ -117,15 +121,17 @@ cp slave.txt.TEMPLATE slave.txt
 ```
 
 Make the appropriate change for a slave connection.
-Add a new section for each slave in the replication domain.
-  * Change these entries in the slave definition file:
-    - passwd = ROOT_PASSWORD
+  * Change these entries in the MySQL slave setup:
+    - user = USER
+    - passwd = PASSWORD
     - host = IP_ADDRESS
-    - serv_os = Linux
     - name = HOSTNAME
-    - port = PORT_NUMBER
-    - cfg_file DIRECTORY_PATH/my.cnf
     - sid = SERVER_ID
+  * Change these entries only if required:
+    - cfg_file = None
+    - serv_os = Linux
+    - port = 3306
+  * NOTE:  Create a new set of entries for each slave in the MySQL replica set.
 
 ```
 vim slave.txt
@@ -141,11 +147,17 @@ cp mongo.py.TEMPLATE mongo.py
 
 Make the appropriate change to the environment.
   * Make the appropriate changes to connect to a Mongo database.
-    - passwd = "ROOT_PASSWORD"
+    - user = "USER"
+    - passwd = "PASSWORD"
     - host = "HOST_IP"
     - name = "HOSTNAME"
 
-  * If connecting to a Mongo replica set, otherwise set to None.
+  * Change these entries only if required:
+    - port = 27017
+    - conf_file = None
+    - auth = True
+
+  * If connecting to a Mongo replica set:
     - repset = "REPLICA_SET_NAME"
     - repset_hosts = "HOST_1:PORT, HOST_2:PORT, ..."
     - db_auth = "AUTHENTICATION_DATABASE"
@@ -154,6 +166,24 @@ Make the appropriate change to the environment.
 vim mongo.py
 chmod 600 mongo.py
 ```
+
+### Database Configuration
+
+For some options to work correctly the report-host and report-port options must be added to each of the slaves mysqld.cnf file and the database restarted.
+It is recommended to add these entries to all slaves including the master database.
+
+```
+sudo bash
+vim MYSQL_DIRECTORY/mysqld.cnf
+```
+
+Add the following lines to the mysqld.cnf file under the [mysqld] section.
+  * report-host and report-port must match up with "name" and "port" entries respectively from the mysql_cfg.py/slave.txt file.
+
+report-host = HOSTNAME
+report-port = 3306
+
+Restart each of the databases for the changes to take effect.
 
 
 # Program Help Function:
@@ -169,8 +199,6 @@ chmod 600 mongo.py
 # Testing:
 
 # Unit Testing:
-
-### Description: Testing consists of unit testing for the functions in the mysql_rep_admin.py program.
 
 ### Installation:
 
@@ -205,37 +233,17 @@ pip install -r requirements-python-lib.txt --target mongo_lib/lib --trusted-host
 ```
 
 
-# Unit test runs for mysql_rep_admin.py:
+### Testing:
   * Replace **{Python_Project}** with the baseline path of the python program.
 
-### Unit testing:
 ```
 cd {Python_Project}/mysql-rep-admin
-test/unit/mysql_rep_admin/add_miss_slaves.py
-test/unit/mysql_rep_admin/call_run_chk.py
-test/unit/mysql_rep_admin/chk_mst_log.py
-test/unit/mysql_rep_admin/chk_other.py
-test/unit/mysql_rep_admin/chk_slv.py
-test/unit/mysql_rep_admin/chk_slv_err.py
-test/unit/mysql_rep_admin/chk_slv_other.py
-test/unit/mysql_rep_admin/chk_slv_thr.py
-test/unit/mysql_rep_admin/chk_slv_time.py
-test/unit/mysql_rep_admin/help_message.py
-test/unit/mysql_rep_admin/main.py
-test/unit/mysql_rep_admin/process_json.py
-test/unit/mysql_rep_admin/process_time_lag.py
-test/unit/mysql_rep_admin/rpt_mst_log.py
-test/unit/mysql_rep_admin/rpt_slv_log.py
-test/unit/mysql_rep_admin/run_program.py
-```
-
-### All unit testing
-```
 test/unit/mysql_rep_admin/unit_test_run.sh
 ```
 
-### Code coverage program
+### Code coverage:
 ```
+cd {Python_Project}/mysql-rep-admin
 test/unit/mysql_rep_admin/code_coverage.sh
 ```
 

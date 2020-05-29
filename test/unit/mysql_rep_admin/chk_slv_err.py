@@ -71,7 +71,7 @@ class SlaveRep(object):
 
     """
 
-    def __init__(self, io="Error", sql="Error"):
+    def __init__(self, ios="Error", sql="Error"):
 
         """Method:  __init__
 
@@ -82,7 +82,7 @@ class SlaveRep(object):
         """
 
         self.name = "Slave_Name"
-        self.io = io
+        self.io = ios
         self.sql = sql
         self.io_msg = "IO_Message"
         self.sql_msg = "SQL_Message"
@@ -140,6 +140,7 @@ class UnitTest(unittest.TestCase):
         """
 
         self.master = MasterRep()
+        self.slave = None
 
     def test_no_slv_present(self):
 
@@ -164,7 +165,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.slave = SlaveRep(io=None, sql=None)
+        self.slave = SlaveRep(ios=None, sql=None)
 
         self.assertFalse(mysql_rep_admin.chk_slv_err(self.master,
                                                      [self.slave]))

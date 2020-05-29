@@ -28,7 +28,6 @@ import mock
 
 # Local
 sys.path.append(os.getcwd())
-import lib.gen_libs as gen_libs
 import mysql_rep_admin
 import version
 
@@ -51,7 +50,12 @@ def rpt_slv_log(master, slaves, form, ofile, db_tbl, class_cfg):
 
     """
 
-    return True
+    status = True
+
+    if master and slaves and form and ofile and db_tbl and class_cfg:
+        status = True
+
+    return status
 
 
 class MasterRep(object):
@@ -132,7 +136,7 @@ class MstCfg(object):
         self.name = "MasterName"
         self.sid = 11
         self.user = "UserName"
-        self.passwd = "pwd"
+        self.passwd = None
         self.serv_os = "Linux"
         self.host = "HostName"
         self.port = 3306
