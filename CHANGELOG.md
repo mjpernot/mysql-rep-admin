@@ -4,6 +4,51 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
+## [3.1.1] - 2020-05-21
+### Fixed
+- main: Fixed handling command line arguments from SonarQube scan finding.
+- run_program:  Only disconnect from master when -c option is used.
+
+### Added
+- Added -f option to Flatten the JSON data structure to file and standard out.
+- Added ProgramLock class to prevent multiple runs at the same time.
+- Added global variable for template printing.
+- Added -a option to allow for appending to output files.
+
+### Changed
+- run_program: Converted positional args to kwargs in mysql_class.MasterRep call.
+- call_run_chk:  Changed variable name to standard naming convention.
+- \_process_json:  Changed variable name to standard naming convention.
+- chk_slv_err:  Changed variable name to standard naming convention.
+- add_miss_slaves:  Changed variable name to standard naming convention.
+- chk_mst_log: Replaced returning unused arguments into placeholders.
+- call_run_chk:  Refactored "for" and "if" statements into a generator.
+- \_process_json:  Added flattening of JSON structure to standard out and to file.
+- call_run_chk:  Checked for "-f" option and passed JSON identation setting to functions.
+- main:  Made "-s" option a requirement for "-A", "-C", "-D", "-E", "-O" and "-T" options.
+- chk_slv_time:  Changed JSON document "Master" entry to "Server".
+- add_miss_slaves:  Converted JSON document to CamelCase.
+- chk_slv_time:  Converted JSON document to CamelCase.
+- main:  Added ProgramLock class to implement program locking.
+- main:  Made "-c" option a requirement for "-B", "-C", and "-T" options.
+- \_chk_other: Used global variable for template printing.
+- chk_slv: Used global variable for template printing.
+- rpt_slv_log: Used global variable for template printing.
+- chk_mst_log:  Removed unused code.
+- chk_slv_thr: Used global variable for template printing.
+- \_process_json:  Changed hardcoded write file mode to a variable to allow for write appending.
+- call_run_chk:  Set file mode settings and passed to functions.
+- config/mongo.py.TEMPLATE:  Changed format.
+- config/mysql.cfg.TEMPLATE:  Changed format.
+- config/mysql_cfg.py.TEMPLATE:  Changed format.
+- config/slave.txt.TEMPLATE:  Changed format.
+- Documentation updates.
+
+### Removed
+- Removed unused library modules.
+- main:  Removed -f option which sets output as JSON or standard format.
+
+
 ## [3.1.0] - 2019-12-04
 ### Fixed
 - chk_slv_time :  Capture time lag from \_process_time_lag function.

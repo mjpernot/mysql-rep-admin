@@ -138,6 +138,7 @@ class UnitTest(unittest.TestCase):
         """
 
         self.master = MasterRep()
+        self.slave = None
 
     def test_no_slv_present(self):
 

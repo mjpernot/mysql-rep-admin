@@ -3,7 +3,7 @@
 
 """Program:  mysql_rep_admin.py
 
-    Description:  Administration program for MySQL Replication system.  Has a
+    Description:  Administration a MySQL Replication database system.  Has a
         number of functions to monitor the status of the replication
         between master and slaves (replicas).  The program can monitor
         and check on a number of different aspects in replication to
@@ -14,63 +14,77 @@
         database and multiple slave databases.
 
     Usage:
-        mysql_rep_admin.py -d path {-c file | -s path/file} [-p path
-            | -C | -S | -B | -D | -T | -E | -A | -O | -o dir_path/file]
-            -f {JSON|standard | -j | -b db:coll | -m file}
-            [-t ToEmail {ToEmail2 ToEmail3 ...} {-u SubjectLine}] -z [-v | -h]
+        mysql_rep_admin.py -d path [-p path]
+            {-C -c file -s [path]/slave.txt} |
+            {-S -s [path]/slave.txt} |
+            {-B -c file} |
+            {-D -s [path]/slave.txt} |
+            {-T -c file -s [path]/slave.txt [-j [-f]] [-o dir_path/file [-a]]
+                [-b db:coll | -m file]
+                [-t ToEmail {ToEmail2 ...} {-u SubjectLine}]} |
+            {-E -s [path]/slave.txt} |
+            {-A -s [path]/slave.txt} |
+            {-O -s [path]/slave.txt}
+            [-y flavor_id] [-z]
+            [-v | -h]
 
     Arguments:
-        -d dir path => Directory path to the config files (-c and -s).
-            Required arg.
-        -c file => Master config file.  Is loaded as a python, do not
-            include the .py extension with the name.
-        -s file => Slave config file.  Will be a text file.  Include the
-            file extension with the name.
-        -C => Compare master binlog position to the slaves'.
-        -S => Check the slave(s) IO and SQL threads.
+        -d dir path => Directory path to the config files (-c). Required arg.
+        -c file => Master config file.
+            For use with the -C, -B, and -T options.
+        -s [path]/slave.txt => Slave config file.
+        -C => Compare master binlog position to the slaves' and return any
+            differences detected if not the same positions.
+        -S => Check the slave(s) IO and SQL threads and return any errors or
+            warnings detected.
         -B => Display the master binlog filename and position.
         -D => Display the slave(s) binlog filename and position.
-        -T => Check time lag for the slave(s).
-        -E => Check for errors on the slave(s).
+        -T => Check time lag for the slave(s) and return any differences
+            detected.
+        -E => Check for any replication errors on the slave(s).
         -A => Does multiple checks which include the following options:
             (-C, -S, -T, -E)
-        -O => Other slave replication checks.
-        -f JSON|standard => Output format as JSON or standard. (only
-            used with option -T)
+        -O => Other slave replication checks and return any errors detected.
         -j => Return output in JSON format, if available.
+            For use with the -T option.
+        -f => Flatten the JSON data structure to file and standard out.
+            For use with the -j option.
         -o path/file => Directory path and file name for output.
+            Use the -a option to append to an existing file.
+            For use with the -T option.
+        -a => Append output to output file.
         -b database:collection => Name of database and collection.
-            Delimited by colon (:).  Default: sysmon:mysql_rep_lag
-        -m file => Mongo config file.  Is loaded as a python, do not
-            include the .py extension with the name.
+            Default: sysmon:mysql_rep_lag
+        -m file => Insert results into a Mongo database.  File is the Mongo
+            config file.
+            For use with the -T option.
         -p dir_path => Directory path to the mysql binary programs.
         -t to_email_addresses => Enables emailing capability for an option if
             the option allows it.  Sends output to one or more email addresses.
+            For use with the -T option.
         -u subject_line => Subject line of email.  Optional, will create own
             subject line if one is not provided.
+        -y value => A flavor id for the program lock.  To create unique lock.
         -z => Suppress standard out.
         -v => Display version of this program.
         -h => Help and usage message.
 
-        NOTE 1:  Will require -c and/or -s option to be included.
-        NOTE 2:  -v or -h overrides the other options.
-        NOTE 3:  -o and -f options is only available for -T option.
-        NOTE 4:  -b option requires -m option to be included.
+        NOTE:  -v or -h overrides the other options.
 
     Notes:
-        Master configuration file format (mysql_cfg.py):
-        WARNING:  Do not use the loopback IP or 'localhost' for the "host"
+        Master configuration file format (config/mysql_cfg.py.TEMPLATE):
+        NOTE:  Do not use the loopback IP or 'localhost' for the "host"
         variable, use the actual IP.
-            # Configuration file for {Database Name/Server}
-            user = "root"
-            passwd = "ROOT_PASSWORD"
+            # Configuration file for Database:
+            user = "USER"
+            passwd = "PASSWORD"
             host = "IP_ADDRESS"
-            serv_os = "Linux"
             name = "HOSTNAME"
-            port = PORT_NUMBER (default of mysql is 3306)
-            cfg_file = "DIRECTORY_PATH/my.cnf"
-            sid = "SERVER_ID"
-            extra_def_file = "DIRECTORY_PATH/mysql.cfg"
+            sid = SERVER_ID
+            extra_def_file = "PYTHON_PROJECT/config/mysql.cfg"
+            serv_os = "Linux"
+            port = 3306
+            cfg_file = "MYSQL_DIRECTORY/my.cnf"
 
         NOTE 1:  Include the cfg_file even if running remotely as the
             file will be used in future releases.
@@ -79,25 +93,60 @@
             of the --defaults-extra-file option (i.e. extra_def_file) in the
             database configuration file.  See below for the
             defaults-extra-file format.
+        NOTE 3:  For the -T option to determine if slaves are missing, the
+            "report-host" and "report-port" must be added to the mysqld.cnf
+            file on each of the slaves and the database restarted for it to
+            take effect.
 
-        Slave configuration file format (slave.txt)
-        Make a copy of this section for each slave in the replication domain.
-            # Slave 1 configuration {Database Name/Server}
-            user = root
-            passwd = ROOT_PASSWORD
+        configuration modules -> name is runtime dependent as it can be
+            used to connect to different databases with different names.
+
+        Defaults Extra File format (config/mysql.cfg.TEMPLATE):
+            [client]
+            password="PASSWORD"
+            socket="MYSQL_DIRECTORY/mysql.sock"
+
+        NOTE 1:  The socket information can be obtained from the my.cnf
+            file under ~/mysql directory.
+        NOTE 2:  The --defaults-extra-file option will be overridden if there
+            is a ~/.my.cnf or ~/.mylogin.cnf file located in the home directory
+            of the user running this program.  The extras file will in effect
+            be ignored.
+
+        Slave configuration file format (config/slave.txt.TEMPLATE)
+        Make a copy of this section for each slave in the replica set.
+            # Slave 1 configuration
+            user = USER
+            passwd = PASSWORD
             host = IP_ADDRESS
-            serv_os = Linux
             name = HOSTNAME
-            port = PORT_NUMBER
-            cfg_file DIRECTORY_PATH/my.cnf
             sid = SERVER_ID
+            cfg_file = None
+            port = 3306
+            serv_os = Linux
 
-        NOTE:  Include the cfg_file even if running remotely as the file
-            will be used in future releases.
+        Mongo configuration file format (config/mongo.py.TEMPLATE).  The
+            configuration file format for the Mongo connection used for
+            inserting data into a database.
+            There are two ways to connect:  single or replica set.
 
-        Defaults Extra File format (mysql.cfg)
-            password="ROOT_PASSWORD"
-            socket=/BASE_PATH/mysqld/mysqld.sock
+            1.)  Single database connection:
+
+            # Single Configuration file for Mongo Database Server.
+            user = "USER"
+            passwd = "PASSWORD"
+            host = "IP_ADDRESS"
+            name = "HOSTNAME"
+            port = 27017
+            conf_file = None
+            auth = True
+
+            2.)  Replica Set connection:  Same format as above, but with these
+                additional entries at the end of the configuration file:
+
+            repset = "REPLICA_SET_NAME"
+            repset_hosts = "HOST1:PORT, HOST2:PORT, HOST3:PORT, [...]"
+            db_auth = "AUTHENTICATION_DATABASE"
 
     Example:
         mysql_rep_admin.py -c master -d config  -s slave.txt -A
@@ -112,8 +161,6 @@ from __future__ import print_function
 import sys
 import time
 import datetime
-import socket
-import getpass
 
 # Third party
 import json
@@ -130,6 +177,9 @@ import mongo_lib.mongo_libs as mongo_libs
 import version
 
 __version__ = version.__version__
+
+# Global
+PRT_TEMPLATE = "\nSlave: {0}"
 
 
 def help_message():
@@ -188,6 +238,8 @@ def rpt_slv_log(master, slaves, **kwargs):
 
     """
 
+    global PRT_TEMPLATE
+
     slaves = list(slaves)
 
     if slaves:
@@ -196,7 +248,7 @@ def rpt_slv_log(master, slaves, **kwargs):
             mst_file, relay_file, read_pos, exec_pos = slv.get_log_info()
             name = slv.get_name()
 
-            print("\nSlave: {0}".format(name))
+            print(PRT_TEMPLATE.format(name))
             print("\tMaster File:\t\t{0}".format(mst_file))
             print("\tMaster Position:\t{0}".format(read_pos))
 
@@ -226,12 +278,14 @@ def chk_slv(slave, **kwargs):
 
     """
 
+    global PRT_TEMPLATE
+
     mst_file, relay_file, read_pos, exec_pos = slave.get_log_info()
     name = slave.get_name()
 
     # Slave's master info doesn't match slave's relay info.
     if mst_file != relay_file or read_pos != exec_pos:
-        print("\nSlave: {0}".format(name))
+        print(PRT_TEMPLATE.format(name))
         print("Warning:  Slave might be lagging in execution of log.")
         print("\tRead Log:\t{0}".format(mst_file))
         print("\tRead Pos:\t{0}".format(read_pos))
@@ -266,7 +320,7 @@ def chk_mst_log(master, slaves, **kwargs):
         fname, log_pos = master.get_log_info()
 
         for slv in slaves:
-            mst_file, relay_file, read_pos, exec_pos = slv.get_log_info()
+            mst_file, _, read_pos, _ = slv.get_log_info()
             name = slv.get_name()
 
             # Master's log file or position doesn't match slave's log info.
@@ -286,9 +340,6 @@ def chk_mst_log(master, slaves, **kwargs):
         print("\nchk_mst_log:  Warning:  Missing Master instance.")
 
         for slv in slaves:
-            mst_file, relay_file, read_pos, exec_pos = slv.get_log_info()
-            name = slv.get_name()
-
             chk_slv(slv, **kwargs)
 
     else:
@@ -307,6 +358,8 @@ def chk_slv_thr(master, slaves, **kwargs):
 
     """
 
+    global PRT_TEMPLATE
+
     slaves = list(slaves)
 
     if slaves:
@@ -317,17 +370,17 @@ def chk_slv_thr(master, slaves, **kwargs):
 
             # Slave IO and run state.
             if not thr or not gen_libs.is_true(run):
-                print("\nSlave: {0}".format(name))
+                print(PRT_TEMPLATE.format(name))
                 print("Error:  Slave IO/SQL Threads are down.")
 
             # Slave IO thread.
             elif not gen_libs.is_true(io_thr):
-                print("\nSlave: {0}".format(name))
+                print(PRT_TEMPLATE.format(name))
                 print("Error:  Slave IO Thread is down.")
 
             # Slave SQL thread.
             elif not gen_libs.is_true(sql_thr):
-                print("\nSlave: {0}".format(name))
+                print(PRT_TEMPLATE.format(name))
                 print("Error:  Slave SQL Thread is down.")
 
     else:
@@ -353,13 +406,13 @@ def chk_slv_err(master, slaves, **kwargs):
         for slv in slaves:
 
             # For pre-MySQL 5.6 versions, will be NULL for these two entries.
-            io, sql, io_msg, sql_msg, io_time, sql_time = slv.get_err_stat()
+            iost, sql, io_msg, sql_msg, io_time, sql_time = slv.get_err_stat()
             name = slv.get_name()
 
             # IO error
-            if io:
+            if iost:
                 print("\nSlave:\t{0}".format(name))
-                print("IO Error Detected:\t{0}".format(io))
+                print("IO Error Detected:\t{0}".format(iost))
                 print("\tIO Message:\t{0}".format(io_msg))
 
                 print("\tIO Timestamp:\t{0}".format(io_time))
@@ -393,15 +446,15 @@ def add_miss_slaves(master, outdata, **kwargs):
     all_list = []
     slv_list = []
 
-    for x in master.show_slv_hosts():
-        all_list.append(x["Host"])
+    for slv in master.show_slv_hosts():
+        all_list.append(slv["Host"])
 
-    for y in outdata["slaves"]:
-        slv_list.append(y["name"])
+    for slv in outdata["Slaves"]:
+        slv_list.append(slv["Name"])
 
     # Add slaves from the slave list that are not in the master's slave list.
-    for x in [val for val in all_list if val not in slv_list]:
-        outdata["slaves"].append({"name": x, "lagTime": None})
+    for item in [val for val in all_list if val not in slv_list]:
+        outdata["Slaves"].append({"Name": item, "LagTime": None})
 
     return outdata
 
@@ -422,6 +475,7 @@ def chk_slv_time(master, slaves, **kwargs):
             mail -> Mail instance.
             sup_std -> Suppress standard out.
             json_fmt -> True|False - convert output to JSON format.
+            indent -> Indentation level for JSON document.
 
     """
 
@@ -429,11 +483,11 @@ def chk_slv_time(master, slaves, **kwargs):
     json_fmt = kwargs.get("json_fmt", False)
 
     if json_fmt:
-        outdata = {"application": "MySQL Replication",
-                   "master": master.name,
-                   "asOf": datetime.datetime.strftime(datetime.datetime.now(),
+        outdata = {"Application": "MySQL Replication",
+                   "Server": master.name,
+                   "AsOf": datetime.datetime.strftime(datetime.datetime.now(),
                                                       "%Y-%m-%d %H:%M:%S"),
-                   "slaves": []}
+                   "Slaves": []}
 
     if slaves:
 
@@ -443,8 +497,8 @@ def chk_slv_time(master, slaves, **kwargs):
             time_lag = _process_time_lag(slv, time_lag, name, json_fmt)
 
             if json_fmt:
-                outdata["slaves"].append({"name": slv.name,
-                                          "lagTime": time_lag})
+                outdata["Slaves"].append({"Name": slv.name,
+                                          "LagTime": time_lag})
 
     elif not json_fmt:
         print("\nchk_slv_time:  Warning:  No Slave instance detected.")
@@ -468,21 +522,25 @@ def _process_json(outdata, **kwargs):
             class_cfg -> Server class configuration settings.
             mail -> Mail instance.
             sup_std -> Suppress standard out.
+            mode -> File write mode.
+            indent -> Indentation level for JSON document.
 
     """
 
-    jdata = json.dumps(outdata, indent=4)
+    indent = kwargs.get("indent", None)
+    jdata = json.dumps(outdata, indent=indent)
     mongo_cfg = kwargs.get("class_cfg", None)
     db_tbl = kwargs.get("db_tbl", None)
     ofile = kwargs.get("ofile", None)
     mail = kwargs.get("mail", None)
+    mode = kwargs.get("mode", "w")
 
     if mongo_cfg and db_tbl:
-        db, tbl = db_tbl.split(":")
-        mongo_libs.ins_doc(mongo_cfg, db, tbl, outdata)
+        dbn, tbl = db_tbl.split(":")
+        mongo_libs.ins_doc(mongo_cfg, dbn, tbl, outdata)
 
     if ofile:
-        gen_libs.write_file(ofile, "w", jdata)
+        gen_libs.write_file(ofile, mode, jdata)
 
     if mail:
         mail.add_2_msg(jdata)
@@ -561,8 +619,10 @@ def _chk_other(skip, tmp_tbl, retry, name, **kwargs):
 
     """
 
+    global PRT_TEMPLATE
+
     if skip > 0 or int(tmp_tbl) > 5 or int(retry) > 0:
-        print("\nSlave: {0}".format(name))
+        print(PRT_TEMPLATE.format(name))
 
         if skip > 0:
             print("Skip Count:  {0}".format(skip))
@@ -600,6 +660,14 @@ def call_run_chk(args_array, func_dict, master, slaves, **kwargs):
     sup_std = args_array.get("-z", False)
     mongo_cfg = None
     mail = None
+    mode = "w"
+    indent = 4
+
+    if args_array.get("-a", False):
+        mode = "a"
+
+    if args_array.get("-f", False):
+        indent = None
 
     if args_array.get("-m", None):
         mongo_cfg = gen_libs.load_module(args_array["-m"], args_array["-d"])
@@ -610,27 +678,30 @@ def call_run_chk(args_array, func_dict, master, slaves, **kwargs):
 
     if "-A" in args_array:
 
-        for x in func_dict["-A"]:
-            func_dict[x](master, slaves, json_fmt=json_fmt, ofile=outfile,
-                         db_tbl=db_tbl, class_cfg=mongo_cfg, mail=mail,
-                         sup_std=sup_std)
+        for opt in func_dict["-A"]:
+            func_dict[opt](
+                master, slaves, json_fmt=json_fmt, ofile=outfile,
+                db_tbl=db_tbl, class_cfg=mongo_cfg, mail=mail, sup_std=sup_std,
+                mode=mode, indent=indent)
 
-        for y in args_array:
+        # The option is in func_dict but not under the ALL option and is not
+        #   the ALL option itself.
+        for item in (opt for opt in args_array if opt in func_dict and
+                     opt not in func_dict["-A"] and opt != "-A"):
 
-            # The option is in func_dict but not under the ALL option and is
-            #   not the ALL option itself.
-            if y in func_dict and y not in func_dict["-A"] and y != "-A":
-                func_dict[y](master, slaves, json_fmt=json_fmt, ofile=outfile,
-                             db_tbl=db_tbl, class_cfg=mongo_cfg, mail=mail,
-                             sup_std=sup_std)
+            func_dict[item](
+                master, slaves, json_fmt=json_fmt, ofile=outfile,
+                db_tbl=db_tbl, class_cfg=mongo_cfg, mail=mail,
+                sup_std=sup_std, mode=mode, indent=indent)
 
     else:
 
         # Intersect args_array & func_dict to find which functions to call.
         for opt in set(args_array.keys()) & set(func_dict.keys()):
-            func_dict[opt](master, slaves, json_fmt=json_fmt, ofile=outfile,
-                           db_tbl=db_tbl, class_cfg=mongo_cfg, mail=mail,
-                           sup_std=sup_std)
+            func_dict[opt](
+                master, slaves, json_fmt=json_fmt, ofile=outfile,
+                db_tbl=db_tbl, class_cfg=mongo_cfg, mail=mail, sup_std=sup_std,
+                mode=mode, indent=indent)
 
 
 def run_program(args_array, func_dict, **kwargs):
@@ -652,11 +723,10 @@ def run_program(args_array, func_dict, **kwargs):
     if "-c" in args_array:
         mst_cfg = gen_libs.load_module(args_array["-c"], args_array["-d"])
 
-        master = mysql_class.MasterRep(mst_cfg.name, mst_cfg.sid,
-                                       mst_cfg.user, mst_cfg.passwd,
-                                       getattr(machine, mst_cfg.serv_os)(),
-                                       mst_cfg.host, mst_cfg.port,
-                                       mst_cfg.cfg_file)
+        master = mysql_class.MasterRep(
+            mst_cfg.name, mst_cfg.sid, mst_cfg.user, mst_cfg.passwd,
+            machine=getattr(machine, mst_cfg.serv_os)(), host=mst_cfg.host,
+            port=mst_cfg.port, defaults_file=mst_cfg.cfg_file)
         master.connect()
 
     slaves = []
@@ -668,7 +738,11 @@ def run_program(args_array, func_dict, **kwargs):
 
     call_run_chk(args_array, func_dict, master, slaves)
 
-    cmds_gen.disconnect(master, slaves)
+    if master:
+        cmds_gen.disconnect(master, slaves)
+
+    else:
+        cmds_gen.disconnect(slaves)
 
 
 def main():
@@ -694,22 +768,25 @@ def main():
 
     """
 
+    cmdline = gen_libs.get_inst(sys)
     dir_chk_list = ["-d", "-p"]
     file_chk_list = ["-o"]
     file_crt_list = ["-o"]
     func_dict = {"-A": ["-C", "-S", "-E", "-T", "-O"], "-B": rpt_mst_log,
                  "-D": rpt_slv_log, "-C": chk_mst_log, "-S": chk_slv_thr,
                  "-E": chk_slv_err, "-T": chk_slv_time, "-O": chk_slv_other}
-    opt_con_req_list = {"-b": ["-m"], "-u": ["-t"]}
-    opt_def_dict = {"-f": "standard", "-b": "sysmon:mysql_rep_lag"}
+    opt_con_req_list = {"-b": ["-m"], "-u": ["-t"], "-A": ["-s"], "-B": ["-c"],
+                        "-C": ["-c", "-s"], "-D": ["-s"], "-E": ["-s"],
+                        "-O": ["-s"], "-T": ["-c", "-s"]}
+    opt_def_dict = {"-b": "sysmon:mysql_rep_lag"}
     opt_multi_list = ["-u", "-t"]
     opt_or_dict_list = {"-c": ["-s"]}
     opt_req_list = ["-d"]
-    opt_val_list = ["-d", "-c", "-p", "-s", "-f", "-o", "-b", "-m", "-u", "-t"]
+    opt_val_list = ["-d", "-c", "-p", "-s", "-o", "-b", "-m", "-u", "-t", "-y"]
 
     # Process argument list from command line.
-    args_array = arg_parser.arg_parse2(sys.argv, opt_val_list, opt_def_dict,
-                                       multi_val=opt_multi_list)
+    args_array = arg_parser.arg_parse2(cmdline.argv, opt_val_list,
+                                       opt_def_dict, multi_val=opt_multi_list)
 
     if not gen_libs.help_func(args_array, __version__, help_message) \
        and arg_parser.arg_req_or_lst(args_array, opt_or_dict_list) \
@@ -718,7 +795,16 @@ def main():
        and not arg_parser.arg_dir_chk_crt(args_array, dir_chk_list) \
        and not arg_parser.arg_file_chk(args_array, file_chk_list,
                                        file_crt_list):
-        run_program(args_array, func_dict)
+
+        try:
+            proglock = gen_class.ProgramLock(cmdline.argv,
+                                             args_array.get("-y", ""))
+            run_program(args_array, func_dict)
+            del proglock
+
+        except gen_class.SingleInstanceException:
+            print("WARNING:  lock in place for mysql_rep_admin with id of: %s"
+                  % (args_array.get("-y", "")))
 
 
 if __name__ == "__main__":
