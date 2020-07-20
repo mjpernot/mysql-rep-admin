@@ -28,6 +28,7 @@ pipeline {
                 source test_env/bin/activate
                 pip2 install mock==2.0.0 --user
                 pip2 install mysql-connector-python==8.0.16 --user
+                pip2 install psutil==5.4.3 --user
                 pip2 install pymongo==3.2.0 --user
                 ./test/unit/mysql_rep_admin/add_miss_slaves.py
                 ./test/unit/mysql_rep_admin/call_run_chk.py
@@ -69,7 +70,7 @@ pipeline {
             steps {
                 script {
                     server = Artifactory.server('Artifactory')
-                    server.credentialsId = 'svc-highpoint-artifactory'
+                    server.credentialsId = 'art-svc-highpoint-dev'
                     uploadSpec = """{
                         "files": [
                             {
