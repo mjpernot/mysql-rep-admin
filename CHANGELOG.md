@@ -9,6 +9,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - config/mysql.cfg.TEMPLATE:  Point to correct socket file.
 
 ### Changed
+- mysql_cfg.py.TEMPLATE:  Changed configuration entry.
 - Documentation changes.
 
 

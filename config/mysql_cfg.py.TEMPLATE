@@ -2,7 +2,7 @@
 # Classification (U)
 # Unclassified until filled in.
 user = 'USER'
-passwd = 'PASSWORD'
+japd = 'PSWORD'
 # MySQL DB host information
 host = 'SERVER_IP'
 name = 'HOST_NAME'
@@ -16,4 +16,4 @@ serv_os = 'Linux'
 port = 3306
 # MySQL configuration settings
 # Example: cfg_file = '/opt/lamp/mysql/my.cnf'
-cfg_file = 'MYSQL_DIRECTORY/mysqld.cnf'
+cfg_file = 'MYSQL_DIRECTORY/my.cnf'
