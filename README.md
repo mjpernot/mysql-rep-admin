@@ -72,18 +72,11 @@ pip install -r requirements-python-lib.txt --target mongo_lib/lib --trusted-host
 
 # Configuration:
 
-Create MySQL configuration file.
+Create MySQL configuration file and make the appropriate change to the environment.
   * Replace **PYTHON_PROJECT** with the baseline path of the python program.
-
-```
-cd config
-cp mysql_cfg.py.TEMPLATE mysql_cfg.py
-```
-
-Make the appropriate change to the environment.
   * Change these entries in the MySQL setup:
     - user = "USER"
-    - passwd = "PASSWORD"
+    - japd = "PSWORD"
     - host = "SERVER_IP"
     - name = "HOST_NAME"
     - sid = SERVER_ID
@@ -94,36 +87,27 @@ Make the appropriate change to the environment.
     - port = 3306
 
 ```
+cd config
+cp mysql_cfg.py.TEMPLATE mysql_cfg.py
 vim mysql_cfg.py
 chmod 600 mysql_cfg.py
 ```
 
-Create MySQL definition file.
-
-```
-cp mysql.cfg.TEMPLATE mysql.cfg
-```
-
-Make the appropriate change to the environment.
+Create MySQL definition file and make the appropriate change to the environment.
   * Change these entries in the MySQL definition file:
     - password="PASSWORD"
     - socket="DIRECTORY_PATH/mysql.sock"
 
 ```
+cp mysql.cfg.TEMPLATE mysql.cfg
 vim mysql.cfg
 chmod 600 mysql.cfg
 ```
 
-Create Slave definition file.
-
-```
-cp slave.txt.TEMPLATE slave.txt
-```
-
-Make the appropriate change for a slave connection.
+Create Slave definition file and make the appropriate change for a slave connection.
   * Change these entries in the MySQL slave setup:
     - user = USER
-    - passwd = PASSWORD
+    - japd = PSWORD
     - host = IP_ADDRESS
     - name = HOSTNAME
     - sid = SERVER_ID
@@ -134,21 +118,16 @@ Make the appropriate change for a slave connection.
   * NOTE:  Create a new set of entries for each slave in the MySQL replica set.
 
 ```
+cp slave.txt.TEMPLATE slave.txt
 vim slave.txt
 chmod 600 slave.txt
 ```
 
-Create Mongodb configuration file.
+Create Mongodb configuration file and make the appropriate change to the environment.
   * If submitting output to Mongo database, then require a Mongodb configuration file.
-
-```
-cp mongo.py.TEMPLATE mongo.py
-```
-
-Make the appropriate change to the environment.
   * Make the appropriate changes to connect to a Mongo database.
     - user = "USER"
-    - passwd = "PASSWORD"
+    - japd = "PSWORD"
     - host = "HOST_IP"
     - name = "HOSTNAME"
 
@@ -163,6 +142,7 @@ Make the appropriate change to the environment.
     - db_auth = "AUTHENTICATION_DATABASE"
 
 ```
+cp mongo.py.TEMPLATE mongo.py
 vim mongo.py
 chmod 600 mongo.py
 ```
@@ -173,8 +153,7 @@ For some options to work correctly the report-host and report-port options must 
 It is recommended to add these entries to all slaves including the master database.
 
 ```
-sudo bash
-vim MYSQL_DIRECTORY/mysqld.cnf
+sudo vim MYSQL_DIRECTORY/mysqld.cnf
 ```
 
 Add the following lines to the mysqld.cnf file under the [mysqld] section.
