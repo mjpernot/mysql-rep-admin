@@ -5,6 +5,9 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 
 ## [3.1.2] - 2020-11-23
+### Fixed
+- config/mysql.cfg.TEMPLATE:  Point to correct socket file.
+
 ### Changed
 - Documentation changes.
 
