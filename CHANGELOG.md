@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
+## [3.1.2] - 2020-11-23
+### Changed
+- Documentation changes.
+
+
 ## [3.1.1] - 2020-05-21
 ### Fixed
 - main: Fixed handling command line arguments from SonarQube scan finding.

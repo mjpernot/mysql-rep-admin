@@ -15,16 +15,16 @@
 
     Usage:
         mysql_rep_admin.py -d path [-p path]
-            {-C -c file -s [path]/slave.txt} |
-            {-S -s [path]/slave.txt} |
-            {-B -c file} |
-            {-D -s [path]/slave.txt} |
-            {-T -c file -s [path]/slave.txt [-j [-f]] [-o dir_path/file [-a]]
+            {-C -c file -s [path]/slave.txt |
+             -S -s [path]/slave.txt |
+             -B -c file |
+             -D -s [path]/slave.txt |
+             -T -c file -s [path]/slave.txt [-j [-f]] [-o dir_path/file [-a]]
                 [-b db:coll | -m file]
-                [-t ToEmail {ToEmail2 ...} {-u SubjectLine}]} |
-            {-E -s [path]/slave.txt} |
-            {-A -s [path]/slave.txt} |
-            {-O -s [path]/slave.txt}
+                [-t ToEmail {ToEmail2 ...} {-u SubjectLine}] |
+             -E -s [path]/slave.txt |
+             -A -s [path]/slave.txt |
+             -O -s [path]/slave.txt}
             [-y flavor_id] [-z]
             [-v | -h]
 
@@ -73,11 +73,11 @@
 
     Notes:
         Master configuration file format (config/mysql_cfg.py.TEMPLATE):
-        NOTE:  Do not use the loopback IP or 'localhost' for the "host"
-        variable, use the actual IP.
+            NOTE:  Do not use the loopback IP or 'localhost' for the "host"
+                variable, use the actual IP.
             # Configuration file for Database:
             user = "USER"
-            passwd = "PASSWORD"
+            japd = "PSWORD"
             host = "IP_ADDRESS"
             name = "HOSTNAME"
             sid = SERVER_ID
@@ -117,7 +117,7 @@
         Make a copy of this section for each slave in the replica set.
             # Slave 1 configuration
             user = USER
-            passwd = PASSWORD
+            japd = PSWORD
             host = IP_ADDRESS
             name = HOSTNAME
             sid = SERVER_ID
@@ -134,12 +134,15 @@
 
             # Single Configuration file for Mongo Database Server.
             user = "USER"
-            passwd = "PASSWORD"
+            japd = "PSWORD"
             host = "IP_ADDRESS"
             name = "HOSTNAME"
             port = 27017
             conf_file = None
             auth = True
+            auth_db = "admin"
+            use_arg = True
+            use_uri = False
 
             2.)  Replica Set connection:  Same format as above, but with these
                 additional entries at the end of the configuration file:
