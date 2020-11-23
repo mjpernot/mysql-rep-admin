@@ -4,7 +4,7 @@
 
 # All Mongo configuration settings.
 user = "USER"
-passwd = "PASSWORD"
+japd = "PASSWORD"
 # Mongo DB host information
 host = "HOST_IP"
 name = "HOSTNAME"
@@ -14,6 +14,12 @@ port = 27017
 conf_file = None
 # Authentication required:  True|False
 auth = True
+# Authentication database
+auth_db = "admin"
+# Use Mongo client arguments
+use_arg = True
+# Use Mongo client uri
+use_uri = False
 
 # Replica Set Mongo configuration settings.
 # Replica set name.
