@@ -624,16 +624,17 @@ def _chk_other(skip, tmp_tbl, retry, name, **kwargs):
 
     global PRT_TEMPLATE
 
-    if skip > 0 or int(tmp_tbl) > 5 or int(retry) > 0:
+    if (skip is None or skip > 0) or (not tmp_tbl or int(tmp_tbl) > 5) \
+       or (not retry or int(retry) > 0):
         print(PRT_TEMPLATE.format(name))
 
-        if skip > 0:
+        if skip is None or skip > 0:
             print("Skip Count:  {0}".format(skip))
 
-        if int(tmp_tbl) > 5:
+        if not tmp_tbl or int(tmp_tbl) > 5:
             print("Temp Table Count:  {0}".format(tmp_tbl))
 
-        if int(retry) > 0:
+        if not retry or int(retry) > 0:
             print("Retried Transaction Count:  {0}".format(retry))
 
 
