@@ -70,7 +70,7 @@ class MasterRep(object):
 
     """
 
-    def __init__(self, name=None, sid=None, user=None, passwd=None,
+    def __init__(self, name=None, sid=None, user=None, japd=None,
                  serv_os=None, **kwargs):
 
         """Method:  __init__
@@ -81,7 +81,7 @@ class MasterRep(object):
             (input) name -> Stub holder.
             (input) sid -> Stub holder.
             (input) user -> Stub holder.
-            (input) passwd -> Stub holder.
+            (input) japd -> Stub holder.
             (input) serv_os -> Stub holder.
             (input) **kwargs:
                 port -> Stub holder.
@@ -93,7 +93,7 @@ class MasterRep(object):
         self.name = name
         self.sid = sid
         self.user = user
-        self.passwd = passwd
+        self.japd = japd
         self.serv_os = serv_os
         self.host = kwargs.get("host", None)
         self.port = kwargs.get("port", None)
@@ -136,7 +136,7 @@ class MstCfg(object):
         self.name = "MasterName"
         self.sid = 11
         self.user = "UserName"
-        self.passwd = None
+        self.japd = None
         self.serv_os = "Linux"
         self.host = "HostName"
         self.port = 3306
@@ -174,11 +174,11 @@ class UnitTest(unittest.TestCase):
         self.args_array2 = {"-D": True, "-m": "Mongo", "-d": "cfg",
                             "-c": "configfile"}
         self.args_array3 = {"-D": True, "-m": "Mongo", "-d": "cfg"}
-        self.cfg_array = [{"name": "HOST_NAME", "passwd": "PWD",
+        self.cfg_array = [{"name": "HOST_NAME", "japd": "japd",
                            "cfg_file": "None", "host": "SERVER",
                            "user": "root", "serv_os": "Linux", "sid": "11",
                            "port": "3306"},
-                          {"name": "HOST_NAME2", "passwd": "PWD",
+                          {"name": "HOST_NAME2", "japd": "japd",
                            "cfg_file": "None", "host": "SERVER2",
                            "user": "root", "serv_os": "Linux", "sid": "21",
                            "port": "3306"}]
