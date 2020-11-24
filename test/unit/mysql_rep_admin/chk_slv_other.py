@@ -83,8 +83,8 @@ class SlaveRep(object):
 
         self.name = "Slave_Name"
         self.skip = skip
-        self.tmp_tbl = tmp_tbl
-        self.retry = retry
+        self.tmp_tbl = unicode(tmp_tbl)
+        self.retry = unicode(retry)
 
     def get_name(self):
 
@@ -136,6 +136,20 @@ class UnitTest(unittest.TestCase):
 
         self.master = MasterRep()
         self.slave = SlaveRep()
+        self.slave2 = SlaveRep(0, 0, 0)
+
+    def test_chk_slv_other2(self):
+
+        """Function:  test_chk_slv_other2
+
+        Description:  Test with no errors detected.
+
+        Arguments:
+
+        """
+
+        self.assertFalse(mysql_rep_admin.chk_slv_other(self.master,
+                                                       [self.slave2]))
 
     def test_no_slv(self):
 
