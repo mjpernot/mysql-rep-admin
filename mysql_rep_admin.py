@@ -741,11 +741,12 @@ def run_program(args_array, func_dict, **kwargs):
 
     call_run_chk(args_array, func_dict, master, slaves)
 
-    if master:
-        cmds_gen.disconnect(master, slaves)
+    conn_list = [slv for slv in slaves if slv.conn]
 
-    else:
-        cmds_gen.disconnect(slaves)
+    if master and master.conn:
+        conn_list.append(master)
+
+    cmds_gen.disconnect(conn_list)
 
 
 def main():
