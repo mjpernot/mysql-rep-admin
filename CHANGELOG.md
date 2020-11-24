@@ -6,6 +6,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 ## [3.1.2] - 2020-11-23
 ### Fixed
+- run_program:  Corrected passing incorrect keyword argument for os_type.
 - config/mysql.cfg.TEMPLATE:  Point to correct socket file.
 
 ### Changed
