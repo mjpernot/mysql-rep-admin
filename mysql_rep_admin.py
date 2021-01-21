@@ -168,7 +168,7 @@
                 additional entries at the end of the configuration file:
 
             repset = "REPLICA_SET_NAME"
-            repset_hosts = "HOST1:PORT, HOST2:PORT, HOST3:PORT, [...]"
+            repset_hosts = "HOST1:PORT, HOST2:PORT, [...]"
             db_auth = "AUTHENTICATION_DATABASE"
 
     Example:
@@ -560,7 +560,10 @@ def _process_json(outdata, **kwargs):
 
     if mongo_cfg and db_tbl:
         dbn, tbl = db_tbl.split(":")
-        mongo_libs.ins_doc(mongo_cfg, dbn, tbl, outdata)
+        status = mongo_libs.ins_doc(mongo_cfg, dbn, tbl, outdata)
+
+        if not status[0]:
+            print("\n_process_json:  Error Detected:  %s" % (status[1]))
 
     if ofile:
         gen_libs.write_file(ofile, mode, jdata)

@@ -12,6 +12,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - config/mysql.cfg.TEMPLATE:  Point to correct socket file.
 
 ### Changed
+- \_process_json:  Captured and process status return from mongo_libs.ins_doc call.
 - run_program:  Updated configuration names to match changes in configuration file.
 - config/mongo.py.TEMPLATE:  Changed configuration entry and added a number of configuration entries.
 - config/slave.txt.TEMPLATE:  Changed configuration entry and added a number of configuration entries.
