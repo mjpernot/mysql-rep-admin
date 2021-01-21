@@ -209,12 +209,15 @@ class UnitTest(unittest.TestCase):
         self.mail = Mail()
         self.outdata = {"key": "value"}
         self.db_tbl = "db:tbl"
+        self.status = (True, None)
 
-    @mock.patch("mysql_rep_admin.gen_libs.write_file")
+    @mock.patch("mysql_rep_admin.gen_libs.write_file",
+                mock.Mock(return_value=True))
+    @mock.patch("mysql_rep_admin.time.sleep",
+                mock.Mock(return_value=True))
     @mock.patch("mysql_rep_admin.mongo_libs.ins_doc")
     @mock.patch("mysql_rep_admin.add_miss_slaves")
-    @mock.patch("mysql_rep_admin.time.sleep")
-    def test_mail(self, mock_sleep, mock_miss, mock_mongo, mock_write):
+    def test_mail(self, mock_miss, mock_mongo):
 
         """Function:  test_mail
 
@@ -224,10 +227,8 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_sleep.return_value = True
         mock_miss.return_value = self.outdata
-        mock_mongo.return_value = True
-        mock_write.return_value = True
+        mock_mongo.return_value = self.status
 
         self.assertFalse(mysql_rep_admin.chk_slv_time(
             self.master, [self.slave], json_fmt=True, class_cfg="Cfg",
@@ -247,11 +248,13 @@ class UnitTest(unittest.TestCase):
         with gen_libs.no_std_out():
             self.assertFalse(mysql_rep_admin.chk_slv_time(self.master, []))
 
-    @mock.patch("mysql_rep_admin.gen_libs.write_file")
+    @mock.patch("mysql_rep_admin.gen_libs.write_file",
+                mock.Mock(return_value=True))
+    @mock.patch("mysql_rep_admin.time.sleep",
+                mock.Mock(return_value=True))
     @mock.patch("mysql_rep_admin.mongo_libs.ins_doc")
     @mock.patch("mysql_rep_admin.add_miss_slaves")
-    @mock.patch("mysql_rep_admin.time.sleep")
-    def test_json_stdout(self, mock_sleep, mock_miss, mock_mongo, mock_write):
+    def test_json_stdout(self, mock_miss, mock_mongo):
 
         """Function:  test_json_stdout
 
@@ -261,22 +264,21 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_sleep.return_value = True
         mock_miss.return_value = self.outdata
-        mock_mongo.return_value = True
-        mock_write.return_value = True
+        mock_mongo.return_value = self.status
 
         with gen_libs.no_std_out():
             self.assertFalse(mysql_rep_admin.chk_slv_time(
                 self.master, [self.slave], json_fmt=True, class_cfg="Cfg",
                 db_tbl=self.db_tbl, ofile="FileName", sup_std=False))
 
-    @mock.patch("mysql_rep_admin.gen_libs.write_file")
+    @mock.patch("mysql_rep_admin.gen_libs.write_file",
+                mock.Mock(return_value=True))
+    @mock.patch("mysql_rep_admin.time.sleep",
+                mock.Mock(return_value=True))
     @mock.patch("mysql_rep_admin.mongo_libs.ins_doc")
     @mock.patch("mysql_rep_admin.add_miss_slaves")
-    @mock.patch("mysql_rep_admin.time.sleep")
-    def test_json_no_stdout(self, mock_sleep, mock_miss, mock_mongo,
-                            mock_write):
+    def test_json_no_stdout(self, mock_miss, mock_mongo):
 
         """Function:  test_json_no_stdout
 
@@ -286,20 +288,20 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_sleep.return_value = True
         mock_miss.return_value = self.outdata
-        mock_mongo.return_value = True
-        mock_write.return_value = True
+        mock_mongo.return_value = self.status
 
         self.assertFalse(mysql_rep_admin.chk_slv_time(
             self.master, [self.slave], json_fmt=True, class_cfg="Cfg",
             db_tbl=self.db_tbl, ofile="FileName", sup_std=True))
 
-    @mock.patch("mysql_rep_admin.gen_libs.write_file")
+    @mock.patch("mysql_rep_admin.gen_libs.write_file",
+                mock.Mock(return_value=True))
+    @mock.patch("mysql_rep_admin.time.sleep",
+                mock.Mock(return_value=True))
     @mock.patch("mysql_rep_admin.mongo_libs.ins_doc")
     @mock.patch("mysql_rep_admin.add_miss_slaves")
-    @mock.patch("mysql_rep_admin.time.sleep")
-    def test_json(self, mock_sleep, mock_miss, mock_mongo, mock_write):
+    def test_json(self, mock_miss, mock_mongo):
 
         """Function:  test_json
 
@@ -309,10 +311,8 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_sleep.return_value = True
         mock_miss.return_value = self.outdata
-        mock_mongo.return_value = True
-        mock_write.return_value = True
+        mock_mongo.return_value = self.status
 
         self.assertFalse(mysql_rep_admin.chk_slv_time(
             self.master, [self.slave], json_fmt=True, class_cfg="Cfg",
