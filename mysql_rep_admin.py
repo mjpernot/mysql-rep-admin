@@ -16,15 +16,15 @@
     Usage:
         mysql_rep_admin.py -d path
             {-C -c file -s [path]/slave.txt |
-             -S -s [path]/slave.txt |
+             -S -s [path/]slave.txt |
              -B -c file |
-             -D -s [path]/slave.txt |
+             -D -s [path/]slave.txt |
              -T -c file -s [path]/slave.txt [-j [-f]] [-o dir_path/file [-a]]
                 [-b db:coll | -m file]
                 [-t ToEmail [ToEmail2 ...] [-u SubjectLine]] |
-             -E -s [path]/slave.txt |
-             -A -s [path]/slave.txt |
-             -O -s [path]/slave.txt}
+             -E -s [path/]slave.txt |
+             -A -s [path/]slave.txt |
+             -O -s [path/]slave.txt}
             [-y flavor_id] [-p path] [-z]
             [-v | -h]
 
@@ -38,19 +38,19 @@
 
         -S => Check the slave(s) IO and SQL threads and return any errors or
                 warnings detected.
-            -s [path]/slave.txt => Slave config file.
+            -s [path/]slave.txt => Slave config file.
 
         -B => Display the master binlog filename and position.
             -c file => Master config file.
 
         -D => Display the slave(s) binlog filename and position.
-            -s [path]/slave.txt => Slave config file.
+            -s [path/]slave.txt => Slave config file.
 
         -T => Check time lag for the slave(s) and return any differences
                 detected.
             -c file => Master config file.
-            -s [path]/slave.txt => Slave config file.
-            -j => Return output in JSON format, if available.
+            -s [path/]slave.txt => Slave config file.
+            -j => Return output in JSON format.
             -f => Flatten the JSON data structure to file and standard out.
             -o path/file => Directory path and file name for output.
             -a => Append output to output file.
@@ -63,16 +63,18 @@
                 addresses.
             -u subject_line => Subject line of email.  Will create own subject
                 line if one is not provided.
+            NOTE:  If returning as standard format and there is no time lag,
+                nothing will be returned.  However, if -j option is selected,
+                then a JSON doc will be returned even if no time lag.
 
         -E => Check for any replication errors on the slave(s).
-            -s [path]/slave.txt => Slave config file.
+            -s [path/]slave.txt => Slave config file.
 
-        -A => Does multiple checks which include the following options:
-                (-C, -S, -T, -E)
-            -s [path]/slave.txt => Slave config file.
+        -A => Runs multiple checks which include the options:  -C, -S, -T, -E
+            -s [path/]slave.txt => Slave config file.
 
         -O => Other slave replication checks and return any errors detected.
-            -s [path]/slave.txt => Slave config file.
+            -s [path/]slave.txt => Slave config file.
 
         -p dir_path => Directory path to the mysql binary programs.
         -y value => A flavor id for the program lock.  To create unique lock.
