@@ -15,7 +15,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - run_program:  Updated configuration names to match changes in configuration file.
 - config/mongo.py.TEMPLATE:  Changed configuration entry and added a number of configuration entries.
 - config/slave.txt.TEMPLATE:  Changed configuration entry and added a number of configuration entries.
-- mysql_cfg.py.TEMPLATE:  Changed configuration entry.
+- config/mysql_cfg.py.TEMPLATE:  Changed configuration entry.
 - Documentation changes.
 
 
@@ -103,14 +103,11 @@ Breaking Change
 - chk_slv_other:  Replaced section of code with call to \_chk_other.
 - call_run_chk:  Intersect args_array & func_dict to run options.
 - main:  Refactored initial program checks.
-- run_program:  Added \*\*kwargs to argument list.
-- call_run_chk:  Added \*\*kwargs to argument list.
+- call_run_chk, run_program:  Added \*\*kwargs to argument list.
 - Changed variable names to standard naming convention.
-- chk_slv_time:  Changed output to camelCase.
-- add_miss_slaves:  Changed output to camelCase.
+- add_miss_slaves, chk_slv_time:  Changed output to camelCase.
 - run_program:  Modified to use the updated mysql_class module.
 - main:  Removed -I and -R arguments from the program options.
-- run_program:  Modified to use the updated mysql_class module.
 - run_program:  Replaced the code to load the slave files into an array with a call to cmds_gen.create_cfg_array().
 
 ### Removed
@@ -119,16 +116,7 @@ Breaking Change
 - rpt_srv_info:  No longer being implemented.
 
 ### Fixed:
-- rpt_mst_log:  Fixed problem with mutable default arguments issue.
-- rpt_slv_log:  Fixed problem with mutable default arguments issue.
-- chk_mst_log:  Fixed problem with mutable default arguments issue.
-- chk_slv_thr:  Fixed problem with mutable default arguments issue.
-- chk_slv_err:  Fixed problem with mutable default arguments issue.
-- add_miss_slaves:  Fixed problem with mutable default arguments issue.
-- chk_slv_time:  Fixed problem with mutable default arguments issue.
-- chk_slv_other:  Fixed problem with mutable default arguments issue.
-- call_run_chk:  Fixed problem with mutable default arguments issue.
-- run_program:  Fixed problem with mutable default arguments issue.
+- rpt_slv_log, chk_mst_log, chk_slv_thr, chk_slv_err, add_miss_slaves, chk_slv_time, chk_slv_other, call_run_chk, run_program, rpt_mst_log:  Fixed problem with mutable default arguments issue.
 - 
 ### Added
 - \_process_json:  Private function for chk_slv_time().  Process JSON data.
@@ -172,11 +160,13 @@ Breaking Change
 
 
 ## [1.7.0] - 2016-11-04
+### Fixed
+- Chk_Mst_Log:  Corrected a formatting error and replaced two sections of code with call to Chk_Slv.
+
 ### Changed
 - MySQL 5.6 (GTID Enabled) - Added GTID attributes to a number of functions.
 - Rpt_Mst_Log:  Print master GTID position.
 - Rpt_Slv_Log:  Print slave GTID information.
-- Chk_Mst_Log:  Corrected a formatting error and replaced two sections of code with call to Chk_Slv.
 - Chk_Slv_Err:  Added IO and SQL error timestamps to output.
 
 ### Added
@@ -184,11 +174,13 @@ Breaking Change
 
 
 ## [1.6.0] - 2016-09-20
+### Fixed
+- Chk_Mst_Log:  Fixed error in if statement variable.
+
 ### Changed
 - Run_Program:  Changed Setup_Class_Run_Chks to Run_Program to be inline with the other programs.  Changed -m to -c.  Added disconnect procedures for class instances.  Allow the -d option to be added to the -s file name if the -s does not include a path directory.
 - main:  Changed the argument option values to be inline with the other programs.
 - Call_Run_Chk:  Changed the argument option values to be inline with the other programs.
-- Chk_Mst_Log:  Fixed error in if statement variable.
 - Chk_Slv_Time:  Replaced a section of code with a library call to cmds_mongo.JSON_Prt_Ins_2_DB.
 
 
