@@ -14,56 +14,67 @@
         database and multiple slave databases.
 
     Usage:
-        mysql_rep_admin.py -d path [-p path]
+        mysql_rep_admin.py -d path
             {-C -c file -s [path]/slave.txt |
              -S -s [path]/slave.txt |
              -B -c file |
              -D -s [path]/slave.txt |
              -T -c file -s [path]/slave.txt [-j [-f]] [-o dir_path/file [-a]]
                 [-b db:coll | -m file]
-                [-t ToEmail {ToEmail2 ...} {-u SubjectLine}] |
+                [-t ToEmail [ToEmail2 ...] [-u SubjectLine]] |
              -E -s [path]/slave.txt |
              -A -s [path]/slave.txt |
              -O -s [path]/slave.txt}
-            [-y flavor_id] [-z]
+            [-y flavor_id] [-p path] [-z]
             [-v | -h]
 
     Arguments:
         -d dir path => Directory path to the config files (-c). Required arg.
-        -c file => Master config file.
-            For use with the -C, -B, and -T options.
-        -s [path]/slave.txt => Slave config file.
+
         -C => Compare master binlog position to the slaves' and return any
-            differences detected if not the same positions.
+                differences detected if not the same positions.
+            -c file => Master config file.
+            -s [path]/slave.txt => Slave config file.
+
         -S => Check the slave(s) IO and SQL threads and return any errors or
-            warnings detected.
+                warnings detected.
+            -s [path]/slave.txt => Slave config file.
+
         -B => Display the master binlog filename and position.
+            -c file => Master config file.
+
         -D => Display the slave(s) binlog filename and position.
+            -s [path]/slave.txt => Slave config file.
+
         -T => Check time lag for the slave(s) and return any differences
-            detected.
+                detected.
+            -c file => Master config file.
+            -s [path]/slave.txt => Slave config file.
+            -j => Return output in JSON format, if available.
+            -f => Flatten the JSON data structure to file and standard out.
+            -o path/file => Directory path and file name for output.
+            -a => Append output to output file.
+            -b database:collection => Name of database and collection.
+                Default: sysmon:mysql_rep_lag
+            -m file => Insert results into a Mongo database.  File is the Mongo
+                config file.
+            -t to_email_addresses => Enables emailing capability for an option
+                if the option allows it.  Sends output to one or more email
+                addresses.
+            -u subject_line => Subject line of email.  Will create own subject
+                line if one is not provided.
+
         -E => Check for any replication errors on the slave(s).
+            -s [path]/slave.txt => Slave config file.
+
         -A => Does multiple checks which include the following options:
-            (-C, -S, -T, -E)
+                (-C, -S, -T, -E)
+            -s [path]/slave.txt => Slave config file.
+
         -O => Other slave replication checks and return any errors detected.
-        -j => Return output in JSON format, if available.
-            For use with the -T option.
-        -f => Flatten the JSON data structure to file and standard out.
-            For use with the -j option.
-        -o path/file => Directory path and file name for output.
-            Use the -a option to append to an existing file.
-            For use with the -T option.
-        -a => Append output to output file.
-        -b database:collection => Name of database and collection.
-            Default: sysmon:mysql_rep_lag
-        -m file => Insert results into a Mongo database.  File is the Mongo
-            config file.
-            For use with the -T option.
+            -s [path]/slave.txt => Slave config file.
+
         -p dir_path => Directory path to the mysql binary programs.
-        -t to_email_addresses => Enables emailing capability for an option if
-            the option allows it.  Sends output to one or more email addresses.
-            For use with the -T option.
-        -u subject_line => Subject line of email.  Optional, will create own
-            subject line if one is not provided.
         -y value => A flavor id for the program lock.  To create unique lock.
         -z => Suppress standard out.
         -v => Display version of this program.
@@ -73,18 +84,16 @@
 
     Notes:
         Master configuration file format (config/mysql_cfg.py.TEMPLATE):
-            NOTE:  Do not use the loopback IP or 'localhost' for the "host"
-                variable, use the actual IP.
             # Configuration file for Database:
             user = "USER"
             japd = "PSWORD"
-            host = "IP_ADDRESS"
+            host = "HOST_IP"
             name = "HOSTNAME"
             sid = SERVER_ID
             extra_def_file = "PYTHON_PROJECT/config/mysql.cfg"
             serv_os = "Linux"
             port = 3306
-            cfg_file = "MYSQL_DIRECTORY/my.cnf"
+            cfg_file = "MYSQL_DIRECTORY/mysqld.cnf"
 
         NOTE 1:  Include the cfg_file even if running remotely as the
             file will be used in future releases.
@@ -97,33 +106,43 @@
             "report-host" and "report-port" must be added to the mysqld.cnf
             file on each of the slaves and the database restarted for it to
             take effect.
+        NOTE 4:  Ignore the Replication user information entries.  They are
+            not required for this program.
 
         configuration modules -> name is runtime dependent as it can be
             used to connect to different databases with different names.
 
+
         Defaults Extra File format (config/mysql.cfg.TEMPLATE):
             [client]
             password="PASSWORD"
-            socket="MYSQL_DIRECTORY/mysql.sock"
+            socket="DIRECTORY_PATH/mysql.sock"
 
         NOTE 1:  The socket information can be obtained from the my.cnf
             file under ~/mysql directory.
+
         NOTE 2:  The --defaults-extra-file option will be overridden if there
             is a ~/.my.cnf or ~/.mylogin.cnf file located in the home directory
             of the user running this program.  The extras file will in effect
             be ignored.
 
+
         Slave configuration file format (config/slave.txt.TEMPLATE)
         Make a copy of this section for each slave in the replica set.
-            # Slave 1 configuration
+            # Slave configuration:
             user = USER
             japd = PSWORD
-            host = IP_ADDRESS
+            host = HOST_IP
             name = HOSTNAME
             sid = SERVER_ID
             cfg_file = None
             port = 3306
             serv_os = Linux
+            extra_def_file = DIRECTORY_PATH/mysql.cfg
+
+        NOTE 1:  Ignore the Replication user information entries.  They are
+            not required for this program.
+
 
         Mongo configuration file format (config/mongo.py.TEMPLATE).  The
             configuration file format for the Mongo connection used for
@@ -135,12 +154,13 @@
             # Single Configuration file for Mongo Database Server.
             user = "USER"
             japd = "PSWORD"
-            host = "IP_ADDRESS"
+            host = "HOST_IP"
             name = "HOSTNAME"
             port = 27017
             conf_file = None
             auth = True
             auth_db = "admin"
+            auth_mech = "SCRAM-SHA-1"
             use_arg = True
             use_uri = False
 
@@ -152,7 +172,7 @@
             db_auth = "AUTHENTICATION_DATABASE"
 
     Example:
-        mysql_rep_admin.py -c master -d config  -s slave.txt -A
+        mysql_rep_admin.py -c master -d config  -s slave.txt -T
 
 """
 
