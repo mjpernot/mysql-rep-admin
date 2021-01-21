@@ -15,7 +15,7 @@
 
     Usage:
         mysql_rep_admin.py -d path
-            {-C -c file -s [path]/slave.txt |
+            {-C -c file -s [path/]slave.txt |
              -S -s [path/]slave.txt |
              -B -c file |
              -D -s [path/]slave.txt |
@@ -34,7 +34,7 @@
         -C => Compare master binlog position to the slaves' and return any
                 differences detected if not the same positions.
             -c file => Master config file.
-            -s [path]/slave.txt => Slave config file.
+            -s [path/]slave.txt => Slave config file.
 
         -S => Check the slave(s) IO and SQL threads and return any errors or
                 warnings detected.
