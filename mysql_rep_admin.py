@@ -396,17 +396,17 @@ def chk_slv_thr(master, slaves, **kwargs):
             # Slave IO and run state.
             if not thr or not gen_libs.is_true(run):
                 print(PRT_TEMPLATE.format(name))
-                print("Error:  Slave IO/SQL Threads are down.")
+                print("\tError:  Slave IO/SQL Threads are down.")
 
             # Slave IO thread.
             elif not gen_libs.is_true(io_thr):
                 print(PRT_TEMPLATE.format(name))
-                print("Error:  Slave IO Thread is down.")
+                print("\tError:  Slave IO Thread is down.")
 
             # Slave SQL thread.
             elif not gen_libs.is_true(sql_thr):
                 print(PRT_TEMPLATE.format(name))
-                print("Error:  Slave SQL Thread is down.")
+                print("\tError:  Slave SQL Thread is down.")
 
     else:
         print("\nchk_slv_thr:  Warning:  No Slave instance detected.")
