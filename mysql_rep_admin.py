@@ -654,13 +654,13 @@ def _chk_other(skip, tmp_tbl, retry, name, **kwargs):
         print(PRT_TEMPLATE.format(name))
 
         if skip is None or skip > 0:
-            print("Skip Count:  {0}".format(skip))
+            print("\tSkip Count:  {0}".format(skip))
 
         if not tmp_tbl or int(tmp_tbl) > 5:
-            print("Temp Table Count:  {0}".format(tmp_tbl))
+            print("\tTemp Table Count:  {0}".format(tmp_tbl))
 
         if not retry or int(retry) > 0:
-            print("Retried Transaction Count:  {0}".format(retry))
+            print("\tRetried Transaction Count:  {0}".format(retry))
 
 
 def call_run_chk(args_array, func_dict, master, slaves, **kwargs):

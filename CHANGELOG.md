@@ -11,7 +11,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - Updated to work with (much older) mysql.connector v1.1.6 library module.
 
 ### Fixed
-- chk_slv_thr:  Fixed print formatting error.
+- \_chk_other, chk_slv_thr:  Fixed print formatting error.
 - \_chk_other:  Fixed when slave instance is down.
 - run_program:  Fixed disconnecting from down master/slave instance.
 - run_program:  Corrected passing incorrect keyword argument for os_type.
