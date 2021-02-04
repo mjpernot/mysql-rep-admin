@@ -354,10 +354,10 @@ def chk_mst_log(master, slaves, **kwargs):
                 print("\nWarning:  Slave lagging in reading master log.")
                 print("Master: {0}".format(master.name))
                 print("\tMaster Log: {0}".format(fname))
-                print("\t\tMaster Pos: {0}".format(log_pos))
+                print("\tMaster Pos: {0}".format(log_pos))
                 print("Slave: {0}".format(name))
                 print("\tSlave Log: {0}".format(mst_file))
-                print("\t\tSlave Pos: {0}".format(read_pos))
+                print("\tSlave Pos: {0}".format(read_pos))
 
             chk_slv(slv, **kwargs)
 
