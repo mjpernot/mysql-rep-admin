@@ -20,7 +20,7 @@
              -B -c file |
              -D -s [path/]slave.txt |
              -T -c file -s [path]/slave.txt [-j [-f]] [-o dir_path/file [-a]]
-                [-b db:coll | -m file]
+                [-b db:coll -m file]
                 [-t ToEmail [ToEmail2 ...] [-u SubjectLine]] |
              -E -s [path/]slave.txt |
              -A -s [path/]slave.txt |
