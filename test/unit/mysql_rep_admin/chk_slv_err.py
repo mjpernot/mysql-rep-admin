@@ -82,7 +82,7 @@ class SlaveRep(object):
         """
 
         self.name = "Slave_Name"
-        self.io = ios
+        self.ios = ios
         self.sql = sql
         self.io_msg = "IO_Message"
         self.sql_msg = "SQL_Message"
@@ -100,7 +100,7 @@ class SlaveRep(object):
 
         """
 
-        return self.io, self.sql, self.io_msg, self.sql_msg, self.io_time, \
+        return self.ios, self.sql, self.io_msg, self.sql_msg, self.io_time, \
             self.sql_time
 
     def get_name(self):
