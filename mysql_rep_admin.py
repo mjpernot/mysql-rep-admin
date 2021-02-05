@@ -434,10 +434,15 @@ def chk_slv_err(master, slaves, **kwargs):
             iost, sql, io_msg, sql_msg, io_time, sql_time = slv.get_err_stat()
             name = slv.get_name()
 
+            # Connection status
+            if not slv.conn:
+                print("\nSlave:\t{0}".format(name))
+                print("\tConnection Error:  No connection detected")
+
             # IO error
             if iost:
                 print("\nSlave:\t{0}".format(name))
-                print("IO Error Detected:\t{0}".format(iost))
+                print("\tIO Error Detected:\t{0}".format(iost))
                 print("\tIO Message:\t{0}".format(io_msg))
 
                 print("\tIO Timestamp:\t{0}".format(io_time))
@@ -445,7 +450,7 @@ def chk_slv_err(master, slaves, **kwargs):
             # SQL error
             if sql:
                 print("\nSlave:\t{0}".format(name))
-                print("SQL Error Detected:\t{0}".format(sql))
+                print("\tSQL Error Detected:\t{0}".format(sql))
                 print("\tSQL Message:\t{0}".format(sql_msg))
 
                 print("\tSQL Timestamp:\t{0}".format(sql_time))
