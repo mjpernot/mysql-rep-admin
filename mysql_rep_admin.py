@@ -596,7 +596,10 @@ def _process_time_lag(slv, time_lag, name, json_fmt, **kwargs):
 
     if time_lag > 0 or time_lag is None:
         time.sleep(5)
-        slv.upd_slv_time()
+
+        if slv.conn:
+            slv.upd_slv_time()
+
         time_lag = slv.get_time()
 
         if (time_lag > 0 or time_lag is None) and not json_fmt:

@@ -11,6 +11,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - Updated to work with (much older) mysql.connector v1.1.6 library module.
 
 ### Fixed
+- \_process_time_lag:  Detected when mysql server is down -T option.
 - \_process_time_lag:  Detected when rep agent is down for -T option to standard out.
 - chk_mst_log, \_chk_other, chk_slv_thr:  Fixed print formatting error.
 - \_chk_other:  Fixed when slave instance is down.
