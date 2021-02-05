@@ -73,7 +73,7 @@ class SlaveRep(object):
 
     """
 
-    def __init__(self, lag_time=1):
+    def __init__(self, lag_time=1, conn="Connection Instance"):
 
         """Method:  __init__
 
@@ -85,6 +85,7 @@ class SlaveRep(object):
 
         self.lag_time = lag_time
         self.name = "Slave_Name"
+        self.conn = conn
 
     def get_time(self):
 
@@ -330,7 +331,7 @@ class UnitTest(unittest.TestCase):
         """
 
         mock_sleep.return_value = True
-        self.slave = SlaveRep(lag_time=None)
+        self.slave = SlaveRep(lag_time=0)
 
         self.assertFalse(mysql_rep_admin.chk_slv_time(self.master,
                                                       [self.slave]))
