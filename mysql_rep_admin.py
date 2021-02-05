@@ -594,14 +594,14 @@ def _process_time_lag(slv, time_lag, name, json_fmt, **kwargs):
 
     """
 
-    if time_lag:
+    if time_lag > 0 or time_lag is None:
         time.sleep(5)
         slv.upd_slv_time()
         time_lag = slv.get_time()
 
-        if time_lag and not json_fmt:
+        if (time_lag > 0 or time_lag is None) and not json_fmt:
             print("\nSlave:  {0}".format(name))
-            print("\tTime Lag:  {0}".format(time_lag))
+            print("\tTime Lag:  {0}".format(time_lag or "No Time Detected"))
 
     return time_lag
 
