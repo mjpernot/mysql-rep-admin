@@ -42,6 +42,9 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp -> Initialize testing environment.
+        test_retry_down -> Test with retry is down slave.
+        test_tmp_tbl_down -> Test with tmp_tbl is down slave.
+        test_skip_down -> Test with skip is down slave.
         test_retry_error -> Test with retry error detected.
         test_tmp_tbl_error -> Test with tmp table error detected.
         test_skip_error -> Test with skip error detected.
@@ -58,14 +61,59 @@ class UnitTest(unittest.TestCase):
         Arguments:
 
         """
-        # with gen_libs.no_std_out():
+
         self.skip0 = 0
         self.skip1 = 1
-        self.tmp_tbl0 = 0
-        self.tmp_tbl6 = 6
-        self.retry0 = 0
-        self.retry1 = 1
+        self.skip2 = None
+        self.tmp_tbl0 = unicode(0)
+        self.tmp_tbl6 = unicode(6)
+        self.tmp_tbl2 = None
+        self.retry0 = unicode(0)
+        self.retry1 = unicode(1)
+        self.retry2 = None
         self.name = "SlaveName"
+
+    def test_retry_down(self):
+
+        """Function:  test_retry_down
+
+        Description:  Test with retry is down slave.
+
+        Arguments:
+
+        """
+
+        with gen_libs.no_std_out():
+            self.assertFalse(mysql_rep_admin._chk_other(
+                self.skip0, self.tmp_tbl0, self.retry2, self.name))
+
+    def test_tmp_tbl_down(self):
+
+        """Function:  test_tmp_tbl_down
+
+        Description:  Test with tmp_tbl is down slave.
+
+        Arguments:
+
+        """
+
+        with gen_libs.no_std_out():
+            self.assertFalse(mysql_rep_admin._chk_other(
+                self.skip0, self.tmp_tbl2, self.retry0, self.name))
+
+    def test_skip_down(self):
+
+        """Function:  test_skip_down
+
+        Description:  Test with skip is down slave.
+
+        Arguments:
+
+        """
+
+        with gen_libs.no_std_out():
+            self.assertFalse(mysql_rep_admin._chk_other(
+                self.skip2, self.tmp_tbl0, self.retry0, self.name))
 
     def test_retry_error(self):
 

@@ -8,6 +8,7 @@
 ###  This README file is broken down into the following sections:
   * Features
   * Prerequisites
+    - FIPS Environment
   * Installation
   * Configuration
   * Program Help Function
@@ -38,6 +39,13 @@
     - mysql_lib/mysql_libs
     - mysql_lib/mysql_class
     - mongo_lib/mongo_libs
+
+  * FIPS Environment
+    If operating in a FIPS 104-2 environment, this package will require at least a minimum of pymongo==3.8.0 or better.  It will also require a manual change to the auth.py module in the pymongo package.  See below for changes to auth.py.
+    - Locate the auth.py file python installed packages on the system in the pymongo package directory.
+    - Edit the file and locate the \_password_digest function.
+    - In the \_password_digest function there is an line that should match: "md5hash = hashlib.md5()".  Change it to "md5hash = hashlib.md5(usedforsecurity=False)".
+    - Lastly, it will require the configuration file entry auth_mech to be set to: SCRAM-SHA-1 or SCRAM-SHA-256.
 
 
 # Installation:
@@ -72,19 +80,12 @@ pip install -r requirements-python-lib.txt --target mongo_lib/lib --trusted-host
 
 # Configuration:
 
-Create MySQL configuration file.
+Create MySQL configuration file and make the appropriate change to the environment.
   * Replace **PYTHON_PROJECT** with the baseline path of the python program.
-
-```
-cd config
-cp mysql_cfg.py.TEMPLATE mysql_cfg.py
-```
-
-Make the appropriate change to the environment.
   * Change these entries in the MySQL setup:
     - user = "USER"
-    - passwd = "PASSWORD"
-    - host = "SERVER_IP"
+    - japd = "PSWORD"
+    - host = "HOST_IP"
     - name = "HOST_NAME"
     - sid = SERVER_ID
     - extra_def_file = "PYTHON_PROJECT/config/mysql.cfg"
@@ -94,37 +95,28 @@ Make the appropriate change to the environment.
     - port = 3306
 
 ```
+cd config
+cp mysql_cfg.py.TEMPLATE mysql_cfg.py
 vim mysql_cfg.py
 chmod 600 mysql_cfg.py
 ```
 
-Create MySQL definition file.
-
-```
-cp mysql.cfg.TEMPLATE mysql.cfg
-```
-
-Make the appropriate change to the environment.
+Create MySQL definition file and make the appropriate change to the environment.
   * Change these entries in the MySQL definition file:
     - password="PASSWORD"
     - socket="DIRECTORY_PATH/mysql.sock"
 
 ```
+cp mysql.cfg.TEMPLATE mysql.cfg
 vim mysql.cfg
 chmod 600 mysql.cfg
 ```
 
-Create Slave definition file.
-
-```
-cp slave.txt.TEMPLATE slave.txt
-```
-
-Make the appropriate change for a slave connection.
+Create Slave definition file and make the appropriate change for a slave connection.
   * Change these entries in the MySQL slave setup:
     - user = USER
-    - passwd = PASSWORD
-    - host = IP_ADDRESS
+    - japd = PSWORD
+    - host = HOST_IP
     - name = HOSTNAME
     - sid = SERVER_ID
   * Change these entries only if required:
@@ -134,21 +126,16 @@ Make the appropriate change for a slave connection.
   * NOTE:  Create a new set of entries for each slave in the MySQL replica set.
 
 ```
+cp slave.txt.TEMPLATE slave.txt
 vim slave.txt
 chmod 600 slave.txt
 ```
 
-Create Mongodb configuration file.
+Create Mongodb configuration file and make the appropriate change to the environment.
   * If submitting output to Mongo database, then require a Mongodb configuration file.
-
-```
-cp mongo.py.TEMPLATE mongo.py
-```
-
-Make the appropriate change to the environment.
   * Make the appropriate changes to connect to a Mongo database.
     - user = "USER"
-    - passwd = "PASSWORD"
+    - japd = "PSWORD"
     - host = "HOST_IP"
     - name = "HOSTNAME"
 
@@ -156,6 +143,10 @@ Make the appropriate change to the environment.
     - port = 27017
     - conf_file = None
     - auth = True
+    - auth_db = "admin"
+    - auth_mech = "SCRAM-SHA-1"
+    - use_arg = True
+    - use_uri = False
 
   * If connecting to a Mongo replica set:
     - repset = "REPLICA_SET_NAME"
@@ -163,6 +154,7 @@ Make the appropriate change to the environment.
     - db_auth = "AUTHENTICATION_DATABASE"
 
 ```
+cp mongo.py.TEMPLATE mongo.py
 vim mongo.py
 chmod 600 mongo.py
 ```
@@ -172,18 +164,13 @@ chmod 600 mongo.py
 For some options to work correctly the report-host and report-port options must be added to each of the slaves mysqld.cnf file and the database restarted.
 It is recommended to add these entries to all slaves including the master database.
 
-```
-sudo bash
-vim MYSQL_DIRECTORY/mysqld.cnf
-```
-
 Add the following lines to the mysqld.cnf file under the [mysqld] section.
   * report-host and report-port must match up with "name" and "port" entries respectively from the mysql_cfg.py/slave.txt file.
 
 report-host = HOSTNAME
-report-port = 3306
+report-port = PORT
 
-Restart each of the databases for the changes to take effect.
+Restart each of the database instances for the changes to take effect.
 
 
 # Program Help Function:
