@@ -425,7 +425,6 @@ def chk_slv_err(master, slaves, **kwargs):
     """
 
     print_template = "\nSlave:\t{0}"
-
     slaves = list(slaves)
 
     if slaves:
