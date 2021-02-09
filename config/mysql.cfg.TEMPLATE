@@ -4,4 +4,4 @@
 password='PASSWORD'
 # Location of the MySQL socket file.
 # Example:  socket=/opt/lamp/mysql/tmp/mysql.sock
-socket=MYSQL_DIRECTORY/mysql.sock
+socket=DIRECTORY_PATH/mysql.sock
