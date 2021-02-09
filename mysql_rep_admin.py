@@ -424,6 +424,8 @@ def chk_slv_err(master, slaves, **kwargs):
 
     """
 
+    print_template = "\nSlave:\t{0}"
+
     slaves = list(slaves)
 
     if slaves:
@@ -436,12 +438,12 @@ def chk_slv_err(master, slaves, **kwargs):
 
             # Connection status
             if not slv.conn:
-                print("\nSlave:\t{0}".format(name))
+                print(print_template.format(name))
                 print("\tConnection Error:  No connection detected")
 
             # IO error
             if iost:
-                print("\nSlave:\t{0}".format(name))
+                print(print_template.format(name))
                 print("\tIO Error Detected:\t{0}".format(iost))
                 print("\tIO Message:\t{0}".format(io_msg))
 
@@ -449,7 +451,7 @@ def chk_slv_err(master, slaves, **kwargs):
 
             # SQL error
             if sql:
-                print("\nSlave:\t{0}".format(name))
+                print(print_template.format(name))
                 print("\tSQL Error Detected:\t{0}".format(sql))
                 print("\tSQL Message:\t{0}".format(sql_msg))
 
