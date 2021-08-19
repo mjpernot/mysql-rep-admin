@@ -172,6 +172,11 @@ Create Mongodb configuration file and make the appropriate change to the environ
     - repset_hosts = "HOST_1:PORT, HOST_2:PORT, ..."
     - db_auth = "AUTHENTICATION_DATABASE"
 
+  * Notes for auth_mech configuration entry:
+    - NOTE 1:  SCRAM-SHA-256 only works for Mongodb 4.0 and better.
+    - NOTE 2:  FIPS 140-2 environment requires SCRAM-SHA-1 or SCRAM-SHA-256.
+    - NOTE 3:  MONGODB-CR is not supported in Mongodb 4.0 and better.
+
 ```
 cp mongo.py.TEMPLATE mongo.py
 vim mongo.py
