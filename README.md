@@ -110,7 +110,7 @@ chmod 600 mysql_cfg.py
 Create MySQL definition file and make the appropriate change to the environment.
   * Change these entries in the MySQL definition file:
     - password="PASSWORD"
-    - socket="DIRECTORY_PATH/mysql.sock"
+    - socket=DIRECTORY_PATH/mysqld.sock
 
 ```
 cp mysql.cfg.TEMPLATE mysql.cfg
