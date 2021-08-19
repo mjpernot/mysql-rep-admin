@@ -14,6 +14,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - config/mongo.py.TEMPLATE:  Added SSL configuration options.
 - config/mysql_cfg.py.TEMPLATE:  Added SSL configuration options.
 - config/mysql.cfg.TEMPLATE:  Added SSL configuration options.
+- Documentation updates.
 
 
 ## [3.1.2] - 2020-11-23

@@ -97,6 +97,19 @@
             port = 3306
             cfg_file = "MYSQL_DIRECTORY/mysqld.cnf"
 
+            # If SSL connections are being used, configure one or more of these
+                entries:
+            ssl_client_ca = None
+            ssl_client_key = None
+            ssl_client_cert = None
+
+            # Only changes these if necessary and have knowledge in MySQL
+                SSL configuration setup:
+            ssl_client_flag = None
+            ssl_disabled = False
+            ssl_verify_id = False
+            ssl_verify_cert = False
+
         NOTE 1:  Include the cfg_file even if running remotely as the
             file will be used in future releases.
         NOTE 2:  In MySQL 5.6 - it now gives warning if password is passed on
@@ -118,15 +131,16 @@
         Defaults Extra File format (config/mysql.cfg.TEMPLATE):
             [client]
             password="PASSWORD"
-            socket="DIRECTORY_PATH/mysql.sock"
+            socket="DIRECTORY_PATH/mysqld.sock"
 
         NOTE 1:  The socket information can be obtained from the my.cnf
             file under ~/mysql directory.
-
         NOTE 2:  The --defaults-extra-file option will be overridden if there
             is a ~/.my.cnf or ~/.mylogin.cnf file located in the home directory
             of the user running this program.  The extras file will in effect
             be ignored.
+        NOTE 3:  Socket use is only required to be set in certain conditions
+            when connecting using localhost.
 
 
         Slave configuration file format (config/slave.txt.TEMPLATE)
@@ -140,7 +154,20 @@
             cfg_file = None
             port = 3306
             serv_os = Linux
-            extra_def_file = DIRECTORY_PATH/mysql.cfg
+            extra_def_file = PYTHON_PROJECT/mysql.cfg
+
+            # If SSL connections are being used, configure one or more of these
+                entries:
+            ssl_client_ca = None
+            ssl_client_key = None
+            ssl_client_cert = None
+
+            # Only changes these if necessary and have knowledge in MySQL
+                SSL configuration setup:
+            ssl_client_flag = None
+            ssl_disabled = False
+            ssl_verify_id = False
+            ssl_verify_cert = False
 
         NOTE 1:  Ignore the Replication user information entries.  They are
             not required for this program.
@@ -151,7 +178,7 @@
             inserting data into a database.
             There are two ways to connect:  single or replica set.
 
-            1.)  Single database connection:
+            Single database connection:
 
             # Single Configuration file for Mongo Database Server.
             user = "USER"
@@ -166,12 +193,37 @@
             use_arg = True
             use_uri = False
 
-            2.)  Replica Set connection:  Same format as above, but with these
+            Replica Set connection:  Same format as above, but with these
                 additional entries at the end of the configuration file:
 
             repset = "REPLICA_SET_NAME"
             repset_hosts = "HOST1:PORT, HOST2:PORT, [...]"
             db_auth = "AUTHENTICATION_DATABASE"
+
+            Note:  If using SSL connections then set one or more of the
+                following entries.  This will automatically enable SSL
+                connections. Below are the configuration settings for SSL
+                connections.  See configuration file for details on each entry:
+
+            ssl_client_ca = None
+            ssl_client_key = None
+            ssl_client_cert = None
+            ssl_client_phrase = None
+
+            Note:  FIPS Environment for Mongo.
+              If operating in a FIPS 104-2 environment, this package will
+              require at least a minimum of pymongo==3.8.0 or better.  It will
+              also require a manual change to the auth.py module in the pymongo
+              package.  See below for changes to auth.py.
+
+            - Locate the auth.py file python installed packages on the system
+                in the pymongo package directory.
+            - Edit the file and locate the "_password_digest" function.
+            - In the "_password_digest" function there is an line that should
+                match: "md5hash = hashlib.md5()".  Change it to
+                "md5hash = hashlib.md5(usedforsecurity=False)".
+            - Lastly, it will require the Mongo configuration file entry
+                auth_mech to be set to: SCRAM-SHA-1 or SCRAM-SHA-256.
 
     Example:
         mysql_rep_admin.py -c master -d config  -s slave.txt -T
