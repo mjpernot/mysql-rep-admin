@@ -57,8 +57,8 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - call_run_chk:  Checked for "-f" option and passed JSON identation setting to functions.
 - main:  Made "-s" option a requirement for "-A", "-C", "-D", "-E", "-O" and "-T" options.
 - chk_slv_time:  Changed JSON document "Master" entry to "Server".
-- add_miss_slaves:  Converted JSON document to CamelCase.
-- chk_slv_time:  Converted JSON document to CamelCase.
+- add_miss_slaves:  Converted JSON document to PascalCase.
+- chk_slv_time:  Converted JSON document to PascalCase.
 - main:  Added ProgramLock class to implement program locking.
 - main:  Made "-c" option a requirement for "-B", "-C", and "-T" options.
 - \_chk_other: Used global variable for template printing.
@@ -120,7 +120,7 @@ Breaking Change
 - main:  Refactored initial program checks.
 - call_run_chk, run_program:  Added \*\*kwargs to argument list.
 - Changed variable names to standard naming convention.
-- add_miss_slaves, chk_slv_time:  Changed output to camelCase.
+- add_miss_slaves, chk_slv_time:  Changed output to PascalCase.
 - run_program:  Modified to use the updated mysql_class module.
 - main:  Removed -I and -R arguments from the program options.
 - run_program:  Replaced the code to load the slave files into an array with a call to cmds_gen.create_cfg_array().
