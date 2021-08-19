@@ -82,7 +82,7 @@ Create MySQL configuration file and make the appropriate change to the environme
     - host = "HOST_IP"
     - name = "HOST_NAME"
     - sid = SERVER_ID
-    - extra_def_file = "PYTHON_PROJECT/config/mysql.cfg"
+    - extra_def_file = "**PYTHON_PROJECT**/config/mysql.cfg"
     - cfg_file = "MYSQL_DIRECTORY/mysqld.cnf"
 
   * Change these entries only if required:
@@ -126,6 +126,7 @@ Create Slave definition file and make the appropriate change for a slave connect
     - host = HOST_IP
     - name = HOSTNAME
     - sid = SERVER_ID
+    - extra_def_file = **PYTHON_PROJECT**/config/mysql.cfg
 
   * Change these entries only if required:
     - cfg_file = None
