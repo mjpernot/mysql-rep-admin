@@ -32,14 +32,9 @@
     - python-devel
 
   * Local class/library dependencies within the program structure.
-    - lib/cmds_gen
-    - lib/arg_parser
-    - lib/gen_libs
-    - lib/machine
-    - lib/gen_class
-    - mysql_lib/mysql_libs
-    - mysql_lib/mysql_class
-    - mongo_lib/mongo_libs
+    - python-lib
+    - mysql-lib
+    - mongo-lib
 
   * FIPS Environment
     If operating in a FIPS 104-2 environment, this package will require at least a minimum of pymongo==3.8.0 or better.  It will also require a manual change to the auth.py module in the pymongo package.  See below for changes to auth.py.
