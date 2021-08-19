@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
+## [3.2.0] - 2021-08-19
+
+
 ## [3.1.2] - 2020-11-23
 - Updated to use the mysql_libs v5.0.3 library.
 - Verified to work with pymongo v3.8.0.
