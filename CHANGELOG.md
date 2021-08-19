@@ -9,6 +9,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - Updated to work in a SSL environment.
 - Updated to use the mysql_libs v5.2.2 library.
 
+
 ## [3.1.2] - 2020-11-23
 - Updated to use the mysql_libs v5.0.3 library.
 - Verified to work with pymongo v3.8.0.
