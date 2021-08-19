@@ -5,7 +5,9 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 
 ## [3.2.0] - 2021-08-19
-
+- Updated to work in MySQL 8.0 and 5.7 environments.
+- Updated to work in a SSL environment.
+- Updated to use the mysql_libs v5.2.2 library.
 
 ## [3.1.2] - 2020-11-23
 - Updated to use the mysql_libs v5.0.3 library.
