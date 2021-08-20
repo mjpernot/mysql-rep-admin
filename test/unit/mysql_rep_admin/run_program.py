@@ -65,7 +65,7 @@ class SlaveRep(object):
     Description:  Class stub holder for mysql_class.SlaveRep class.
 
     Methods:
-        __init__ -> Class initialization.
+        __init__
 
     """
 
@@ -77,15 +77,15 @@ class SlaveRep(object):
         Description:  Class initialization.
 
         Arguments:
-            (input) name -> Stub holder.
-            (input) sid -> Stub holder.
-            (input) user -> Stub holder.
-            (input) japd -> Stub holder.
-            (input) serv_os -> Stub holder.
+            (input) name
+            (input) sid
+            (input) user
+            (input) japd
+            (input) serv_os
             (input) **kwargs:
-                port -> Stub holder.
-                cfg_file -> Stub holder.
-                host -> Stub holder.
+                port
+                cfg_file
+                host
 
         """
 
@@ -107,8 +107,8 @@ class MasterRep(object):
     Description:  Class stub holder for mysql_class.MasterRep class.
 
     Methods:
-        __init__ -> Class initialization.
-        connect -> Stub method holder for MasterRep.connect.
+        __init__
+        connect
 
     """
 
@@ -120,15 +120,15 @@ class MasterRep(object):
         Description:  Class initialization.
 
         Arguments:
-            (input) name -> Stub holder.
-            (input) sid -> Stub holder.
-            (input) user -> Stub holder.
-            (input) japd -> Stub holder.
-            (input) serv_os -> Stub holder.
+            (input) name
+            (input) sid
+            (input) user
+            (input) japd
+            (input) serv_os
             (input) **kwargs:
-                port -> Stub holder.
-                cfg_file -> Stub holder.
-                host -> Stub holder.
+                port
+                cfg_file
+                host
 
         """
 
@@ -162,7 +162,7 @@ class MstCfg(object):
     Description:  Class stub holder for gen_libs.load_module class.
 
     Methods:
-        __init__ -> Class initialization.
+        __init__
 
     """
 
@@ -193,13 +193,13 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Initialize testing environment.
-        test_master_down -> Test with master is down.
-        test_all_slaves_down -> Test with all slaves are down.
-        test_one_slave_down -> Test with one of the slaves is down.
-        test_no_master -> Test with no -c option in args_array.
-        test_no_slaves -> Test with no -s option in args_array.
-        test_single_func -> Test with single function call.
+        setUp
+        test_master_down
+        test_all_slaves_down
+        test_one_slave_down
+        test_no_master
+        test_no_slaves
+        test_single_func
 
     """
 
