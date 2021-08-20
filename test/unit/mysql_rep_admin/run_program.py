@@ -233,7 +233,7 @@ class UnitTest(unittest.TestCase):
                            "user": "root", "serv_os": "Linux", "sid": "21",
                            "port": "3306"}]
 
-    @mock.patch("mysql_rep_admin.cmds_gen.disconnect",
+    @mock.patch("mysql_rep_admin.mysql_libs.disconnect",
                 mock.Mock(return_value=True))
     @mock.patch("mysql_rep_admin.call_run_chk", mock.Mock(return_value=True))
     @mock.patch("mysql_rep_admin.mysql_libs.create_slv_array")
@@ -259,7 +259,7 @@ class UnitTest(unittest.TestCase):
         self.assertFalse(mysql_rep_admin.run_program(self.args_array,
                                                      self.func_dict))
 
-    @mock.patch("mysql_rep_admin.cmds_gen.disconnect",
+    @mock.patch("mysql_rep_admin.mysql_libs.disconnect",
                 mock.Mock(return_value=True))
     @mock.patch("mysql_rep_admin.call_run_chk", mock.Mock(return_value=True))
     @mock.patch("mysql_rep_admin.mysql_libs.create_slv_array")
@@ -286,7 +286,7 @@ class UnitTest(unittest.TestCase):
         self.assertFalse(mysql_rep_admin.run_program(self.args_array,
                                                      self.func_dict))
 
-    @mock.patch("mysql_rep_admin.cmds_gen.disconnect",
+    @mock.patch("mysql_rep_admin.mysql_libs.disconnect",
                 mock.Mock(return_value=True))
     @mock.patch("mysql_rep_admin.call_run_chk", mock.Mock(return_value=True))
     @mock.patch("mysql_rep_admin.mysql_libs.create_slv_array")
@@ -312,7 +312,7 @@ class UnitTest(unittest.TestCase):
         self.assertFalse(mysql_rep_admin.run_program(self.args_array,
                                                      self.func_dict))
 
-    @mock.patch("mysql_rep_admin.cmds_gen.disconnect")
+    @mock.patch("mysql_rep_admin.mysql_libs.disconnect")
     @mock.patch("mysql_rep_admin.call_run_chk")
     def test_no_master(self, mock_call, mock_dis):
 
@@ -331,7 +331,7 @@ class UnitTest(unittest.TestCase):
                                                      self.func_dict))
 
     @mock.patch("mysql_rep_admin.mysql_class.MasterRep")
-    @mock.patch("mysql_rep_admin.cmds_gen.disconnect")
+    @mock.patch("mysql_rep_admin.mysql_libs.disconnect")
     @mock.patch("mysql_rep_admin.call_run_chk")
     @mock.patch("mysql_rep_admin.gen_libs.load_module")
     def test_no_slaves(self, mock_cfg, mock_call, mock_dis, mock_rep):
@@ -352,7 +352,7 @@ class UnitTest(unittest.TestCase):
         self.assertFalse(mysql_rep_admin.run_program(self.args_array2,
                                                      self.func_dict))
 
-    @mock.patch("mysql_rep_admin.cmds_gen.disconnect",
+    @mock.patch("mysql_rep_admin.mysql_libs.disconnect",
                 mock.Mock(return_value=True))
     @mock.patch("mysql_rep_admin.call_run_chk", mock.Mock(return_value=True))
     @mock.patch("mysql_rep_admin.mysql_libs.create_slv_array")
