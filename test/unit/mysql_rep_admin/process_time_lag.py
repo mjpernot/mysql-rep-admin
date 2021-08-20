@@ -42,9 +42,9 @@ class SlaveRep(object):
     Description:  Class stub holder for mysql_class.SlaveRep class.
 
     Methods:
-        __init__ -> Class initialization.
-        get_time -> Stub method holder for SlaveRep.get_time.
-        upd_slv_time -> Stub method holder for SlaveRep.upd_slv_time.
+        __init__
+        get_time
+        upd_slv_time
 
     """
 
@@ -93,16 +93,16 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Initialize testing environment.
-        test_mysql_down_std -> Test with MySQL is down in standard format.
-        test_mysql_down_json -> Test with MySQL is down in JSON format.
-        test_lag_one2 -> Test with time lag set to one and then clears.
-        test_lag_one -> Test with time lag set to one.
-        test_lag_zero -> Test with time lag set to zero.
-        test_lag_none -> Test with time lag set to None.
-        test_lag_json -> Test with time lag to JSON.
-        test_lag_stdout -> Test with time lag to standard out.
-        test_no_lag -> Test with no time lag.
+        setUp
+        test_mysql_down_std
+        test_mysql_down_json
+        test_lag_one2
+        test_lag_one
+        test_lag_zero
+        test_lag_none
+        test_lag_json
+        test_lag_stdout
+        test_no_lag
 
     """
 
