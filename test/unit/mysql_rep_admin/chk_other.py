@@ -41,14 +41,14 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Initialize testing environment.
-        test_retry_down -> Test with retry is down slave.
-        test_tmp_tbl_down -> Test with tmp_tbl is down slave.
-        test_skip_down -> Test with skip is down slave.
-        test_retry_error -> Test with retry error detected.
-        test_tmp_tbl_error -> Test with tmp table error detected.
-        test_skip_error -> Test with skip error detected.
-        test_no_errors -> Test with no errors detected.
+        setUp
+        test_retry_down
+        test_tmp_tbl_down
+        test_skip_down
+        test_retry_error
+        test_tmp_tbl_error
+        test_skip_error
+        test_no_errors
 
     """
 
