@@ -833,7 +833,7 @@ def run_program(args_array, func_dict, **kwargs):
     if master and master.conn:
         conn_list.append(master)
 
-    cmds_gen.disconnect(conn_list)
+    mysql_libs.disconnect(conn_list)
 
 
 def main():

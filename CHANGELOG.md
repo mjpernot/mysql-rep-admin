@@ -10,6 +10,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - Updated to use the mysql_libs v5.2.2 library.
 
 ### Changed
+- run_program:  Replaced cmds_gen.disconnect with mysql_libs.disconnect.
 - config/slave.txt.TEMPLATE: Added SSL configuration options.
 - config/mongo.py.TEMPLATE:  Added SSL configuration options.
 - config/mysql_cfg.py.TEMPLATE:  Added SSL configuration options.
