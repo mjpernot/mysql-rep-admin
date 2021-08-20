@@ -512,7 +512,7 @@ def chk_slv_err(master, slaves, **kwargs):
         print("\nchk_slv_err:  Warning:  No Slave instance detected.")
 
 
-def add_miss_slaves(master, outdata, **kwargs):
+def add_miss_slaves(master, outdata):
 
     """Function:  add_miss_slaves
 
@@ -636,7 +636,7 @@ def _process_json(outdata, **kwargs):
         gen_libs.print_data(jdata)
 
 
-def _process_time_lag(slv, time_lag, name, json_fmt, **kwargs):
+def _process_time_lag(slv, time_lag, name, json_fmt):
 
     """Function:  _process_time_lag
 
@@ -693,7 +693,7 @@ def chk_slv_other(master, slaves, **kwargs):
         print("\nchk_slv_other:  Warning:  No Slave instance detected.")
 
 
-def _chk_other(skip, tmp_tbl, retry, name, **kwargs):
+def _chk_other(skip, tmp_tbl, retry, name):
 
     """Function:  _chk_other
 
@@ -724,7 +724,7 @@ def _chk_other(skip, tmp_tbl, retry, name, **kwargs):
             print("\tRetried Transaction Count:  {0}".format(retry))
 
 
-def call_run_chk(args_array, func_dict, master, slaves, **kwargs):
+def call_run_chk(args_array, func_dict, master, slaves):
 
     """Function:  call_run_chk
 
@@ -794,7 +794,7 @@ def call_run_chk(args_array, func_dict, master, slaves, **kwargs):
                 mode=mode, indent=indent)
 
 
-def run_program(args_array, func_dict, **kwargs):
+def run_program(args_array, func_dict):
 
     """Function:  run_program
 
