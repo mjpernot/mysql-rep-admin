@@ -14,7 +14,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 ### Changed
 - main:  Added slave configuration transpose data.
-- run_program:  Added call to transpose_slv_cfg function.
+- run_program:  Added call to transpose_dict function.
 - Removed unnecessary \*\*kwargs in function argument list.
 - run_program:  Replaced cmds_gen.disconnect with mysql_libs.disconnect.
 - config/slave.txt.TEMPLATE: Added SSL configuration options.
