@@ -795,41 +795,41 @@ def call_run_chk(args_array, func_dict, master, slaves):
                 mode=mode, indent=indent)
 
 
-def transpose_slv_cfg(slv_cfg, slv_key):
+def transpose_dict(data, data_key):
 
-    """Function:  transpose_slv_cfg
+    """Function:  transpose_dict
 
-    Description:  Transpose specified keys in the slave configuration to
-        specified data types or None.
+    Description:  Transpose specified keys in a list of dictionaries
+        to specified data types or None.
     
     Arguments:
-        (input) slv_cfg -> Slave configuration.
-        (input) slv_key -> Dictionary of keys and data types.
-        (output) mod_slv_cfg -> Modified slave configuration.
+        (input) data -> Initial list of dictionaries.
+        (input) data_key -> Dictionary of keys and data types.
+        (output) mod_data -> Modified list of dictionaries.
     
     """
 
-    slv_cfg = list(slv_cfg)
-    slv_key = dict(slv_key)
-    mod_slv_cfg= list()
+    data = list(data)
+    data_key = dict(data_key)
+    mod_data = list()
 
-    for list_item in slv_cfg:
+    for list_item in data:
         list_item = dict(list_item)
-        intersect_keys = set(list_item.keys()) & set(slv_key.keys())
+        intersect_keys = set(list_item.keys()) & set(data_key.keys())
 
         for item in intersect_keys:
             if not list_item[item] or list_item[item] == "None":
                 list_item[item] = None
 
-            elif slv_key[item] = "int":
+            elif data_key[item] = "int":
                 list_item[item] = int(list_item[item])
 
-            elif slv_key[item] == "bool":
+            elif data_key[item] == "bool":
                 list_item[item] = ast.literal_eval(list_item[item])
 
-        mod_slv_cfg.append(list_item)
+        mod_data.append(list_item)
 
-    return mod_slv_cfg
+    return mod_data
 
 
 def run_program(args_array, func_dict, **kwargs):
@@ -864,7 +864,7 @@ def run_program(args_array, func_dict, **kwargs):
     if "-s" in args_array:
         slv_cfg = cmds_gen.create_cfg_array(args_array["-s"],
                                             cfg_path=args_array["-d"])
-        slv_cfg = transpose_slv_cfg(slv_cfg, kwargs.get("slv_key", {})
+        slv_cfg = transpose_dict(slv_cfg, kwargs.get("slv_key", {})
         slaves = mysql_libs.create_slv_array(slv_cfg)
 
     call_run_chk(args_array, func_dict, master, slaves)
