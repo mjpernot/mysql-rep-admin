@@ -9,7 +9,12 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - Updated to work in a SSL environment.
 - Updated to use the mysql_libs v5.2.2 library.
 
+### Added
+- transpose_dict:  Transpose specified keys to new data types.
+
 ### Changed
+- main:  Added slave configuration transpose data.
+- run_program:  Added call to transpose_dict function.
 - Removed unnecessary \*\*kwargs in function argument list.
 - run_program:  Replaced cmds_gen.disconnect with mysql_libs.disconnect.
 - config/slave.txt.TEMPLATE: Added SSL configuration options.

@@ -24,6 +24,7 @@ coverage run -a --source=mysql_rep_admin test/unit/mysql_rep_admin/process_time_
 coverage run -a --source=mysql_rep_admin test/unit/mysql_rep_admin/rpt_mst_log.py
 coverage run -a --source=mysql_rep_admin test/unit/mysql_rep_admin/rpt_slv_log.py
 coverage run -a --source=mysql_rep_admin test/unit/mysql_rep_admin/run_program.py
+coverage run -a --source=mysql_rep_admin test/unit/mysql_rep_admin/transpose_dict.py
 
 echo ""
 echo "Producing code coverage report"

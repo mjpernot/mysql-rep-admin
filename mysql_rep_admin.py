@@ -241,6 +241,7 @@ import datetime
 
 # Third party
 import json
+import ast
 
 # Local
 import lib.arg_parser as arg_parser
@@ -794,7 +795,43 @@ def call_run_chk(args_array, func_dict, master, slaves):
                 mode=mode, indent=indent)
 
 
-def run_program(args_array, func_dict):
+def transpose_dict(data, data_key):
+
+    """Function:  transpose_dict
+
+    Description:  Transpose specified keys in a list of dictionaries
+        to specified data types or None.
+    
+    Arguments:
+        (input) data -> Initial list of dictionaries.
+        (input) data_key -> Dictionary of keys and data types.
+        (output) mod_data -> Modified list of dictionaries.
+    
+    """
+
+    data = list(data)
+    data_key = dict(data_key)
+    mod_data = list()
+
+    for list_item in data:
+        list_item = dict(list_item)
+
+        for item in set(list_item.keys()) & set(data_key.keys()):
+            if not list_item[item] or list_item[item] == "None":
+                list_item[item] = None
+
+            elif data_key[item] == "int":
+                list_item[item] = int(list_item[item])
+
+            elif data_key[item] == "bool":
+                list_item[item] = ast.literal_eval(list_item[item])
+
+        mod_data.append(list_item)
+
+    return mod_data
+
+
+def run_program(args_array, func_dict, **kwargs):
 
     """Function:  run_program
 
@@ -803,6 +840,8 @@ def run_program(args_array, func_dict):
     Arguments:
         (input) args_array -> Array of command line options and values.
         (input) func_dict -> Dictionary list of functions and options.
+        (input) kwargs:
+            slv_key -> Dictionary of keys and data types.
 
     """
 
@@ -824,6 +863,7 @@ def run_program(args_array, func_dict):
     if "-s" in args_array:
         slv_cfg = cmds_gen.create_cfg_array(args_array["-s"],
                                             cfg_path=args_array["-d"])
+        slv_cfg = transpose_dict(slv_cfg, kwargs.get("slv_key", {}))
         slaves = mysql_libs.create_slv_array(slv_cfg)
 
     call_run_chk(args_array, func_dict, master, slaves)
@@ -874,6 +914,11 @@ def main():
     opt_or_dict_list = {"-c": ["-s"]}
     opt_req_list = ["-d"]
     opt_val_list = ["-d", "-c", "-p", "-s", "-o", "-b", "-m", "-u", "-t", "-y"]
+    slv_key = {"sid": "int", "port": "int", "cfg_file": "None",
+               "ssl_client_ca": "None",  "ssl_ca_path": "None",
+               "ssl_client_key": "None", "ssl_client_cert": "None",
+               "ssl_client_flag": "int", "ssl_disabled": "bool",
+               "ssl_verify_id": "bool", "ssl_verify_cert": "bool"}
 
     # Process argument list from command line.
     args_array = arg_parser.arg_parse2(cmdline.argv, opt_val_list,
@@ -890,7 +935,7 @@ def main():
         try:
             proglock = gen_class.ProgramLock(cmdline.argv,
                                              args_array.get("-y", ""))
-            run_program(args_array, func_dict)
+            run_program(args_array, func_dict, slv_key=slv_key)
             del proglock
 
         except gen_class.SingleInstanceException:
