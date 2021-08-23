@@ -10,7 +10,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - Updated to use the mysql_libs v5.2.2 library.
 
 ### Added
-- transpose_slv_cfg:  Transpose specified keys to new data types.
+- transpose_dict:  Transpose specified keys to new data types.
 
 ### Changed
 - main:  Added slave configuration transpose data.
