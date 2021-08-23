@@ -832,7 +832,7 @@ def transpose_slv_cfg(slv_cfg, slv_key):
     return mod_slv_cfg
 
 
-def run_program(args_array, func_dict):
+def run_program(args_array, func_dict, **kwargs):
 
     """Function:  run_program
 
@@ -841,6 +841,8 @@ def run_program(args_array, func_dict):
     Arguments:
         (input) args_array -> Array of command line options and values.
         (input) func_dict -> Dictionary list of functions and options.
+        (input) kwargs:
+            slv_key -> Dictionary of keys and data types.
 
     """
 
@@ -862,6 +864,7 @@ def run_program(args_array, func_dict):
     if "-s" in args_array:
         slv_cfg = cmds_gen.create_cfg_array(args_array["-s"],
                                             cfg_path=args_array["-d"])
+        slv_cfg = transpose_slv_cfg(slv_cfg, kwargs.get("slv_key", {})
         slaves = mysql_libs.create_slv_array(slv_cfg)
 
     call_run_chk(args_array, func_dict, master, slaves)
