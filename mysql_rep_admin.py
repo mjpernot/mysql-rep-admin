@@ -821,7 +821,7 @@ def transpose_dict(data, data_key):
             if not list_item[item] or list_item[item] == "None":
                 list_item[item] = None
 
-            elif data_key[item] = "int":
+            elif data_key[item] == "int":
                 list_item[item] = int(list_item[item])
 
             elif data_key[item] == "bool":
@@ -864,7 +864,7 @@ def run_program(args_array, func_dict, **kwargs):
     if "-s" in args_array:
         slv_cfg = cmds_gen.create_cfg_array(args_array["-s"],
                                             cfg_path=args_array["-d"])
-        slv_cfg = transpose_dict(slv_cfg, kwargs.get("slv_key", {})
+        slv_cfg = transpose_dict(slv_cfg, kwargs.get("slv_key", {}))
         slaves = mysql_libs.create_slv_array(slv_cfg)
 
     call_run_chk(args_array, func_dict, master, slaves)
@@ -915,11 +915,11 @@ def main():
     opt_or_dict_list = {"-c": ["-s"]}
     opt_req_list = ["-d"]
     opt_val_list = ["-d", "-c", "-p", "-s", "-o", "-b", "-m", "-u", "-t", "-y"]
-    slv_key = {"sid": "int", "port": "int", "cfg_file": "None", "ssl_client_ca": "None", 
-               "ssl_ca_path": "None", "ssl_client_key": "None",
-               "ssl_client_cert": "None", "ssl_client_flag", "int",
-               "ssl_disabled": "bool", "ssl_verify_id": "bool",
-               "ssl_verify_cert": "bool"}
+    slv_key = {"sid": "int", "port": "int", "cfg_file": "None",
+               "ssl_client_ca": "None",  "ssl_ca_path": "None",
+               "ssl_client_key": "None", "ssl_client_cert": "None",
+               "ssl_client_flag": "int", "ssl_disabled": "bool",
+               "ssl_verify_id": "bool", "ssl_verify_cert": "bool"}
 
     # Process argument list from command line.
     args_array = arg_parser.arg_parse2(cmdline.argv, opt_val_list,
