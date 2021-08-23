@@ -915,6 +915,11 @@ def main():
     opt_or_dict_list = {"-c": ["-s"]}
     opt_req_list = ["-d"]
     opt_val_list = ["-d", "-c", "-p", "-s", "-o", "-b", "-m", "-u", "-t", "-y"]
+    slv_key = {"sid": "int", "port": "int", "cfg_file": "None", "ssl_client_ca": "None", 
+               "ssl_ca_path": "None", "ssl_client_key": "None",
+               "ssl_client_cert": "None", "ssl_client_flag", "int",
+               "ssl_disabled": "bool", "ssl_verify_id": "bool",
+               "ssl_verify_cert": "bool"}
 
     # Process argument list from command line.
     args_array = arg_parser.arg_parse2(cmdline.argv, opt_val_list,
@@ -931,7 +936,7 @@ def main():
         try:
             proglock = gen_class.ProgramLock(cmdline.argv,
                                              args_array.get("-y", ""))
-            run_program(args_array, func_dict)
+            run_program(args_array, func_dict, slv_key=slv_key)
             del proglock
 
         except gen_class.SingleInstanceException:
