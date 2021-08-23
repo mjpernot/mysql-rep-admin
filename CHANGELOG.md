@@ -13,6 +13,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - transpose_slv_cfg:  Transpose specified keys to new data types.
 
 ### Changed
+- main:  Added slave configuration transpose data.
 - run_program:  Added call to transpose_slv_cfg function.
 - Removed unnecessary \*\*kwargs in function argument list.
 - run_program:  Replaced cmds_gen.disconnect with mysql_libs.disconnect.
