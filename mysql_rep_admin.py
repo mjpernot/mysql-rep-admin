@@ -815,9 +815,8 @@ def transpose_dict(data, data_key):
 
     for list_item in data:
         list_item = dict(list_item)
-        intersect_keys = set(list_item.keys()) & set(data_key.keys())
 
-        for item in intersect_keys:
+        for item in set(list_item.keys()) & set(data_key.keys()):
             if not list_item[item] or list_item[item] == "None":
                 list_item[item] = None
 
