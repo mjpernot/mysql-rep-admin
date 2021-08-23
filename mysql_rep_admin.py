@@ -794,6 +794,43 @@ def call_run_chk(args_array, func_dict, master, slaves):
                 mode=mode, indent=indent)
 
 
+def transpose_slv_cfg(slv_cfg, slv_key):
+
+    """Function:  transpose_slv_cfg
+
+    Description:  Transpose specified keys in the slave configuration to
+        specified data types or None.
+    
+    Arguments:
+        (input) slv_cfg -> Slave configuration.
+        (input) slv_key -> Dictionary of keys and data types.
+        (output) mod_slv_cfg -> Modified slave configuration.
+    
+    """
+
+    slv_cfg = list(slv_cfg)
+    slv_key = dict(slv_key)
+    mod_slv_cfg= list()
+
+    for list_item in slv_cfg:
+        list_item = dict(list_item)
+        intersect_keys = set(list_item.keys()) & set(slv_key.keys())
+
+        for item in intersect_keys:
+            if not list_item[item] or list_item[item] == "None":
+                list_item[item] = None
+
+            elif slv_key[item] = "int":
+                list_item[item] = int(list_item[item])
+
+            elif slv_key[item] == "bool":
+                list_item[item] = ast.literal_eval(list_item[item])
+
+        mod_slv_cfg.append(list_item)
+
+    return mod_slv_cfg
+
+
 def run_program(args_array, func_dict):
 
     """Function:  run_program
