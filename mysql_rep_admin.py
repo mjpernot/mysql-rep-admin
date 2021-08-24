@@ -862,7 +862,7 @@ def run_program(args_array, func_dict, **kwargs):
             port=mst_cfg.port, defaults_file=mst_cfg.cfg_file)
         master.connect(silent=True)
 
-    if master.conn_msg:
+    if master and master.conn_msg:
         print("run_program:  Error encountered on server(%s): %s" % (master.name, master.conn_msg))
 
     else:
