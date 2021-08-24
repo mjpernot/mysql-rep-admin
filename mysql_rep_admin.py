@@ -23,7 +23,9 @@
                 [-b db:coll -m file]
                 [-t ToEmail [ToEmail2 ...] [-u SubjectLine]] |
              -E -s [path/]slave.txt |
-             -A -s [path/]slave.txt |
+             -A -c file -s [path/]slave.txt [-j [-f]] [-o dir_path/file [-a]]
+                [-b db:coll -m file]
+                [-t ToEmail [ToEmail2 ...] [-u SubjectLine]] |
              -O -s [path/]slave.txt}
             [-y flavor_id] [-p path] [-z]
             [-v | -h]
@@ -71,7 +73,24 @@
             -s [path/]slave.txt => Slave config file.
 
         -A => Runs multiple checks which include the options:  -C, -S, -T, -E
+            -c file => Master config file.
             -s [path/]slave.txt => Slave config file.
+            -j => Return output in JSON format.
+            -f => Flatten the JSON data structure to file and standard out.
+            -o path/file => Directory path and file name for output.
+            -a => Append output to output file.
+            -b database:collection => Name of database and collection.
+                Default: sysmon:mysql_rep_lag
+            -m file => Insert results into a Mongo database.  File is the Mongo
+                config file.
+            -t to_email_addresses => Enables emailing capability for an option
+                if the option allows it.  Sends output to one or more email
+                addresses.
+            -u subject_line => Subject line of email.  Will create own subject
+                line if one is not provided.
+            NOTE:  If returning as standard format and there is no time lag,
+                nothing will be returned.  However, if -j option is selected,
+                then a JSON doc will be returned even if no time lag.
 
         -O => Other slave replication checks and return any errors detected.
             -s [path/]slave.txt => Slave config file.
@@ -720,11 +739,8 @@ def _chk_other(skip, tmp_tbl, retry, name, sql_ver):
         print(PRT_TEMPLATE.format(name))
         print("\tTemp Table Count:  {0}".format(tmp_tbl))
 
-    if sql_ver[0] < 8 and (not retry or int(retry) > 0):
-        print(PRT_TEMPLATE.format(name))
-        print("\tRetried Transaction Count:  {0}".format(retry))
-
-    elif sql_ver[0] >= 8 and retry > 0:
+    if (sql_ver[0] < 8 and (not retry or int(retry) > 0)) \
+       or (sql_ver[0] >= 8 and retry > 0):
         print(PRT_TEMPLATE.format(name))
         print("\tRetried Transaction Count:  {0}".format(retry))
 
