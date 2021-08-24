@@ -14,7 +14,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 ### Changed
 - \_chk_other:  Check version to determine how to process retry.
-- chk_slv_other:  Add slv argument to \_chk_other call.
+- chk_slv_other:  Add slv.version argument to \_chk_other call.
 - main:  Added slave configuration transpose data.
 - run_program:  Added call to transpose_dict function.
 - Removed unnecessary \*\*kwargs in function argument list.
