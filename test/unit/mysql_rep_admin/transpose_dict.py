@@ -98,7 +98,6 @@ class UnitTest(unittest.TestCase):
         self.results9 = [{"a": True}, {"a": True}]
         self.results9a = [{"a": False}, {"a": False}]
 
-
     def test_no_matches2(self):
 
         """Function:  test_no_matches2
