@@ -706,6 +706,7 @@ def _chk_other(skip, tmp_tbl, retry, name):
         (input) tmp_tbl -> Mysql's temp tables created count.
         (input) retry -> Mysql's retry count.
         (input) name -> Name of Mysql server.
+        (input) slv - Slave instance.
 
     """
 
@@ -721,7 +722,10 @@ def _chk_other(skip, tmp_tbl, retry, name):
         if not tmp_tbl or int(tmp_tbl) > 5:
             print("\tTemp Table Count:  {0}".format(tmp_tbl))
 
-        if not retry or int(retry) > 0:
+        if slv.version[0] < 8 and (not retry or int(retry) > 0):
+            print("\tRetried Transaction Count:  {0}".format(retry))
+
+        elif slv.version[0] >= 8 and retry > 0:
             print("\tRetried Transaction Count:  {0}".format(retry))
 
 
