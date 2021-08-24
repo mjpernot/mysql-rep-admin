@@ -280,7 +280,7 @@ class UnitTest(unittest.TestCase):
     @mock.patch("mysql_rep_admin.cmds_gen.create_cfg_array")
     @mock.patch("mysql_rep_admin.gen_libs.load_module")
     def test_master_conn_good(self, mock_cfg, mock_array, mock_rep, mock_slv,
-                         mock_transpose):
+                              mock_transpose):
 
         """Function:  test_master_connect_good
 
