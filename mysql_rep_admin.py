@@ -688,7 +688,7 @@ def chk_slv_other(master, slaves, **kwargs):
         for slv in slaves:
             skip, tmp_tbl, retry = slv.get_others()
             name = slv.get_name()
-            _chk_other(skip, tmp_tbl, retry, name, slv)
+            _chk_other(skip, tmp_tbl, retry, name, slv.version)
 
     else:
         print("\nchk_slv_other:  Warning:  No Slave instance detected.")
