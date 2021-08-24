@@ -13,7 +13,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - transpose_dict:  Transpose specified keys to new data types.
 
 ### Changed
-- \_chk_other:  Check version to determine how to process retry.
+- \_chk_other:  Check version to determine how to process retry and refactored the "if" statements.
 - chk_slv_other:  Add slv.version argument to \_chk_other call.
 - main:  Added slave configuration transpose data.
 - run_program:  Added call to transpose_dict function.
