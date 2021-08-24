@@ -85,6 +85,7 @@ class SlaveRep(object):
         self.skip = skip
         self.tmp_tbl = unicode(tmp_tbl)
         self.retry = unicode(retry)
+        self.version = (5, 6, 31)
 
     def get_name(self):
 
@@ -148,8 +149,8 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.assertFalse(mysql_rep_admin.chk_slv_other(self.master,
-                                                       [self.slave2]))
+        self.assertFalse(
+            mysql_rep_admin.chk_slv_other(self.master, [self.slave2]))
 
     def test_no_slv(self):
 
@@ -175,8 +176,8 @@ class UnitTest(unittest.TestCase):
         """
 
         with gen_libs.no_std_out():
-            self.assertFalse(mysql_rep_admin.chk_slv_other(self.master,
-                                                           [self.slave]))
+            self.assertFalse(
+                mysql_rep_admin.chk_slv_other(self.master, [self.slave]))
 
 
 if __name__ == "__main__":

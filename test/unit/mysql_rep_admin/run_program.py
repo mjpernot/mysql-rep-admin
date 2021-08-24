@@ -29,6 +29,7 @@ import mock
 # Local
 sys.path.append(os.getcwd())
 import mysql_rep_admin
+import lib.gen_libs as gen_libs
 import version
 
 __version__ = version.__version__
@@ -77,15 +78,15 @@ class SlaveRep(object):
         Description:  Class initialization.
 
         Arguments:
-            (input) name
-            (input) sid
-            (input) user
-            (input) japd
-            (input) serv_os
+            (input) name -> Instance name.
+            (input) sid -> Server id.
+            (input) user -> User name.
+            (input) japd -> User pswd.
+            (input) serv_os -> Machine class instance.
             (input) **kwargs:
-                port
-                cfg_file
-                host
+                port -> MySQL port number.
+                cfg_file -> MySQL configuration file.
+                host -> Host name.
 
         """
 
@@ -120,15 +121,15 @@ class MasterRep(object):
         Description:  Class initialization.
 
         Arguments:
-            (input) name
-            (input) sid
-            (input) user
-            (input) japd
-            (input) serv_os
+            (input) name -> Instance name.
+            (input) sid -> Server id.
+            (input) user -> User name.
+            (input) japd -> User pswd.
+            (input) serv_os -> Machine class instance.
             (input) **kwargs:
-                port
-                cfg_file
-                host
+                port -> MySQL port number.
+                cfg_file -> MySQL configuration file.
+                host -> Host name.
 
         """
 
@@ -141,8 +142,9 @@ class MasterRep(object):
         self.port = kwargs.get("port", None)
         self.cfg_file = kwargs.get("cfg_file", None)
         self.conn = "Connection Handler"
+        self.conn_msg = None
 
-    def connect(self):
+    def connect(self, silent=False):
 
         """Method:  connect
 
@@ -152,7 +154,12 @@ class MasterRep(object):
 
         """
 
-        return True
+        status = True
+
+        if silent:
+            status = True
+
+        return status
 
 
 class MstCfg(object):
@@ -194,6 +201,8 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp
+        test_master_connect_fail
+        test_master_connect_good
         test_master_down
         test_all_slaves_down
         test_one_slave_down
@@ -241,6 +250,55 @@ class UnitTest(unittest.TestCase):
                             "user": "root", "serv_os": "Linux", "sid": 21,
                             "port": 3306}]
 
+    @mock.patch("mysql_rep_admin.mysql_class.MasterRep")
+    @mock.patch("mysql_rep_admin.gen_libs.load_module")
+    def test_master_conn_fail(self, mock_cfg, mock_rep):
+
+        """Function:  test_master_connect_fail
+
+        Description:  Test with master connection failed.
+
+        Arguments:
+
+        """
+
+        self.master.conn_msg = "Error message"
+
+        mock_cfg.return_value = self.mstcfg
+        mock_rep.return_value = self.master
+
+        with gen_libs.no_std_out():
+            self.assertFalse(
+                mysql_rep_admin.run_program(self.args_array, self.func_dict))
+
+    @mock.patch("mysql_rep_admin.mysql_libs.disconnect",
+                mock.Mock(return_value=True))
+    @mock.patch("mysql_rep_admin.call_run_chk", mock.Mock(return_value=True))
+    @mock.patch("mysql_rep_admin.transpose_dict")
+    @mock.patch("mysql_rep_admin.mysql_libs.create_slv_array")
+    @mock.patch("mysql_rep_admin.mysql_class.MasterRep")
+    @mock.patch("mysql_rep_admin.cmds_gen.create_cfg_array")
+    @mock.patch("mysql_rep_admin.gen_libs.load_module")
+    def test_master_conn_good(self, mock_cfg, mock_array, mock_rep, mock_slv,
+                         mock_transpose):
+
+        """Function:  test_master_connect_good
+
+        Description:  Test with master connection is successful.
+
+        Arguments:
+
+        """
+
+        mock_transpose.return_value = self.cfg_array2
+        mock_cfg.return_value = self.mstcfg
+        mock_array.return_value = self.cfg_array
+        mock_rep.return_value = self.master
+        mock_slv.return_value = self.slv_array
+
+        self.assertFalse(
+            mysql_rep_admin.run_program(self.args_array, self.func_dict))
+
     @mock.patch("mysql_rep_admin.mysql_libs.disconnect",
                 mock.Mock(return_value=True))
     @mock.patch("mysql_rep_admin.call_run_chk", mock.Mock(return_value=True))
@@ -267,8 +325,8 @@ class UnitTest(unittest.TestCase):
         mock_rep.return_value = self.master
         mock_slv.return_value = self.slv_array
 
-        self.assertFalse(mysql_rep_admin.run_program(self.args_array,
-                                                     self.func_dict))
+        self.assertFalse(
+            mysql_rep_admin.run_program(self.args_array, self.func_dict))
 
     @mock.patch("mysql_rep_admin.mysql_libs.disconnect",
                 mock.Mock(return_value=True))
@@ -297,8 +355,8 @@ class UnitTest(unittest.TestCase):
         mock_rep.return_value = self.master
         mock_slv.return_value = self.slv_array
 
-        self.assertFalse(mysql_rep_admin.run_program(self.args_array,
-                                                     self.func_dict))
+        self.assertFalse(
+            mysql_rep_admin.run_program(self.args_array, self.func_dict))
 
     @mock.patch("mysql_rep_admin.mysql_libs.disconnect",
                 mock.Mock(return_value=True))
@@ -326,8 +384,8 @@ class UnitTest(unittest.TestCase):
         mock_rep.return_value = self.master
         mock_slv.return_value = self.slv_array
 
-        self.assertFalse(mysql_rep_admin.run_program(self.args_array,
-                                                     self.func_dict))
+        self.assertFalse(
+            mysql_rep_admin.run_program(self.args_array, self.func_dict))
 
     @mock.patch("mysql_rep_admin.mysql_libs.disconnect")
     @mock.patch("mysql_rep_admin.call_run_chk")
@@ -344,8 +402,8 @@ class UnitTest(unittest.TestCase):
         mock_call.return_value = True
         mock_dis.return_value = True
 
-        self.assertFalse(mysql_rep_admin.run_program(self.args_array3,
-                                                     self.func_dict))
+        self.assertFalse(
+            mysql_rep_admin.run_program(self.args_array3, self.func_dict))
 
     @mock.patch("mysql_rep_admin.mysql_class.MasterRep")
     @mock.patch("mysql_rep_admin.mysql_libs.disconnect")
@@ -366,8 +424,8 @@ class UnitTest(unittest.TestCase):
         mock_dis.return_value = True
         mock_rep.return_value = self.master
 
-        self.assertFalse(mysql_rep_admin.run_program(self.args_array2,
-                                                     self.func_dict))
+        self.assertFalse(
+            mysql_rep_admin.run_program(self.args_array2, self.func_dict))
 
     @mock.patch("mysql_rep_admin.mysql_libs.disconnect",
                 mock.Mock(return_value=True))
@@ -394,8 +452,8 @@ class UnitTest(unittest.TestCase):
         mock_rep.return_value = self.master
         mock_slv.return_value = self.slv_array
 
-        self.assertFalse(mysql_rep_admin.run_program(self.args_array,
-                                                     self.func_dict))
+        self.assertFalse(
+            mysql_rep_admin.run_program(self.args_array, self.func_dict))
 
 
 if __name__ == "__main__":

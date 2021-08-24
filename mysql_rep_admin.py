@@ -688,13 +688,13 @@ def chk_slv_other(master, slaves, **kwargs):
         for slv in slaves:
             skip, tmp_tbl, retry = slv.get_others()
             name = slv.get_name()
-            _chk_other(skip, tmp_tbl, retry, name)
+            _chk_other(skip, tmp_tbl, retry, name, slv.version)
 
     else:
         print("\nchk_slv_other:  Warning:  No Slave instance detected.")
 
 
-def _chk_other(skip, tmp_tbl, retry, name):
+def _chk_other(skip, tmp_tbl, retry, name, version):
 
     """Function:  _chk_other
 
@@ -706,23 +706,27 @@ def _chk_other(skip, tmp_tbl, retry, name):
         (input) tmp_tbl -> Mysql's temp tables created count.
         (input) retry -> Mysql's retry count.
         (input) name -> Name of Mysql server.
+        (input) version -> Slave's MySQL version.
 
     """
 
     global PRT_TEMPLATE
 
-    if (skip is None or skip > 0) or (not tmp_tbl or int(tmp_tbl) > 5) \
-       or (not retry or int(retry) > 0):
+    if skip is None or skip > 0:
         print(PRT_TEMPLATE.format(name))
+        print("\tSkip Count:  {0}".format(skip))
 
-        if skip is None or skip > 0:
-            print("\tSkip Count:  {0}".format(skip))
+    if not tmp_tbl or int(tmp_tbl) > 5:
+        print(PRT_TEMPLATE.format(name))
+        print("\tTemp Table Count:  {0}".format(tmp_tbl))
 
-        if not tmp_tbl or int(tmp_tbl) > 5:
-            print("\tTemp Table Count:  {0}".format(tmp_tbl))
+    if version[0] < 8 and (not retry or int(retry) > 0):
+        print(PRT_TEMPLATE.format(name))
+        print("\tRetried Transaction Count:  {0}".format(retry))
 
-        if not retry or int(retry) > 0:
-            print("\tRetried Transaction Count:  {0}".format(retry))
+    elif version[0] >= 8 and retry > 0:
+        print(PRT_TEMPLATE.format(name))
+        print("\tRetried Transaction Count:  {0}".format(retry))
 
 
 def call_run_chk(args_array, func_dict, master, slaves):
@@ -856,24 +860,28 @@ def run_program(args_array, func_dict, **kwargs):
             mst_cfg.name, mst_cfg.sid, mst_cfg.user, mst_cfg.japd,
             os_type=getattr(machine, mst_cfg.serv_os)(), host=mst_cfg.host,
             port=mst_cfg.port, defaults_file=mst_cfg.cfg_file)
-        master.connect()
+        master.connect(silent=True)
 
-    slaves = []
+    if master and master.conn_msg:
+        print("run_program:  Error encountered on server(%s): %s" % (master.name, master.conn_msg))
 
-    if "-s" in args_array:
-        slv_cfg = cmds_gen.create_cfg_array(args_array["-s"],
-                                            cfg_path=args_array["-d"])
-        slv_cfg = transpose_dict(slv_cfg, kwargs.get("slv_key", {}))
-        slaves = mysql_libs.create_slv_array(slv_cfg)
+    else:
+        slaves = []
 
-    call_run_chk(args_array, func_dict, master, slaves)
+        if "-s" in args_array:
+            slv_cfg = cmds_gen.create_cfg_array(args_array["-s"],
+                                                cfg_path=args_array["-d"])
+            slv_cfg = transpose_dict(slv_cfg, kwargs.get("slv_key", {}))
+            slaves = mysql_libs.create_slv_array(slv_cfg)
 
-    conn_list = [slv for slv in slaves if slv.conn]
+        call_run_chk(args_array, func_dict, master, slaves)
 
-    if master and master.conn:
-        conn_list.append(master)
+        conn_list = [slv for slv in slaves if slv.conn]
 
-    mysql_libs.disconnect(conn_list)
+        if master and master.conn:
+            conn_list.append(master)
+
+        mysql_libs.disconnect(conn_list)
 
 
 def main():
