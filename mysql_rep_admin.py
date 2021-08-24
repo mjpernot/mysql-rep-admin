@@ -694,7 +694,7 @@ def chk_slv_other(master, slaves, **kwargs):
         print("\nchk_slv_other:  Warning:  No Slave instance detected.")
 
 
-def _chk_other(skip, tmp_tbl, retry, name, version):
+def _chk_other(skip, tmp_tbl, retry, name, sql_ver):
 
     """Function:  _chk_other
 
@@ -706,7 +706,7 @@ def _chk_other(skip, tmp_tbl, retry, name, version):
         (input) tmp_tbl -> Mysql's temp tables created count.
         (input) retry -> Mysql's retry count.
         (input) name -> Name of Mysql server.
-        (input) version -> Slave's MySQL version.
+        (input) sql_ver -> Slave's MySQL version.
 
     """
 
@@ -720,11 +720,11 @@ def _chk_other(skip, tmp_tbl, retry, name, version):
         print(PRT_TEMPLATE.format(name))
         print("\tTemp Table Count:  {0}".format(tmp_tbl))
 
-    if version[0] < 8 and (not retry or int(retry) > 0):
+    if sql_ver[0] < 8 and (not retry or int(retry) > 0):
         print(PRT_TEMPLATE.format(name))
         print("\tRetried Transaction Count:  {0}".format(retry))
 
-    elif version[0] >= 8 and retry > 0:
+    elif sql_ver[0] >= 8 and retry > 0:
         print(PRT_TEMPLATE.format(name))
         print("\tRetried Transaction Count:  {0}".format(retry))
 
@@ -924,7 +924,7 @@ def main():
     opt_req_list = ["-d"]
     opt_val_list = ["-d", "-c", "-p", "-s", "-o", "-b", "-m", "-u", "-t", "-y"]
     slv_key = {"sid": "int", "port": "int", "cfg_file": "None",
-               "ssl_client_ca": "None",  "ssl_ca_path": "None",
+               "ssl_client_ca": "None", "ssl_ca_path": "None",
                "ssl_client_key": "None", "ssl_client_cert": "None",
                "ssl_client_flag": "int", "ssl_disabled": "bool",
                "ssl_verify_id": "bool", "ssl_verify_cert": "bool"}
