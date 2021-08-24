@@ -42,8 +42,8 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp
-        test_rety_down_80
-        test_retry_down_pre80
+        test_retry_80
+        test_retry_pre80
         test_tmp_tbl_down
         test_skip_down
         test_retry_error
@@ -76,25 +76,11 @@ class UnitTest(unittest.TestCase):
         self.version = (5, 6, 31)
         self.version2 = (8, 0, 23)
 
-    def test_retry_down_80(self):
+    def test_retry_80(self):
 
-        """Function:  test_retry_down_80
+        """Function:  test_retry_80
 
-        Description:  Test with retry is down slave and 8.0 version.
-
-        Arguments:
-
-        """
-
-        with gen_libs.no_std_out():
-            self.assertFalse(mysql_rep_admin._chk_other(
-                self.skip0, self.tmp_tbl0, self.retry2, self.name, self.version2))
-
-    def test_retry_down_pre80(self):
-
-        """Function:  test_retry_down_pre80
-
-        Description:  Test with retry is down slave and pre 8.0 version.
+        Description:  Test with retry is set and 8.0 version.
 
         Arguments:
 
@@ -102,7 +88,23 @@ class UnitTest(unittest.TestCase):
 
         with gen_libs.no_std_out():
             self.assertFalse(mysql_rep_admin._chk_other(
-                self.skip0, self.tmp_tbl0, self.retry2, self.name, self.version))
+                self.skip0, self.tmp_tbl0, self.retry1, self.name,
+                self.version2))
+
+    def test_retry_pre80(self):
+
+        """Function:  test_retry_pre80
+
+        Description:  Test with retry is set and pre 8.0 version.
+
+        Arguments:
+
+        """
+
+        with gen_libs.no_std_out():
+            self.assertFalse(mysql_rep_admin._chk_other(
+                self.skip0, self.tmp_tbl0, self.retry1, self.name,
+                self.version))
 
     def test_tmp_tbl_down(self):
 
@@ -116,7 +118,8 @@ class UnitTest(unittest.TestCase):
 
         with gen_libs.no_std_out():
             self.assertFalse(mysql_rep_admin._chk_other(
-                self.skip0, self.tmp_tbl2, self.retry0, self.name))
+                self.skip0, self.tmp_tbl2, self.retry0, self.name,
+                self.version))
 
     def test_skip_down(self):
 
@@ -130,7 +133,8 @@ class UnitTest(unittest.TestCase):
 
         with gen_libs.no_std_out():
             self.assertFalse(mysql_rep_admin._chk_other(
-                self.skip2, self.tmp_tbl0, self.retry0, self.name, self.version))
+                self.skip2, self.tmp_tbl0, self.retry0, self.name,
+                self.version))
 
     def test_retry_error(self):
 
@@ -144,7 +148,8 @@ class UnitTest(unittest.TestCase):
 
         with gen_libs.no_std_out():
             self.assertFalse(mysql_rep_admin._chk_other(
-                self.skip0, self.tmp_tbl0, self.retry1, self.name, self.version))
+                self.skip0, self.tmp_tbl0, self.retry1, self.name,
+                self.version))
 
     def test_tmp_tbl_error(self):
 
@@ -158,7 +163,8 @@ class UnitTest(unittest.TestCase):
 
         with gen_libs.no_std_out():
             self.assertFalse(mysql_rep_admin._chk_other(
-                self.skip0, self.tmp_tbl6, self.retry0, self.name, self.version))
+                self.skip0, self.tmp_tbl6, self.retry0, self.name,
+                self.version))
 
     def test_skip_error(self):
 
@@ -172,7 +178,8 @@ class UnitTest(unittest.TestCase):
 
         with gen_libs.no_std_out():
             self.assertFalse(mysql_rep_admin._chk_other(
-                self.skip1, self.tmp_tbl0, self.retry0, self.name, self.version))
+                self.skip1, self.tmp_tbl0, self.retry0, self.name,
+                self.version))
 
     def test_no_errors(self):
 
