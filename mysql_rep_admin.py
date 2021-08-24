@@ -860,24 +860,28 @@ def run_program(args_array, func_dict, **kwargs):
             mst_cfg.name, mst_cfg.sid, mst_cfg.user, mst_cfg.japd,
             os_type=getattr(machine, mst_cfg.serv_os)(), host=mst_cfg.host,
             port=mst_cfg.port, defaults_file=mst_cfg.cfg_file)
-        master.connect()
+        master.connect(silent=True)
 
-    slaves = []
+    if master.conn_msg:
+        print("run_program:  Error encountered on server(%s): %s" % (master.name, master.conn_msg))
 
-    if "-s" in args_array:
-        slv_cfg = cmds_gen.create_cfg_array(args_array["-s"],
-                                            cfg_path=args_array["-d"])
-        slv_cfg = transpose_dict(slv_cfg, kwargs.get("slv_key", {}))
-        slaves = mysql_libs.create_slv_array(slv_cfg)
+    else:
+        slaves = []
 
-    call_run_chk(args_array, func_dict, master, slaves)
+        if "-s" in args_array:
+            slv_cfg = cmds_gen.create_cfg_array(args_array["-s"],
+                                                cfg_path=args_array["-d"])
+            slv_cfg = transpose_dict(slv_cfg, kwargs.get("slv_key", {}))
+            slaves = mysql_libs.create_slv_array(slv_cfg)
 
-    conn_list = [slv for slv in slaves if slv.conn]
+        call_run_chk(args_array, func_dict, master, slaves)
 
-    if master and master.conn:
-        conn_list.append(master)
+        conn_list = [slv for slv in slaves if slv.conn]
 
-    mysql_libs.disconnect(conn_list)
+        if master and master.conn:
+            conn_list.append(master)
+
+        mysql_libs.disconnect(conn_list)
 
 
 def main():
