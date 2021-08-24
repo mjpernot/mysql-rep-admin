@@ -805,12 +805,12 @@ def transpose_dict(data, data_key):
 
     Description:  Transpose specified keys in a list of dictionaries
         to specified data types or None.
-    
+
     Arguments:
         (input) data -> Initial list of dictionaries.
         (input) data_key -> Dictionary of keys and data types.
         (output) mod_data -> Modified list of dictionaries.
-    
+
     """
 
     data = list(data)
@@ -863,7 +863,8 @@ def run_program(args_array, func_dict, **kwargs):
         master.connect(silent=True)
 
     if master and master.conn_msg:
-        print("run_program:  Error encountered on server(%s): %s" % (master.name, master.conn_msg))
+        print("run_program:  Error encountered on server(%s): %s" %
+              (master.name, master.conn_msg))
 
     else:
         slaves = []
