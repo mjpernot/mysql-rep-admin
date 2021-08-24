@@ -13,6 +13,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - transpose_dict:  Transpose specified keys to new data types.
 
 ### Changed
+- chk_slv_other:  Add slv argument to \_chk_other call.
 - main:  Added slave configuration transpose data.
 - run_program:  Added call to transpose_dict function.
 - Removed unnecessary \*\*kwargs in function argument list.
