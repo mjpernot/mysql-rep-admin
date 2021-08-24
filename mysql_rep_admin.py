@@ -694,7 +694,7 @@ def chk_slv_other(master, slaves, **kwargs):
         print("\nchk_slv_other:  Warning:  No Slave instance detected.")
 
 
-def _chk_other(skip, tmp_tbl, retry, name):
+def _chk_other(skip, tmp_tbl, retry, name, version):
 
     """Function:  _chk_other
 
@@ -706,27 +706,27 @@ def _chk_other(skip, tmp_tbl, retry, name):
         (input) tmp_tbl -> Mysql's temp tables created count.
         (input) retry -> Mysql's retry count.
         (input) name -> Name of Mysql server.
-        (input) slv - Slave instance.
+        (input) version -> Slave's MySQL version.
 
     """
 
     global PRT_TEMPLATE
 
-    if (skip is None or skip > 0) or (not tmp_tbl or int(tmp_tbl) > 5) \
-       or (not retry or int(retry) > 0):
+    if skip is None or skip > 0:
         print(PRT_TEMPLATE.format(name))
+        print("\tSkip Count:  {0}".format(skip))
 
-        if skip is None or skip > 0:
-            print("\tSkip Count:  {0}".format(skip))
+    if not tmp_tbl or int(tmp_tbl) > 5:
+        print(PRT_TEMPLATE.format(name))
+        print("\tTemp Table Count:  {0}".format(tmp_tbl))
 
-        if not tmp_tbl or int(tmp_tbl) > 5:
-            print("\tTemp Table Count:  {0}".format(tmp_tbl))
+    if version[0] < 8 and (not retry or int(retry) > 0):
+        print(PRT_TEMPLATE.format(name))
+        print("\tRetried Transaction Count:  {0}".format(retry))
 
-        if slv.version[0] < 8 and (not retry or int(retry) > 0):
-            print("\tRetried Transaction Count:  {0}".format(retry))
-
-        elif slv.version[0] >= 8 and retry > 0:
-            print("\tRetried Transaction Count:  {0}".format(retry))
+    elif version[0] >= 8 and retry > 0:
+        print(PRT_TEMPLATE.format(name))
+        print("\tRetried Transaction Count:  {0}".format(retry))
 
 
 def call_run_chk(args_array, func_dict, master, slaves):
