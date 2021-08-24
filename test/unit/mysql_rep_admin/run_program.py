@@ -141,8 +141,9 @@ class MasterRep(object):
         self.port = kwargs.get("port", None)
         self.cfg_file = kwargs.get("cfg_file", None)
         self.conn = "Connection Handler"
+        self.conn_msg = None
 
-    def connect(self):
+    def connect(self, silent=False):
 
         """Method:  connect
 
@@ -152,7 +153,12 @@ class MasterRep(object):
 
         """
 
-        return True
+        status = True
+
+        if silent:
+            status = True
+
+        return status
 
 
 class MstCfg(object):
@@ -194,6 +200,8 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp
+        test_master_connect_fail
+        test_master_connect_good
         test_master_down
         test_all_slaves_down
         test_one_slave_down
@@ -240,6 +248,54 @@ class UnitTest(unittest.TestCase):
                             "cfg_file": "None", "host": "SERVER2",
                             "user": "root", "serv_os": "Linux", "sid": 21,
                             "port": 3306}]
+
+    @mock.patch("mysql_rep_admin.mysql_class.MasterRep")
+    @mock.patch("mysql_rep_admin.gen_libs.load_module")
+    def test_master_conn_fail(self, mock_cfg, mock_rep):
+
+        """Function:  test_master_connect_fail
+
+        Description:  Test with master connection failed.
+
+        Arguments:
+
+        """
+
+        self.master.conn_msg = "Error message"
+
+        mock_cfg.return_value = self.mstcfg
+        mock_rep.return_value = self.master
+
+        self.assertFalse(mysql_rep_admin.run_program(self.args_array,
+                                                     self.func_dict))
+
+    @mock.patch("mysql_rep_admin.mysql_libs.disconnect",
+                mock.Mock(return_value=True))
+    @mock.patch("mysql_rep_admin.call_run_chk", mock.Mock(return_value=True))
+    @mock.patch("mysql_rep_admin.transpose_dict")
+    @mock.patch("mysql_rep_admin.mysql_libs.create_slv_array")
+    @mock.patch("mysql_rep_admin.mysql_class.MasterRep")
+    @mock.patch("mysql_rep_admin.cmds_gen.create_cfg_array")
+    @mock.patch("mysql_rep_admin.gen_libs.load_module")
+    def test_master_conn_good(self, mock_cfg, mock_array, mock_rep, mock_slv,
+                         mock_transpose):
+
+        """Function:  test_master_connect_good
+
+        Description:  Test with master connection is successful.
+
+        Arguments:
+
+        """
+
+        mock_transpose.return_value = self.cfg_array2
+        mock_cfg.return_value = self.mstcfg
+        mock_array.return_value = self.cfg_array
+        mock_rep.return_value = self.master
+        mock_slv.return_value = self.slv_array
+
+        self.assertFalse(mysql_rep_admin.run_program(self.args_array,
+                                                     self.func_dict))
 
     @mock.patch("mysql_rep_admin.mysql_libs.disconnect",
                 mock.Mock(return_value=True))
