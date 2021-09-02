@@ -42,7 +42,7 @@ class MasterRep(object):
     Description:  Class stub holder for mysql_class.MasterRep class.
 
     Methods:
-        __init__ -> Class initialization.
+        __init__
 
     """
 
@@ -66,10 +66,10 @@ class SlaveRep(object):
     Description:  Class stub holder for mysql_class.SlaveRep class.
 
     Methods:
-        __init__ -> Class initialization.
-        get_time -> Stub method holder for SlaveRep.get_time.
-        get_name -> Stub method holder for SlaveRep.get_name.
-        upd_slv_time -> Stub method holder for SlaveRep.upd_slv_time.
+        __init__
+        get_time
+        get_name
+        upd_slv_time
 
     """
 
@@ -131,9 +131,9 @@ class Mail(object):
     Description:  Class stub holder for gen_class.Mail class.
 
     Methods:
-        __init__ -> Class initialization.
-        add_2_msg -> Stub method holder for Mail.add_2_msg.
-        send_mail -> Stub method holder for Mail.send_mail.
+        __init__
+        add_2_msg
+        send_mail
 
     """
 
@@ -184,14 +184,14 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Initialize testing environment.
-        test_mail -> Test sending JSON data to mail.
-        test_no_slv -> Test with no slaves present.
-        test_json_stdout -> Test with JSON format with standard out.
-        test_json_no_stdout -> Test JSON format with standard out suppressed.
-        test_json -> Test with JSON format.
-        test_std_no_lag -> Test standard out with no time lag.
-        test_std_out -> Test standard out.
+        setUp
+        test_mail
+        test_no_slv
+        test_json_stdout
+        test_json_no_stdout
+        test_json
+        test_std_no_lag
+        test_std_out
 
     """
 

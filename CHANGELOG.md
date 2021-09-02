@@ -4,6 +4,27 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
+## [3.2.0] - 2021-08-19
+- Updated to work in MySQL 8.0 and 5.7 environments.
+- Updated to work in a SSL environment.
+- Updated to use the mysql_libs v5.2.2 library.
+- Updated to use gen_libs v2.8.4 library.
+
+### Changed
+- \_chk_other:  Check version to determine how to process retry and refactored the "if" statements.
+- chk_slv_other:  Add slv.version argument to \_chk_other call.
+- main:  Added slave configuration transpose data.
+- run_program:  Added call to gen_libs.transpose_dict function, replaced cmds_gen.disconnect with mysql_libs.disconnect, process status connection on MySQL connection, and replaced cmds_gen.create_cfg_array with call to gen_libs.create_cfg_array.
+- Removed unnecessary \*\*kwargs in function argument list.
+- config/slave.txt.TEMPLATE: Added SSL configuration options.
+- config/mongo.py.TEMPLATE:  Added SSL configuration options.
+- config/mysql_cfg.py.TEMPLATE:  Added SSL configuration options.
+- config/mysql.cfg.TEMPLATE:  Added SSL configuration options.
+- Documentation updates.
+
+## Removed
+- cmds_gen module.
+
 ## [3.1.2] - 2020-11-23
 - Updated to use the mysql_libs v5.0.3 library.
 - Verified to work with pymongo v3.8.0.
@@ -51,8 +72,8 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - call_run_chk:  Checked for "-f" option and passed JSON identation setting to functions.
 - main:  Made "-s" option a requirement for "-A", "-C", "-D", "-E", "-O" and "-T" options.
 - chk_slv_time:  Changed JSON document "Master" entry to "Server".
-- add_miss_slaves:  Converted JSON document to CamelCase.
-- chk_slv_time:  Converted JSON document to CamelCase.
+- add_miss_slaves:  Converted JSON document to PascalCase.
+- chk_slv_time:  Converted JSON document to PascalCase.
 - main:  Added ProgramLock class to implement program locking.
 - main:  Made "-c" option a requirement for "-B", "-C", and "-T" options.
 - \_chk_other: Used global variable for template printing.
@@ -114,7 +135,7 @@ Breaking Change
 - main:  Refactored initial program checks.
 - call_run_chk, run_program:  Added \*\*kwargs to argument list.
 - Changed variable names to standard naming convention.
-- add_miss_slaves, chk_slv_time:  Changed output to camelCase.
+- add_miss_slaves, chk_slv_time:  Changed output to PascalCase.
 - run_program:  Modified to use the updated mysql_class module.
 - main:  Removed -I and -R arguments from the program options.
 - run_program:  Replaced the code to load the slave files into an array with a call to cmds_gen.create_cfg_array().

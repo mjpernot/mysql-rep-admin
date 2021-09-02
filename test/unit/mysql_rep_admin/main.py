@@ -42,7 +42,7 @@ class ProgramLock(object):
     Description:  Class stub holder for gen_class.ProgramLock class.
 
     Methods:
-        __init__ -> Class initialization.
+        __init__
 
     """
 
@@ -53,8 +53,8 @@ class ProgramLock(object):
         Description:  Class initialization.
 
         Arguments:
-            (input) cmdline -> Argv command line.
-            (input) flavor -> Lock flavor ID.
+            (input) cmdline
+            (input) flavor
 
         """
 
@@ -69,23 +69,23 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Unit testing initilization.
-        test_help_true -> Test help if returns true.
-        test_help_false -> Test help if returns false.
-        test_req_or_false -> Test arg_req_or_lst if returns false.
-        test_req_or_true -> Test arg_req_or_lst if returns true.
-        test_arg_req_true -> Test arg_require if returns true.
-        test_arg_req_false -> Test arg_require if returns false.
-        test_arg_cond_false -> Test arg_cond_req if returns false.
-        test_arg_cond_true -> Test arg_cond_req if returns true.
-        test_arg_dir_true -> Test arg_dir_chk_crt if returns true.
-        test_arg_dir_false -> Test arg_dir_chk_crt if returns false.
-        test_arg_file_true -> Test arg_file_chk if returns true.
-        test_arg_file_false -> Test arg_file_chk if returns false.
-        test_run_program -> Test run_program function.
-        test_programlock_true -> Test with ProgramLock returns True.
-        test_programlock_false -> Test with ProgramLock returns False.
-        test_programlock_id -> Test ProgramLock with flavor ID.
+        setUp
+        test_help_true
+        test_help_false
+        test_req_or_false
+        test_req_or_true
+        test_arg_req_true
+        test_arg_req_false
+        test_arg_cond_false
+        test_arg_cond_true
+        test_arg_dir_true
+        test_arg_dir_false
+        test_arg_file_true
+        test_arg_file_false
+        test_run_program
+        test_programlock_true
+        test_programlock_false
+        test_programlock_id
 
     """
 

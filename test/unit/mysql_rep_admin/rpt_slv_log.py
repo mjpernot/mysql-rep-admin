@@ -41,7 +41,7 @@ class MasterRep(object):
     Description:  Class stub holder for mysql_class.MasterRep class.
 
     Methods:
-        __init__ -> Class initialization.
+        __init__
 
     """
 
@@ -65,9 +65,9 @@ class SlaveRep(object):
     Description:  Class stub holder for mysql_class.SlaveRep class.
 
     Methods:
-        __init__ -> Class initialization.
-        get_log_info -> Stub method holder for SlaveRep.get_log_info.
-        get_name -> Stub method holder for SlaveRep.get_name.
+        __init__
+        get_log_info
+        get_name
 
     """
 
@@ -122,9 +122,9 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Initialize testing environment.
-        test_no_slaves -> Test no slaves present.
-        test_rpt_slv_log -> Test rpt_slv_log method.
+        setUp
+        test_no_slaves
+        test_rpt_slv_log
 
     """
 
