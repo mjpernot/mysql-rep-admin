@@ -41,7 +41,7 @@ class MasterRep(object):
     Description:  Class stub holder for mysql_class.MasterRep class.
 
     Methods:
-        __init__ -> Class initialization.
+        __init__
 
     """
 
@@ -65,9 +65,9 @@ class SlaveRep(object):
     Description:  Class stub holder for mysql_class.SlaveRep class.
 
     Methods:
-        __init__ -> Class initialization.
-        get_name -> Stub method holder for SlaveRep.get_name.
-        get_others -> Stub method holder for SlaveRep.get_others.
+        __init__
+        get_name
+        get_others
 
     """
 
@@ -85,6 +85,7 @@ class SlaveRep(object):
         self.skip = skip
         self.tmp_tbl = unicode(tmp_tbl)
         self.retry = unicode(retry)
+        self.version = (5, 6, 31)
 
     def get_name(self):
 
@@ -118,9 +119,9 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Initialize testing environment.
-        test_no_slv -> Test with no slaves present.
-        test_chk_slv_other -> Test chk_slv_other method.
+        setUp
+        test_no_slv
+        test_chk_slv_other
 
     """
 
@@ -148,8 +149,8 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.assertFalse(mysql_rep_admin.chk_slv_other(self.master,
-                                                       [self.slave2]))
+        self.assertFalse(
+            mysql_rep_admin.chk_slv_other(self.master, [self.slave2]))
 
     def test_no_slv(self):
 
@@ -175,8 +176,8 @@ class UnitTest(unittest.TestCase):
         """
 
         with gen_libs.no_std_out():
-            self.assertFalse(mysql_rep_admin.chk_slv_other(self.master,
-                                                           [self.slave]))
+            self.assertFalse(
+                mysql_rep_admin.chk_slv_other(self.master, [self.slave]))
 
 
 if __name__ == "__main__":

@@ -23,7 +23,9 @@
                 [-b db:coll -m file]
                 [-t ToEmail [ToEmail2 ...] [-u SubjectLine]] |
              -E -s [path/]slave.txt |
-             -A -s [path/]slave.txt |
+             -A -c file -s [path/]slave.txt [-j [-f]] [-o dir_path/file [-a]]
+                [-b db:coll -m file]
+                [-t ToEmail [ToEmail2 ...] [-u SubjectLine]] |
              -O -s [path/]slave.txt}
             [-y flavor_id] [-p path] [-z]
             [-v | -h]
@@ -71,7 +73,24 @@
             -s [path/]slave.txt => Slave config file.
 
         -A => Runs multiple checks which include the options:  -C, -S, -T, -E
+            -c file => Master config file.
             -s [path/]slave.txt => Slave config file.
+            -j => Return output in JSON format.
+            -f => Flatten the JSON data structure to file and standard out.
+            -o path/file => Directory path and file name for output.
+            -a => Append output to output file.
+            -b database:collection => Name of database and collection.
+                Default: sysmon:mysql_rep_lag
+            -m file => Insert results into a Mongo database.  File is the Mongo
+                config file.
+            -t to_email_addresses => Enables emailing capability for an option
+                if the option allows it.  Sends output to one or more email
+                addresses.
+            -u subject_line => Subject line of email.  Will create own subject
+                line if one is not provided.
+            NOTE:  If returning as standard format and there is no time lag,
+                nothing will be returned.  However, if -j option is selected,
+                then a JSON doc will be returned even if no time lag.
 
         -O => Other slave replication checks and return any errors detected.
             -s [path/]slave.txt => Slave config file.
@@ -97,6 +116,19 @@
             port = 3306
             cfg_file = "MYSQL_DIRECTORY/mysqld.cnf"
 
+            # If SSL connections are being used, configure one or more of these
+                entries:
+            ssl_client_ca = None
+            ssl_client_key = None
+            ssl_client_cert = None
+
+            # Only changes these if necessary and have knowledge in MySQL
+                SSL configuration setup:
+            ssl_client_flag = None
+            ssl_disabled = False
+            ssl_verify_id = False
+            ssl_verify_cert = False
+
         NOTE 1:  Include the cfg_file even if running remotely as the
             file will be used in future releases.
         NOTE 2:  In MySQL 5.6 - it now gives warning if password is passed on
@@ -118,15 +150,16 @@
         Defaults Extra File format (config/mysql.cfg.TEMPLATE):
             [client]
             password="PASSWORD"
-            socket="DIRECTORY_PATH/mysql.sock"
+            socket="DIRECTORY_PATH/mysqld.sock"
 
         NOTE 1:  The socket information can be obtained from the my.cnf
             file under ~/mysql directory.
-
         NOTE 2:  The --defaults-extra-file option will be overridden if there
             is a ~/.my.cnf or ~/.mylogin.cnf file located in the home directory
             of the user running this program.  The extras file will in effect
             be ignored.
+        NOTE 3:  Socket use is only required to be set in certain conditions
+            when connecting using localhost.
 
 
         Slave configuration file format (config/slave.txt.TEMPLATE)
@@ -140,7 +173,20 @@
             cfg_file = None
             port = 3306
             serv_os = Linux
-            extra_def_file = DIRECTORY_PATH/mysql.cfg
+            extra_def_file = PYTHON_PROJECT/mysql.cfg
+
+            # If SSL connections are being used, configure one or more of these
+                entries:
+            ssl_client_ca = None
+            ssl_client_key = None
+            ssl_client_cert = None
+
+            # Only changes these if necessary and have knowledge in MySQL
+                SSL configuration setup:
+            ssl_client_flag = None
+            ssl_disabled = False
+            ssl_verify_id = False
+            ssl_verify_cert = False
 
         NOTE 1:  Ignore the Replication user information entries.  They are
             not required for this program.
@@ -151,7 +197,7 @@
             inserting data into a database.
             There are two ways to connect:  single or replica set.
 
-            1.)  Single database connection:
+            Single database connection:
 
             # Single Configuration file for Mongo Database Server.
             user = "USER"
@@ -166,12 +212,37 @@
             use_arg = True
             use_uri = False
 
-            2.)  Replica Set connection:  Same format as above, but with these
+            Replica Set connection:  Same format as above, but with these
                 additional entries at the end of the configuration file:
 
             repset = "REPLICA_SET_NAME"
             repset_hosts = "HOST1:PORT, HOST2:PORT, [...]"
             db_auth = "AUTHENTICATION_DATABASE"
+
+            Note:  If using SSL connections then set one or more of the
+                following entries.  This will automatically enable SSL
+                connections. Below are the configuration settings for SSL
+                connections.  See configuration file for details on each entry:
+
+            ssl_client_ca = None
+            ssl_client_key = None
+            ssl_client_cert = None
+            ssl_client_phrase = None
+
+            Note:  FIPS Environment for Mongo.
+              If operating in a FIPS 104-2 environment, this package will
+              require at least a minimum of pymongo==3.8.0 or better.  It will
+              also require a manual change to the auth.py module in the pymongo
+              package.  See below for changes to auth.py.
+
+            - Locate the auth.py file python installed packages on the system
+                in the pymongo package directory.
+            - Edit the file and locate the "_password_digest" function.
+            - In the "_password_digest" function there is an line that should
+                match: "md5hash = hashlib.md5()".  Change it to
+                "md5hash = hashlib.md5(usedforsecurity=False)".
+            - Lastly, it will require the Mongo configuration file entry
+                auth_mech to be set to: SCRAM-SHA-1 or SCRAM-SHA-256.
 
     Example:
         mysql_rep_admin.py -c master -d config  -s slave.txt -T
@@ -189,11 +260,11 @@ import datetime
 
 # Third party
 import json
+import ast
 
 # Local
 import lib.arg_parser as arg_parser
 import lib.gen_libs as gen_libs
-import lib.cmds_gen as cmds_gen
 import lib.machine as machine
 import lib.gen_class as gen_class
 import mysql_lib.mysql_class as mysql_class
@@ -460,7 +531,7 @@ def chk_slv_err(master, slaves, **kwargs):
         print("\nchk_slv_err:  Warning:  No Slave instance detected.")
 
 
-def add_miss_slaves(master, outdata, **kwargs):
+def add_miss_slaves(master, outdata):
 
     """Function:  add_miss_slaves
 
@@ -584,7 +655,7 @@ def _process_json(outdata, **kwargs):
         gen_libs.print_data(jdata)
 
 
-def _process_time_lag(slv, time_lag, name, json_fmt, **kwargs):
+def _process_time_lag(slv, time_lag, name, json_fmt):
 
     """Function:  _process_time_lag
 
@@ -635,13 +706,13 @@ def chk_slv_other(master, slaves, **kwargs):
         for slv in slaves:
             skip, tmp_tbl, retry = slv.get_others()
             name = slv.get_name()
-            _chk_other(skip, tmp_tbl, retry, name)
+            _chk_other(skip, tmp_tbl, retry, name, slv.version)
 
     else:
         print("\nchk_slv_other:  Warning:  No Slave instance detected.")
 
 
-def _chk_other(skip, tmp_tbl, retry, name, **kwargs):
+def _chk_other(skip, tmp_tbl, retry, name, sql_ver):
 
     """Function:  _chk_other
 
@@ -653,26 +724,27 @@ def _chk_other(skip, tmp_tbl, retry, name, **kwargs):
         (input) tmp_tbl -> Mysql's temp tables created count.
         (input) retry -> Mysql's retry count.
         (input) name -> Name of Mysql server.
+        (input) sql_ver -> Slave's MySQL version.
 
     """
 
     global PRT_TEMPLATE
 
-    if (skip is None or skip > 0) or (not tmp_tbl or int(tmp_tbl) > 5) \
-       or (not retry or int(retry) > 0):
+    if skip is None or skip > 0:
         print(PRT_TEMPLATE.format(name))
+        print("\tSkip Count:  {0}".format(skip))
 
-        if skip is None or skip > 0:
-            print("\tSkip Count:  {0}".format(skip))
+    if not tmp_tbl or int(tmp_tbl) > 5:
+        print(PRT_TEMPLATE.format(name))
+        print("\tTemp Table Count:  {0}".format(tmp_tbl))
 
-        if not tmp_tbl or int(tmp_tbl) > 5:
-            print("\tTemp Table Count:  {0}".format(tmp_tbl))
+    if (sql_ver[0] < 8 and (not retry or int(retry) > 0)) \
+       or (sql_ver[0] >= 8 and retry > 0):
+        print(PRT_TEMPLATE.format(name))
+        print("\tRetried Transaction Count:  {0}".format(retry))
 
-        if not retry or int(retry) > 0:
-            print("\tRetried Transaction Count:  {0}".format(retry))
 
-
-def call_run_chk(args_array, func_dict, master, slaves, **kwargs):
+def call_run_chk(args_array, func_dict, master, slaves):
 
     """Function:  call_run_chk
 
@@ -751,6 +823,8 @@ def run_program(args_array, func_dict, **kwargs):
     Arguments:
         (input) args_array -> Array of command line options and values.
         (input) func_dict -> Dictionary list of functions and options.
+        (input) kwargs:
+            slv_key -> Dictionary of keys and data types.
 
     """
 
@@ -765,23 +839,29 @@ def run_program(args_array, func_dict, **kwargs):
             mst_cfg.name, mst_cfg.sid, mst_cfg.user, mst_cfg.japd,
             os_type=getattr(machine, mst_cfg.serv_os)(), host=mst_cfg.host,
             port=mst_cfg.port, defaults_file=mst_cfg.cfg_file)
-        master.connect()
+        master.connect(silent=True)
 
-    slaves = []
+    if master and master.conn_msg:
+        print("run_program:  Error encountered on server(%s): %s" %
+              (master.name, master.conn_msg))
 
-    if "-s" in args_array:
-        slv_cfg = cmds_gen.create_cfg_array(args_array["-s"],
-                                            cfg_path=args_array["-d"])
-        slaves = mysql_libs.create_slv_array(slv_cfg)
+    else:
+        slaves = []
 
-    call_run_chk(args_array, func_dict, master, slaves)
+        if "-s" in args_array:
+            slv_cfg = gen_libs.create_cfg_array(args_array["-s"],
+                                                cfg_path=args_array["-d"])
+            slv_cfg = gen_libs.transpose_dict(slv_cfg, kwargs.get("slv_key", {}))
+            slaves = mysql_libs.create_slv_array(slv_cfg)
 
-    conn_list = [slv for slv in slaves if slv.conn]
+        call_run_chk(args_array, func_dict, master, slaves)
 
-    if master and master.conn:
-        conn_list.append(master)
+        conn_list = [slv for slv in slaves if slv.conn]
 
-    cmds_gen.disconnect(conn_list)
+        if master and master.conn:
+            conn_list.append(master)
+
+        mysql_libs.disconnect(conn_list)
 
 
 def main():
@@ -822,6 +902,11 @@ def main():
     opt_or_dict_list = {"-c": ["-s"]}
     opt_req_list = ["-d"]
     opt_val_list = ["-d", "-c", "-p", "-s", "-o", "-b", "-m", "-u", "-t", "-y"]
+    slv_key = {"sid": "int", "port": "int", "cfg_file": "None",
+               "ssl_client_ca": "None", "ssl_ca_path": "None",
+               "ssl_client_key": "None", "ssl_client_cert": "None",
+               "ssl_client_flag": "int", "ssl_disabled": "bool",
+               "ssl_verify_id": "bool", "ssl_verify_cert": "bool"}
 
     # Process argument list from command line.
     args_array = arg_parser.arg_parse2(cmdline.argv, opt_val_list,
@@ -838,7 +923,7 @@ def main():
         try:
             proglock = gen_class.ProgramLock(cmdline.argv,
                                              args_array.get("-y", ""))
-            run_program(args_array, func_dict)
+            run_program(args_array, func_dict, slv_key=slv_key)
             del proglock
 
         except gen_class.SingleInstanceException:

@@ -41,14 +41,15 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Initialize testing environment.
-        test_retry_down -> Test with retry is down slave.
-        test_tmp_tbl_down -> Test with tmp_tbl is down slave.
-        test_skip_down -> Test with skip is down slave.
-        test_retry_error -> Test with retry error detected.
-        test_tmp_tbl_error -> Test with tmp table error detected.
-        test_skip_error -> Test with skip error detected.
-        test_no_errors -> Test with no errors detected.
+        setUp
+        test_retry_80
+        test_retry_pre80
+        test_tmp_tbl_down
+        test_skip_down
+        test_retry_error
+        test_tmp_tbl_error
+        test_skip_error
+        test_no_errors
 
     """
 
@@ -72,12 +73,14 @@ class UnitTest(unittest.TestCase):
         self.retry1 = unicode(1)
         self.retry2 = None
         self.name = "SlaveName"
+        self.version = (5, 6, 31)
+        self.version2 = (8, 0, 23)
 
-    def test_retry_down(self):
+    def test_retry_80(self):
 
-        """Function:  test_retry_down
+        """Function:  test_retry_80
 
-        Description:  Test with retry is down slave.
+        Description:  Test with retry is set and 8.0 version.
 
         Arguments:
 
@@ -85,7 +88,23 @@ class UnitTest(unittest.TestCase):
 
         with gen_libs.no_std_out():
             self.assertFalse(mysql_rep_admin._chk_other(
-                self.skip0, self.tmp_tbl0, self.retry2, self.name))
+                self.skip0, self.tmp_tbl0, self.retry1, self.name,
+                self.version2))
+
+    def test_retry_pre80(self):
+
+        """Function:  test_retry_pre80
+
+        Description:  Test with retry is set and pre 8.0 version.
+
+        Arguments:
+
+        """
+
+        with gen_libs.no_std_out():
+            self.assertFalse(mysql_rep_admin._chk_other(
+                self.skip0, self.tmp_tbl0, self.retry1, self.name,
+                self.version))
 
     def test_tmp_tbl_down(self):
 
@@ -99,7 +118,8 @@ class UnitTest(unittest.TestCase):
 
         with gen_libs.no_std_out():
             self.assertFalse(mysql_rep_admin._chk_other(
-                self.skip0, self.tmp_tbl2, self.retry0, self.name))
+                self.skip0, self.tmp_tbl2, self.retry0, self.name,
+                self.version))
 
     def test_skip_down(self):
 
@@ -113,7 +133,8 @@ class UnitTest(unittest.TestCase):
 
         with gen_libs.no_std_out():
             self.assertFalse(mysql_rep_admin._chk_other(
-                self.skip2, self.tmp_tbl0, self.retry0, self.name))
+                self.skip2, self.tmp_tbl0, self.retry0, self.name,
+                self.version))
 
     def test_retry_error(self):
 
@@ -127,7 +148,8 @@ class UnitTest(unittest.TestCase):
 
         with gen_libs.no_std_out():
             self.assertFalse(mysql_rep_admin._chk_other(
-                self.skip0, self.tmp_tbl0, self.retry1, self.name))
+                self.skip0, self.tmp_tbl0, self.retry1, self.name,
+                self.version))
 
     def test_tmp_tbl_error(self):
 
@@ -141,7 +163,8 @@ class UnitTest(unittest.TestCase):
 
         with gen_libs.no_std_out():
             self.assertFalse(mysql_rep_admin._chk_other(
-                self.skip0, self.tmp_tbl6, self.retry0, self.name))
+                self.skip0, self.tmp_tbl6, self.retry0, self.name,
+                self.version))
 
     def test_skip_error(self):
 
@@ -155,7 +178,8 @@ class UnitTest(unittest.TestCase):
 
         with gen_libs.no_std_out():
             self.assertFalse(mysql_rep_admin._chk_other(
-                self.skip1, self.tmp_tbl0, self.retry0, self.name))
+                self.skip1, self.tmp_tbl0, self.retry0, self.name,
+                self.version))
 
     def test_no_errors(self):
 
@@ -168,7 +192,7 @@ class UnitTest(unittest.TestCase):
         """
 
         self.assertFalse(mysql_rep_admin._chk_other(
-            self.skip0, self.tmp_tbl0, self.retry0, self.name))
+            self.skip0, self.tmp_tbl0, self.retry0, self.name, self.version))
 
 
 if __name__ == "__main__":
