@@ -265,7 +265,6 @@ import ast
 # Local
 import lib.arg_parser as arg_parser
 import lib.gen_libs as gen_libs
-import lib.cmds_gen as cmds_gen
 import lib.machine as machine
 import lib.gen_class as gen_class
 import mysql_lib.mysql_class as mysql_class
@@ -850,7 +849,7 @@ def run_program(args_array, func_dict, **kwargs):
         slaves = []
 
         if "-s" in args_array:
-            slv_cfg = cmds_gen.create_cfg_array(args_array["-s"],
+            slv_cfg = gen_libs.create_cfg_array(args_array["-s"],
                                                 cfg_path=args_array["-d"])
             slv_cfg = gen_libs.transpose_dict(slv_cfg, kwargs.get("slv_key", {}))
             slaves = mysql_libs.create_slv_array(slv_cfg)
