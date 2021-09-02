@@ -23,7 +23,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - Documentation updates.
 
 ## Removed
-- lib.cmds_gen module.
+- cmds_gen module.
 
 ## [3.1.2] - 2020-11-23
 - Updated to use the mysql_libs v5.0.3 library.
