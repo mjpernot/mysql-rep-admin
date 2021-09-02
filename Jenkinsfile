@@ -46,7 +46,6 @@ pipeline {
                 ./test/unit/mysql_rep_admin/rpt_mst_log.py
                 ./test/unit/mysql_rep_admin/rpt_slv_log.py
                 ./test/unit/mysql_rep_admin/run_program.py
-                ./test/unit/mysql_rep_admin/transpose_dict.py
                 deactivate
                 rm -rf test_env
                 """
