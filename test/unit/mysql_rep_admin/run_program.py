@@ -274,10 +274,10 @@ class UnitTest(unittest.TestCase):
     @mock.patch("mysql_rep_admin.mysql_libs.disconnect",
                 mock.Mock(return_value=True))
     @mock.patch("mysql_rep_admin.call_run_chk", mock.Mock(return_value=True))
-    @mock.patch("mysql_rep_admin.transpose_dict")
+    @mock.patch("mysql_rep_admin.gen_libs.transpose_dict")
     @mock.patch("mysql_rep_admin.mysql_libs.create_slv_array")
     @mock.patch("mysql_rep_admin.mysql_class.MasterRep")
-    @mock.patch("mysql_rep_admin.cmds_gen.create_cfg_array")
+    @mock.patch("mysql_rep_admin.gen_libs.create_cfg_array")
     @mock.patch("mysql_rep_admin.gen_libs.load_module")
     def test_master_conn_good(self, mock_cfg, mock_array, mock_rep, mock_slv,
                               mock_transpose):
@@ -302,10 +302,10 @@ class UnitTest(unittest.TestCase):
     @mock.patch("mysql_rep_admin.mysql_libs.disconnect",
                 mock.Mock(return_value=True))
     @mock.patch("mysql_rep_admin.call_run_chk", mock.Mock(return_value=True))
-    @mock.patch("mysql_rep_admin.transpose_dict")
+    @mock.patch("mysql_rep_admin.gen_libs.transpose_dict")
     @mock.patch("mysql_rep_admin.mysql_libs.create_slv_array")
     @mock.patch("mysql_rep_admin.mysql_class.MasterRep")
-    @mock.patch("mysql_rep_admin.cmds_gen.create_cfg_array")
+    @mock.patch("mysql_rep_admin.gen_libs.create_cfg_array")
     @mock.patch("mysql_rep_admin.gen_libs.load_module")
     def test_master_down(self, mock_cfg, mock_array, mock_rep, mock_slv,
                          mock_transpose):
@@ -331,10 +331,10 @@ class UnitTest(unittest.TestCase):
     @mock.patch("mysql_rep_admin.mysql_libs.disconnect",
                 mock.Mock(return_value=True))
     @mock.patch("mysql_rep_admin.call_run_chk", mock.Mock(return_value=True))
-    @mock.patch("mysql_rep_admin.transpose_dict")
+    @mock.patch("mysql_rep_admin.gen_libs.transpose_dict")
     @mock.patch("mysql_rep_admin.mysql_libs.create_slv_array")
     @mock.patch("mysql_rep_admin.mysql_class.MasterRep")
-    @mock.patch("mysql_rep_admin.cmds_gen.create_cfg_array")
+    @mock.patch("mysql_rep_admin.gen_libs.create_cfg_array")
     @mock.patch("mysql_rep_admin.gen_libs.load_module")
     def test_all_slaves_down(self, mock_cfg, mock_array, mock_rep, mock_slv,
                              mock_transpose):
@@ -361,10 +361,10 @@ class UnitTest(unittest.TestCase):
     @mock.patch("mysql_rep_admin.mysql_libs.disconnect",
                 mock.Mock(return_value=True))
     @mock.patch("mysql_rep_admin.call_run_chk", mock.Mock(return_value=True))
-    @mock.patch("mysql_rep_admin.transpose_dict")
+    @mock.patch("mysql_rep_admin.gen_libs.transpose_dict")
     @mock.patch("mysql_rep_admin.mysql_libs.create_slv_array")
     @mock.patch("mysql_rep_admin.mysql_class.MasterRep")
-    @mock.patch("mysql_rep_admin.cmds_gen.create_cfg_array")
+    @mock.patch("mysql_rep_admin.gen_libs.create_cfg_array")
     @mock.patch("mysql_rep_admin.gen_libs.load_module")
     def test_one_slave_down(self, mock_cfg, mock_array, mock_rep, mock_slv,
                             mock_transpose):
@@ -430,10 +430,10 @@ class UnitTest(unittest.TestCase):
     @mock.patch("mysql_rep_admin.mysql_libs.disconnect",
                 mock.Mock(return_value=True))
     @mock.patch("mysql_rep_admin.call_run_chk", mock.Mock(return_value=True))
-    @mock.patch("mysql_rep_admin.transpose_dict")
+    @mock.patch("mysql_rep_admin.gen_libs.transpose_dict")
     @mock.patch("mysql_rep_admin.mysql_libs.create_slv_array")
     @mock.patch("mysql_rep_admin.mysql_class.MasterRep")
-    @mock.patch("mysql_rep_admin.cmds_gen.create_cfg_array")
+    @mock.patch("mysql_rep_admin.gen_libs.create_cfg_array")
     @mock.patch("mysql_rep_admin.gen_libs.load_module")
     def test_single_func(self, mock_cfg, mock_array, mock_rep, mock_slv,
                          mock_transpose):

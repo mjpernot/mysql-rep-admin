@@ -265,7 +265,6 @@ import ast
 # Local
 import lib.arg_parser as arg_parser
 import lib.gen_libs as gen_libs
-import lib.cmds_gen as cmds_gen
 import lib.machine as machine
 import lib.gen_class as gen_class
 import mysql_lib.mysql_class as mysql_class
@@ -815,42 +814,6 @@ def call_run_chk(args_array, func_dict, master, slaves):
                 mode=mode, indent=indent)
 
 
-def transpose_dict(data, data_key):
-
-    """Function:  transpose_dict
-
-    Description:  Transpose specified keys in a list of dictionaries
-        to specified data types or None.
-
-    Arguments:
-        (input) data -> Initial list of dictionaries.
-        (input) data_key -> Dictionary of keys and data types.
-        (output) mod_data -> Modified list of dictionaries.
-
-    """
-
-    data = list(data)
-    data_key = dict(data_key)
-    mod_data = list()
-
-    for list_item in data:
-        list_item = dict(list_item)
-
-        for item in set(list_item.keys()) & set(data_key.keys()):
-            if not list_item[item] or list_item[item] == "None":
-                list_item[item] = None
-
-            elif data_key[item] == "int":
-                list_item[item] = int(list_item[item])
-
-            elif data_key[item] == "bool":
-                list_item[item] = ast.literal_eval(list_item[item])
-
-        mod_data.append(list_item)
-
-    return mod_data
-
-
 def run_program(args_array, func_dict, **kwargs):
 
     """Function:  run_program
@@ -886,9 +849,9 @@ def run_program(args_array, func_dict, **kwargs):
         slaves = []
 
         if "-s" in args_array:
-            slv_cfg = cmds_gen.create_cfg_array(args_array["-s"],
+            slv_cfg = gen_libs.create_cfg_array(args_array["-s"],
                                                 cfg_path=args_array["-d"])
-            slv_cfg = transpose_dict(slv_cfg, kwargs.get("slv_key", {}))
+            slv_cfg = gen_libs.transpose_dict(slv_cfg, kwargs.get("slv_key", {}))
             slaves = mysql_libs.create_slv_array(slv_cfg)
 
         call_run_chk(args_array, func_dict, master, slaves)
