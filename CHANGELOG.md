@@ -9,17 +9,12 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - Updated to work in a SSL environment.
 - Updated to use the mysql_libs v5.2.2 library.
 
-### Added
-- transpose_dict:  Transpose specified keys to new data types.
-
 ### Changed
-- run_program:  Process status connection on MySQL connection.
 - \_chk_other:  Check version to determine how to process retry and refactored the "if" statements.
 - chk_slv_other:  Add slv.version argument to \_chk_other call.
 - main:  Added slave configuration transpose data.
-- run_program:  Added call to transpose_dict function.
+- run_program:  Added call to gen_libs.transpose_dict function, replaced cmds_gen.disconnect with mysql_libs.disconnect, and process status connection on MySQL connection.
 - Removed unnecessary \*\*kwargs in function argument list.
-- run_program:  Replaced cmds_gen.disconnect with mysql_libs.disconnect.
 - config/slave.txt.TEMPLATE: Added SSL configuration options.
 - config/mongo.py.TEMPLATE:  Added SSL configuration options.
 - config/mysql_cfg.py.TEMPLATE:  Added SSL configuration options.
