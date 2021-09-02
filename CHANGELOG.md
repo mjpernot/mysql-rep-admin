@@ -8,7 +8,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - Updated to work in MySQL 8.0 and 5.7 environments.
 - Updated to work in a SSL environment.
 - Updated to use the mysql_libs v5.2.2 library.
--  Updatedto use gen_libs v3.8.3 library.
+- Updated to use gen_libs v2.8.4 library.
 
 ### Changed
 - \_chk_other:  Check version to determine how to process retry and refactored the "if" statements.
