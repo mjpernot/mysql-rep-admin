@@ -6,6 +6,8 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 ## [3.2.1] - 2022-06-02
 - Upgrade mysql-connector to v8.0.22.
+- Upgraded mysql-libs to v5.3.1.
+- Upgraded mongo-libs to v4.2.1.
 
 
 ## [3.2.0] - 2021-08-19
