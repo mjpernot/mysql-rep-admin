@@ -10,6 +10,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - Upgraded mongo-libs to v4.2.1.
 
 ### Changed
+- config/mysql_cfg.py.TEMPLATE: Added TLS version entry.
 - config/mongo.py.TEMPLATE: Removed old entries.
 
 
