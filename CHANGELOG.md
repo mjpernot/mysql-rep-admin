@@ -9,6 +9,9 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - Upgraded mysql-libs to v5.3.1.
 - Upgraded mongo-libs to v4.2.1.
 
+### Changed
+- config/mongo.py.TEMPLATE: Removed old entries.
+
 
 ## [3.2.0] - 2021-08-19
 - Updated to work in MySQL 8.0 and 5.7 environments.
