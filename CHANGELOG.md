@@ -6,8 +6,9 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 ## [3.3.0] - 2022-06-02
 - Upgrade mysql-connector to v8.0.22.
-- Upgraded mysql-libs to v5.3.1.
-- Upgraded mongo-libs to v4.2.1.
+- Upgrade mysql-libs to v5.3.1.
+- Upgrade mongo-libs to v4.2.1.
+- Upgrade python-lib to v2.9.1.
 
 ### Changed
 - main, call_run_chk: Changed "-b" option to "-i" option to be inline with the other programs.
