@@ -4,14 +4,16 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
-## [3.2.1] - 2022-06-02
+## [3.3.0] - 2022-06-02
 - Upgrade mysql-connector to v8.0.22.
 - Upgraded mysql-libs to v5.3.1.
 - Upgraded mongo-libs to v4.2.1.
 
 ### Changed
+- main, call_run_chk: Changed "-b" option to "-i" option to be inline with the other programs.
 - config/mysql_cfg.py.TEMPLATE: Added TLS version entry.
 - config/mongo.py.TEMPLATE: Removed old entries.
+- Documentation updates.
 
 
 ## [3.2.0] - 2021-08-19

@@ -20,11 +20,11 @@
              -B -c file |
              -D -s [path/]slave.txt |
              -T -c file -s [path]/slave.txt [-j [-f]] [-o dir_path/file [-a]]
-                [-b db:coll -m file]
+                [-i db:coll -m file]
                 [-t ToEmail [ToEmail2 ...] [-u SubjectLine]] |
              -E -s [path/]slave.txt |
              -A -c file -s [path/]slave.txt [-j [-f]] [-o dir_path/file [-a]]
-                [-b db:coll -m file]
+                [-i db:coll -m file]
                 [-t ToEmail [ToEmail2 ...] [-u SubjectLine]] |
              -O -s [path/]slave.txt}
             [-y flavor_id] [-p path] [-z]
@@ -56,10 +56,12 @@
             -f => Flatten the JSON data structure to file and standard out.
             -o path/file => Directory path and file name for output.
             -a => Append output to output file.
-            -b database:collection => Name of database and collection.
-                Default: sysmon:mysql_rep_lag
-            -m file => Insert results into a Mongo database.  File is the Mongo
-                config file.
+            -i [database:collection] => Insert results of command into Mongo
+                    database. List the name of database and collection.
+                    Default: sysmon:mysql_rep_lag
+                -m file => File is the Mongo configuration file for inserting
+                    results into a Mongo database.  This is loaded as a python
+                    module, do not include the .py extension with the name.
             -t to_email_addresses => Enables emailing capability for an option
                 if the option allows it.  Sends output to one or more email
                 addresses.
@@ -79,10 +81,12 @@
             -f => Flatten the JSON data structure to file and standard out.
             -o path/file => Directory path and file name for output.
             -a => Append output to output file.
-            -b database:collection => Name of database and collection.
-                Default: sysmon:mysql_rep_lag
-            -m file => Insert results into a Mongo database.  File is the Mongo
-                config file.
+            -i [database:collection] => Insert results of command into Mongo
+                    database. List the name of database and collection.
+                    Default: sysmon:mysql_rep_lag
+                -m file => File is the Mongo configuration file for inserting
+                    results into a Mongo database.  This is loaded as a python
+                    module, do not include the .py extension with the name.
             -t to_email_addresses => Enables emailing capability for an option
                 if the option allows it.  Sends output to one or more email
                 addresses.
@@ -766,7 +770,7 @@ def call_run_chk(args_array, func_dict, master, slaves):
     slaves = list(slaves)
     json_fmt = args_array.get("-j", False)
     outfile = args_array.get("-o", None)
-    db_tbl = args_array.get("-b", None)
+    db_tbl = args_array.get("-i", None)
     sup_std = args_array.get("-z", False)
     mongo_cfg = None
     mail = None
@@ -894,14 +898,14 @@ def main():
     func_dict = {"-A": ["-C", "-S", "-E", "-T", "-O"], "-B": rpt_mst_log,
                  "-D": rpt_slv_log, "-C": chk_mst_log, "-S": chk_slv_thr,
                  "-E": chk_slv_err, "-T": chk_slv_time, "-O": chk_slv_other}
-    opt_con_req_list = {"-b": ["-m"], "-u": ["-t"], "-A": ["-s"], "-B": ["-c"],
+    opt_con_req_list = {"-i": ["-m"], "-u": ["-t"], "-A": ["-s"], "-B": ["-c"],
                         "-C": ["-c", "-s"], "-D": ["-s"], "-E": ["-s"],
                         "-O": ["-s"], "-T": ["-c", "-s"]}
-    opt_def_dict = {"-b": "sysmon:mysql_rep_lag"}
+    opt_def_dict = {"-i": "sysmon:mysql_rep_lag"}
     opt_multi_list = ["-u", "-t"]
     opt_or_dict_list = {"-c": ["-s"]}
     opt_req_list = ["-d"]
-    opt_val_list = ["-d", "-c", "-p", "-s", "-o", "-b", "-m", "-u", "-t", "-y"]
+    opt_val_list = ["-d", "-c", "-p", "-s", "-o", "-i", "-m", "-u", "-t", "-y"]
     slv_key = {"sid": "int", "port": "int", "cfg_file": "None",
                "ssl_client_ca": "None", "ssl_ca_path": "None",
                "ssl_client_key": "None", "ssl_client_cert": "None",
