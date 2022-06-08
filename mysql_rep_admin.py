@@ -748,7 +748,7 @@ def _chk_other(skip, tmp_tbl, retry, name, sql_ver):
         print("\tRetried Transaction Count:  {0}".format(retry))
 
 
-def call_run_chk(args_array, func_dict, master, slaves):
+def call_run_chk(args, func_dict, master, slaves):
 
     """Function:  call_run_chk
 
@@ -758,40 +758,33 @@ def call_run_chk(args_array, func_dict, master, slaves):
         determine what instances to be used.
 
     Arguments:
-        (input) args_array -> Array of command line options and values.
-        (input) func_dict -> Dictionary list of functions and options.
-        (input) master -> Master instance.
-        (input) slaves -> Slave instances.
+        (input) args -> ArgParser class instance
+        (input) func_dict -> Dictionary list of functions and options
+        (input) master -> Master instance
+        (input) slaves -> Slave instances
 
     """
 
-    args_array = dict(args_array)
     func_dict = dict(func_dict)
     slaves = list(slaves)
-    json_fmt = args_array.get("-j", False)
-    outfile = args_array.get("-o", None)
-    db_tbl = args_array.get("-i", None)
-    sup_std = args_array.get("-z", False)
-    mongo_cfg = None
     mail = None
-    mode = "w"
-    indent = 4
+    mongo_cfg = None
+    json_fmt = args.arg_exist("-j")
+    outfile = args.get_val("-o", def_val=None)
+    db_tbl = args.get_val("-i", def_val=None)
+    sup_std = args.arg_exist("-z")
+    mode = "a" if args.arg_exist("-a") else "w"
+    indent = 4 if args.arg_exist("-f") else None
 
-    if args_array.get("-a", False):
-        mode = "a"
+    if args.arg_exist("-m"):
+        mongo_cfg = gen_libs.load_module(
+            args.get_val("-m"), args.get_val("-d"))
 
-    if args_array.get("-f", False):
-        indent = None
+    if args.arg_exist("-t"):
+        mail = gen_class.setup_mail(
+            args.get_val("-t"), subj=args.get_val("-u", def_val=None))
 
-    if args_array.get("-m", None):
-        mongo_cfg = gen_libs.load_module(args_array["-m"], args_array["-d"])
-
-    if args_array.get("-t", None):
-        mail = gen_class.setup_mail(args_array.get("-t"),
-                                    subj=args_array.get("-u", None))
-
-    if "-A" in args_array:
-
+    if args.arg_exist("-A"):
         for opt in func_dict["-A"]:
             func_dict[opt](
                 master, slaves, json_fmt=json_fmt, ofile=outfile,
@@ -800,7 +793,7 @@ def call_run_chk(args_array, func_dict, master, slaves):
 
         # The option is in func_dict but not under the ALL option and is not
         #   the ALL option itself.
-        for item in (opt for opt in args_array if opt in func_dict and
+        for item in (opt for opt in args.get_args() if opt in func_dict and
                      opt not in func_dict["-A"] and opt != "-A"):
 
             func_dict[item](
@@ -810,8 +803,8 @@ def call_run_chk(args_array, func_dict, master, slaves):
 
     else:
 
-        # Intersect args_array & func_dict to find which functions to call.
-        for opt in set(args_array.keys()) & set(func_dict.keys()):
+        # Intersect args & func_dict to find which functions to call.
+        for opt in set(args.get_args_keys()) & set(func_dict.keys()):
             func_dict[opt](
                 master, slaves, json_fmt=json_fmt, ofile=outfile,
                 db_tbl=db_tbl, class_cfg=mongo_cfg, mail=mail, sup_std=sup_std,
