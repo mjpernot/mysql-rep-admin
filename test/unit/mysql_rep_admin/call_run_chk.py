@@ -97,6 +97,82 @@ def rpt_slv_log(master, slaves, **kwargs):
     return status
 
 
+class ArgParser(object):
+
+    """Class:  ArgParser
+
+    Description:  Class stub holder for gen_class.ArgParser class.
+
+    Methods:
+        __init__
+        arg_exist
+        get_args
+        get_args_keys
+        get_val
+
+    """
+
+    def __init__(self):
+
+        """Method:  __init__
+
+        Description:  Class initialization.
+
+        Arguments:
+
+        """
+
+        self.args_array = {"-A": True, "-D": True, "-m": "Mongo", "-d": "cfg"}
+
+    def arg_exist(self, arg):
+
+        """Method:  arg_exist
+
+        Description:  Method stub holder for gen_class.ArgParser.arg_exist.
+
+        Arguments:
+
+        """
+
+        return True if arg in self.args_array else False
+
+    def get_args(self):
+
+        """Method:  get_args
+
+        Description:  Method stub holder for gen_class.ArgParser.get_args.
+
+        Arguments:
+
+        """
+
+        return self.args_array
+
+    def get_args_keys(self):
+
+        """Method:  get_args_keys
+
+        Description:  Method stub holder for gen_class.ArgParser.get_args_keys.
+
+        Arguments:
+
+        """
+
+        return self.args_array.keys()
+
+    def get_val(self, skey, def_val=None):
+
+        """Method:  get_val
+
+        Description:  Method stub holder for gen_class.ArgParser.get_val.
+
+        Arguments:
+
+        """
+
+        return self.args_array.get(skey, def_val)
+
+
 class MasterRep(object):
 
     """Class:  MasterRep
@@ -172,15 +248,9 @@ class UnitTest(unittest.TestCase):
 
         self.master = MasterRep()
         self.slave = SlaveRep()
+        self.args = ArgParser()
         self.func_dict = {"-A": ["-C", "-S"], "-C": chk_mst_log,
                           "-S": chk_slv_thr, "-D": rpt_slv_log}
-        self.args_array = {"-A": True, "-D": True, "-m": "Mongo", "-d": "cfg"}
-        self.args_array2 = {"-D": True, "-m": "Mongo", "-d": "cfg",
-                            "-t": "ToMail"}
-        self.args_array3 = {"-A": True, "-D": True, "-m": "Mongo",
-                            "-d": "cfg", "-a": True}
-        self.args_array4 = {"-A": True, "-D": True, "-m": "Mongo",
-                            "-d": "cfg", "-f": True}
 
     @mock.patch("mysql_rep_admin.gen_libs.load_module")
     def test_flatten_json(self, mock_cfg):
@@ -193,10 +263,12 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        self.args.args_array["-f"] = True
+
         mock_cfg.return_value = "MongoCfg"
 
         self.assertFalse(mysql_rep_admin.call_run_chk(
-            self.args_array4, self.func_dict, self.master, [self.slave]))
+            self.args, self.func_dict, self.master, [self.slave]))
 
     @mock.patch("mysql_rep_admin.gen_libs.load_module")
     def test_file_append(self, mock_cfg):
@@ -209,10 +281,12 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        self.args.args_array["-a"] = True
+
         mock_cfg.return_value = "MongoCfg"
 
         self.assertFalse(mysql_rep_admin.call_run_chk(
-            self.args_array3, self.func_dict, self.master, [self.slave]))
+            self.args, self.func_dict, self.master, [self.slave]))
 
     @mock.patch("mysql_rep_admin.gen_class.setup_mail")
     @mock.patch("mysql_rep_admin.gen_libs.load_module")
@@ -226,11 +300,15 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        del self.args.args_array["-A"]
+
+        self.args.args_array["-t"] = "ToMail"
+
         mock_cfg.return_value = "MongoCfg"
         mock_mail.return_value = "MailInstance"
 
         self.assertFalse(mysql_rep_admin.call_run_chk(
-            self.args_array2, self.func_dict, self.master, [self.slave]))
+            self.args, self.func_dict, self.master, [self.slave]))
 
     @mock.patch("mysql_rep_admin.gen_libs.load_module")
     def test_argsarray_all(self, mock_cfg):
@@ -246,7 +324,7 @@ class UnitTest(unittest.TestCase):
         mock_cfg.return_value = "MongoCfg"
 
         self.assertFalse(mysql_rep_admin.call_run_chk(
-            self.args_array, self.func_dict, self.master, [self.slave]))
+            self.args, self.func_dict, self.master, [self.slave]))
 
 
 if __name__ == "__main__":

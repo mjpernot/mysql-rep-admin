@@ -280,11 +280,6 @@ class UnitTest(unittest.TestCase):
         self.slv_array = [self.slave1, self.slave2]
         self.func_dict = {"-D": rpt_slv_log}
         self.args = ArgParser()
-#        self.args = {"-D": True, "-m": "Mongo", "-d": "cfg",
-#                           "-c": "configfile", "-s": "slavefile"}
-#        self.args2 = {"-D": True, "-m": "Mongo", "-d": "cfg",
-#                            "-c": "configfile"}
-#        self.args3 = {"-D": True, "-m": "Mongo", "-d": "cfg"}
         self.cfg_array = [{"name": "HOST_NAME", "japd": "japd",
                            "cfg_file": "None", "host": "SERVER",
                            "user": "root", "serv_os": "Linux", "sid": "11",
