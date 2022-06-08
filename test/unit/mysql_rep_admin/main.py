@@ -238,9 +238,6 @@ class UnitTest(unittest.TestCase):
 
         """
 
-#        self.args_array = {"-c": "CfgFile", "-d": "CfgDir", "-C": True,
-#                           "-s": "slave.txt"}
-#        self.args_array2 = {"-c": "CfgFile", "-d": "CfgDir", "-y": "Flavor"}
         self.proglock = ProgramLock(["cmdline"], "FlavorID")
         self.args = ArgParser()
 

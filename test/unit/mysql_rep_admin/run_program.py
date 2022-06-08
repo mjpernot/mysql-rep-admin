@@ -59,6 +59,57 @@ def rpt_slv_log(master, slaves, form, ofile, db_tbl, class_cfg):
     return status
 
 
+class ArgParser(object):
+
+    """Class:  ArgParser
+
+    Description:  Class stub holder for gen_class.ArgParser class.
+
+    Methods:
+        __init__
+        arg_exist
+        get_val
+
+    """
+
+    def __init__(self):
+
+        """Method:  __init__
+
+        Description:  Class initialization.
+
+        Arguments:
+
+        """
+
+        self.args_array = {
+            "-c": "mysql_cfg", "-d": "config", "-s": "slaves.txt"}
+
+    def arg_exist(self, arg):
+
+        """Method:  arg_exist
+
+        Description:  Method stub holder for gen_class.ArgParser.arg_exist.
+
+        Arguments:
+
+        """
+
+        return True if arg in self.args_array else False
+
+    def get_val(self, skey, def_val=None):
+
+        """Method:  get_val
+
+        Description:  Method stub holder for gen_class.ArgParser.get_val.
+
+        Arguments:
+
+        """
+
+        return self.args_array.get(skey, def_val)
+
+
 class SlaveRep(object):
 
     """Class:  SlaveRep
@@ -228,11 +279,12 @@ class UnitTest(unittest.TestCase):
         self.slave2 = SlaveRep()
         self.slv_array = [self.slave1, self.slave2]
         self.func_dict = {"-D": rpt_slv_log}
-        self.args_array = {"-D": True, "-m": "Mongo", "-d": "cfg",
-                           "-c": "configfile", "-s": "slavefile"}
-        self.args_array2 = {"-D": True, "-m": "Mongo", "-d": "cfg",
-                            "-c": "configfile"}
-        self.args_array3 = {"-D": True, "-m": "Mongo", "-d": "cfg"}
+        self.args = ArgParser()
+#        self.args = {"-D": True, "-m": "Mongo", "-d": "cfg",
+#                           "-c": "configfile", "-s": "slavefile"}
+#        self.args2 = {"-D": True, "-m": "Mongo", "-d": "cfg",
+#                            "-c": "configfile"}
+#        self.args3 = {"-D": True, "-m": "Mongo", "-d": "cfg"}
         self.cfg_array = [{"name": "HOST_NAME", "japd": "japd",
                            "cfg_file": "None", "host": "SERVER",
                            "user": "root", "serv_os": "Linux", "sid": "11",
@@ -269,7 +321,7 @@ class UnitTest(unittest.TestCase):
 
         with gen_libs.no_std_out():
             self.assertFalse(
-                mysql_rep_admin.run_program(self.args_array, self.func_dict))
+                mysql_rep_admin.run_program(self.args, self.func_dict))
 
     @mock.patch("mysql_rep_admin.mysql_libs.disconnect",
                 mock.Mock(return_value=True))
@@ -297,7 +349,7 @@ class UnitTest(unittest.TestCase):
         mock_slv.return_value = self.slv_array
 
         self.assertFalse(
-            mysql_rep_admin.run_program(self.args_array, self.func_dict))
+            mysql_rep_admin.run_program(self.args, self.func_dict))
 
     @mock.patch("mysql_rep_admin.mysql_libs.disconnect",
                 mock.Mock(return_value=True))
@@ -326,7 +378,7 @@ class UnitTest(unittest.TestCase):
         mock_slv.return_value = self.slv_array
 
         self.assertFalse(
-            mysql_rep_admin.run_program(self.args_array, self.func_dict))
+            mysql_rep_admin.run_program(self.args, self.func_dict))
 
     @mock.patch("mysql_rep_admin.mysql_libs.disconnect",
                 mock.Mock(return_value=True))
@@ -356,7 +408,7 @@ class UnitTest(unittest.TestCase):
         mock_slv.return_value = self.slv_array
 
         self.assertFalse(
-            mysql_rep_admin.run_program(self.args_array, self.func_dict))
+            mysql_rep_admin.run_program(self.args, self.func_dict))
 
     @mock.patch("mysql_rep_admin.mysql_libs.disconnect",
                 mock.Mock(return_value=True))
@@ -385,11 +437,15 @@ class UnitTest(unittest.TestCase):
         mock_slv.return_value = self.slv_array
 
         self.assertFalse(
-            mysql_rep_admin.run_program(self.args_array, self.func_dict))
+            mysql_rep_admin.run_program(self.args, self.func_dict))
 
-    @mock.patch("mysql_rep_admin.mysql_libs.disconnect")
-    @mock.patch("mysql_rep_admin.call_run_chk")
-    def test_no_master(self, mock_call, mock_dis):
+    @mock.patch("mysql_rep_admin.mysql_libs.disconnect",
+                mock.Mock(return_value=True))
+    @mock.patch("mysql_rep_admin.call_run_chk", mock.Mock(return_value=True))
+    @mock.patch("mysql_rep_admin.gen_libs.transpose_dict")
+    @mock.patch("mysql_rep_admin.mysql_libs.create_slv_array")
+    @mock.patch("mysql_rep_admin.gen_libs.create_cfg_array")
+    def test_no_master(self, mock_array, mock_slv, mock_transpose):
 
         """Function:  test_no_master
 
@@ -399,11 +455,14 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_call.return_value = True
-        mock_dis.return_value = True
+        del self.args.args_array["-c"]
+
+        mock_transpose.return_value = self.cfg_array2
+        mock_array.return_value = self.cfg_array
+        mock_slv.return_value = self.slv_array
 
         self.assertFalse(
-            mysql_rep_admin.run_program(self.args_array3, self.func_dict))
+            mysql_rep_admin.run_program(self.args, self.func_dict))
 
     @mock.patch("mysql_rep_admin.mysql_class.MasterRep")
     @mock.patch("mysql_rep_admin.mysql_libs.disconnect")
@@ -419,13 +478,15 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        del self.args.args_array["-s"]
+
         mock_cfg.return_value = self.mstcfg
         mock_call.return_value = True
         mock_dis.return_value = True
         mock_rep.return_value = self.master
 
         self.assertFalse(
-            mysql_rep_admin.run_program(self.args_array2, self.func_dict))
+            mysql_rep_admin.run_program(self.args, self.func_dict))
 
     @mock.patch("mysql_rep_admin.mysql_libs.disconnect",
                 mock.Mock(return_value=True))
@@ -453,7 +514,7 @@ class UnitTest(unittest.TestCase):
         mock_slv.return_value = self.slv_array
 
         self.assertFalse(
-            mysql_rep_admin.run_program(self.args_array, self.func_dict))
+            mysql_rep_admin.run_program(self.args, self.func_dict))
 
 
 if __name__ == "__main__":
