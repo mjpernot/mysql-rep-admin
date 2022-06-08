@@ -876,7 +876,8 @@ def main():
         line arguments and values.
 
     Variables:
-        dir_chk_list -> contains options which will be directories.
+        dir_perms_chk -> contains options which will be directories and the
+            octal permission settings.
         file_chk_list -> contains the options which will have files included.
         file_crt_list -> contains options which require files to be created.
         func_dict -> dictionary list for the function calls or other options.
@@ -892,7 +893,7 @@ def main():
     """
 
     cmdline = gen_libs.get_inst(sys)
-    dir_chk_list = ["-d", "-p"]
+    dir_perms_chk = {"-d": 5, "-p": 5}
     file_chk_list = ["-o"]
     file_crt_list = ["-o"]
     func_dict = {"-A": ["-C", "-S", "-E", "-T", "-O"], "-B": rpt_mst_log,
@@ -913,26 +914,26 @@ def main():
                "ssl_verify_id": "bool", "ssl_verify_cert": "bool"}
 
     # Process argument list from command line.
-    args_array = arg_parser.arg_parse2(cmdline.argv, opt_val_list,
-                                       opt_def_dict, multi_val=opt_multi_list)
+    args = gen_class.ArgParser(
+        cmdline.argv, opt_val=opt_val_list, multi_val=opt_multi_list,
+        opt_def=opt_def_dict, do_parse=True)
 
-    if not gen_libs.help_func(args_array, __version__, help_message) \
-       and arg_parser.arg_req_or_lst(args_array, opt_or_dict_list) \
-       and not arg_parser.arg_require(args_array, opt_req_list) \
-       and arg_parser.arg_cond_req(args_array, opt_con_req_list) \
-       and not arg_parser.arg_dir_chk_crt(args_array, dir_chk_list) \
-       and not arg_parser.arg_file_chk(args_array, file_chk_list,
-                                       file_crt_list):
+    if not gen_libs.help_func(args.get_args(), __version__, help_message) \
+       and args.arg_req_or_lst(opt_or=opt_or_dict_list) \
+       and args.arg_require(opt_req=opt_req_list) \
+       and args.arg_cond_req(opt_con_req=opt_con_req_list) \
+       and args.arg_dir_chk(dir_perms_chk=dir_perms_chk)\
+       and args.arg_file_chk(file_chk=file_chk_list, file_crt=file_crt_list):
 
         try:
-            proglock = gen_class.ProgramLock(cmdline.argv,
-                                             args_array.get("-y", ""))
-            run_program(args_array, func_dict, slv_key=slv_key)
+            proglock = gen_class.ProgramLock(
+                cmdline.argv, args.get_val("-y", def_val=""))
+            run_program(args, func_dict, slv_key=slv_key)
             del proglock
 
         except gen_class.SingleInstanceException:
             print("WARNING:  lock in place for mysql_rep_admin with id of: %s"
-                  % (args_array.get("-y", "")))
+                  % (args.get_val("-y", def_val="")))
 
 
 if __name__ == "__main__":

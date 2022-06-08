@@ -5,12 +5,14 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 
 ## [3.3.0] - 2022-06-02
+- Replaced args_parser module with the gen_class.ArgParser class.
 - Upgrade mysql-connector to v8.0.22.
 - Upgrade mysql-libs to v5.3.1.
 - Upgrade mongo-libs to v4.2.1.
 - Upgrade python-lib to v2.9.2.
 
 ### Changed
+- main: Replaced the use of arg_parser (args_array) with gen_class.ArgParser class (args).
 - main, call_run_chk: Changed "-b" option to "-i" option to be inline with the other programs.
 - config/mysql_cfg.py.TEMPLATE: Added TLS version entry.
 - config/mongo.py.TEMPLATE: Removed old entries.
