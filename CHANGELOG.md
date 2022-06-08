@@ -12,7 +12,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - Upgrade python-lib to v2.9.2.
 
 ### Changed
-- main: Replaced the use of arg_parser (args_array) with gen_class.ArgParser class (args).
+- main, run_program: Replaced the use of arg_parser (args_array) with gen_class.ArgParser class (args).
 - main, call_run_chk: Changed "-b" option to "-i" option to be inline with the other programs.
 - config/mysql_cfg.py.TEMPLATE: Added TLS version entry.
 - config/mongo.py.TEMPLATE: Removed old entries.

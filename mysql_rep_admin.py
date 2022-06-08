@@ -31,7 +31,7 @@
             [-v | -h]
 
     Arguments:
-        -d dir path => Directory path to the config files (-c). Required arg.
+        -d dir path => Directory path to the config files. Required arg.
 
         -C => Compare master binlog position to the slaves' and return any
                 differences detected if not the same positions.
@@ -818,26 +818,25 @@ def call_run_chk(args_array, func_dict, master, slaves):
                 mode=mode, indent=indent)
 
 
-def run_program(args_array, func_dict, **kwargs):
+def run_program(args, func_dict, **kwargs):
 
     """Function:  run_program
 
     Description:  Creates class instance(s) and controls flow of the program.
 
     Arguments:
-        (input) args_array -> Array of command line options and values.
-        (input) func_dict -> Dictionary list of functions and options.
+        (input) args -> ArgParser class instance
+        (input) func_dict -> Dictionary list of functions and options
         (input) kwargs:
-            slv_key -> Dictionary of keys and data types.
+            slv_key -> Dictionary of keys and data types
 
     """
 
-    args_array = dict(args_array)
     func_dict = dict(func_dict)
     master = None
 
-    if "-c" in args_array:
-        mst_cfg = gen_libs.load_module(args_array["-c"], args_array["-d"])
+    if args.arg_exist("-c"):
+        mst_cfg = gen_libs.load_module(args.get_val("-c"), args.get_val("-d"))
 
         master = mysql_class.MasterRep(
             mst_cfg.name, mst_cfg.sid, mst_cfg.user, mst_cfg.japd,
@@ -852,14 +851,14 @@ def run_program(args_array, func_dict, **kwargs):
     else:
         slaves = []
 
-        if "-s" in args_array:
-            slv_cfg = gen_libs.create_cfg_array(args_array["-s"],
-                                                cfg_path=args_array["-d"])
-            slv_cfg = gen_libs.transpose_dict(slv_cfg, kwargs.get("slv_key", {}))
+        if args.arg_exist("-s"):
+            slv_cfg = gen_libs.create_cfg_array(
+                args.get_val("-s"), cfg_path=args.get_val("-d"))
+            slv_cfg = gen_libs.transpose_dict(
+                slv_cfg, kwargs.get("slv_key", {}))
             slaves = mysql_libs.create_slv_array(slv_cfg)
 
-        call_run_chk(args_array, func_dict, master, slaves)
-
+        call_run_chk(args, func_dict, master, slaves)
         conn_list = [slv for slv in slaves if slv.conn]
 
         if master and master.conn:
