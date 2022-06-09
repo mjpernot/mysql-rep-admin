@@ -17,6 +17,7 @@ coverage run -a --source=mysql_rep_admin test/unit/mysql_rep_admin/chk_slv_err.p
 coverage run -a --source=mysql_rep_admin test/unit/mysql_rep_admin/chk_slv_other.py
 coverage run -a --source=mysql_rep_admin test/unit/mysql_rep_admin/chk_slv_thr.py
 coverage run -a --source=mysql_rep_admin test/unit/mysql_rep_admin/chk_slv_time.py
+coverage run -a --source=mysql_rep_admin test/unit/mysql_rep_admin/dict_out.py
 coverage run -a --source=mysql_rep_admin test/unit/mysql_rep_admin/help_message.py
 coverage run -a --source=mysql_rep_admin test/unit/mysql_rep_admin/main.py
 coverage run -a --source=mysql_rep_admin test/unit/mysql_rep_admin/process_json.py
