@@ -748,6 +748,95 @@ def _chk_other(skip, tmp_tbl, retry, name, sql_ver):
         print("\tRetried Transaction Count:  {0}".format(retry))
 
 
+def dict_out(data, **kwargs):
+
+    """Function:  dict_out
+
+    Description:  Print dictionary to a file, standard out, and/or an email
+        instance either in expanded or flatten JSON format.
+
+    Arguments:
+        (input) data -> Dictionary document
+        (input) kwargs:
+            expand -> True|False - Expand JSON format
+            mail -> Mail instance
+            ofile -> Name of output file name
+            mode -> w|a => Write or append mode for file
+            no_std -> True|False - Do not print to standard out
+        (output) err_flag -> True|False - If error has occurred
+        (output) err_msg -> Error message
+
+    """
+
+    err_flag = False
+    err_msg = None
+    mail = kwargs.get("mail", None)
+    indent = 4 if kwargs.get("expand", False) else None
+    mode = kwargs.get("mode", "w")
+    ofile = kwargs.get("ofile", None)
+    no_std = kwargs.get("mail", False)
+
+    if isinstance(data, dict):
+        if ofile:
+            gen_libs.print_data(
+                json.dumps(data, indent=indent), ofile=ofile, mode=mode)
+
+        if not no_std:
+            gen_libs.print_data(json.dumps(data, indent=indent))
+
+        if mail:
+            mail.add_2_msg(json.dumps(data, indent=indent))
+
+    else:
+        err_flag = True
+        err_msg = "Error: Is not a dictionary: %s" % (data)
+
+    return err_flag, err_msg
+
+
+def data_out(data, args, **kwargs):
+
+    """Function:  data_out
+
+    Description:  Outputs the data in a variety of formats and media.
+
+    Arguments:
+        (input) data -> Data output results
+        (input) args -> ArgParser class instance
+        (input) kwargs:
+            def_subj -> Default subject line for email
+
+    """
+
+    data = dict(data)
+    def_subj = kwargs.get("def_subj", "NoSubjectLine")
+    mail = None
+
+    if args.get_val("-t", def_val=False):
+        mail = gen_class.setup_mail(
+            args.get_val("-t"), subj=args.get_val("-s", def_val=def_subj))
+
+    status = dict_out(
+        data, ofile=args.get_val("-o", def_val=None),
+        mode="a" if args.get_val("-a", def_val=False) else "w",
+        expand=args.arg_val("-e", def_val=False),
+        no_std=args.get_val("-z", def_val=False), mail=mail)
+
+    if status[0]:
+        print("data_out:  Error detected: %s" % (status[1]))
+
+    elif args.arg_exist("-i") and args.arg_exist("-m"):
+        cfg = gen_libs.load_module(args.get_val("-m"), args.get_val("-d"))
+        dbs, tbl = args.get_val("-i").split(":")
+        status2 = mongo_libs.ins_doc(mongo_cfg, dbn, tbl, outdata)
+
+        if not status2[0]:
+            print("data_out:  Error Detected:  %s" % (status2[1]))
+
+    if mail and not status[0]:
+        mail.send_mail()
+
+
 def call_run_chk(args, func_dict, master, slaves):
 
     """Function:  call_run_chk

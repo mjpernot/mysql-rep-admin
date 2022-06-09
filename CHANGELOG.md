@@ -13,6 +13,10 @@ Breaking change
 - Upgrade mongo-libs to v4.2.1.
 - Upgrade python-lib to v2.9.2.
 
+### Added
+- data_out: Outputs the data in a variety of formats and media.
+- dict_out: Print dictionary to a file, standard out, and/or an email instance either in expanded or flatten JSON format.
+
 ### Changed
 - main, run_program, call_run_chk: Replaced the use of arg_parser (args_array) with gen_class.ArgParser class (args).
 - main, call_run_chk: Changed "-b" option to "-i" option to be inline with the other programs.
