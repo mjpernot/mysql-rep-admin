@@ -4,7 +4,9 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
-## [3.3.0] - 2022-06-02
+## [4.0.0] - 2022-06-02
+Breaking change
+
 - Replaced args_parser module with the gen_class.ArgParser class.
 - Upgrade mysql-connector to v8.0.22.
 - Upgrade mysql-libs to v5.3.1.
