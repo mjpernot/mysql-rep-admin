@@ -54,6 +54,8 @@
             -s [path/]slave.txt => Slave config file.
             -j => Return output in JSON format.
             -f => Flatten the JSON data structure to file and standard out.
+            # -e => Expand the JSON data structure.
+                # NOTE: This is replacing -f option.
             -o path/file => Directory path and file name for output.
             -a => Append output to output file.
             -i [database:collection] => Insert results of command into Mongo
@@ -79,6 +81,8 @@
             -s [path/]slave.txt => Slave config file.
             -j => Return output in JSON format.
             -f => Flatten the JSON data structure to file and standard out.
+            # -e => Expand the JSON data structure.
+                # NOTE: This is replacing -f option.
             -o path/file => Directory path and file name for output.
             -a => Append output to output file.
             -i [database:collection] => Insert results of command into Mongo
@@ -819,19 +823,19 @@ def data_out(data, args, **kwargs):
     status = dict_out(
         data, ofile=args.get_val("-o", def_val=None),
         mode="a" if args.get_val("-a", def_val=False) else "w",
-        expand=args.arg_val("-e", def_val=False),
+        expand=args.get_val("-e", def_val=False),
         no_std=args.get_val("-z", def_val=False), mail=mail)
 
-    if status[0]:
-        print("data_out:  Error detected: %s" % (status[1]))
+    if not status[0]:
+        print("data_out 1:  Error detected: %s" % (status[1]))
 
     elif args.arg_exist("-i") and args.arg_exist("-m"):
         cfg = gen_libs.load_module(args.get_val("-m"), args.get_val("-d"))
         dbs, tbl = args.get_val("-i").split(":")
-        status2 = mongo_libs.ins_doc(mongo_cfg, dbn, tbl, outdata)
+        status2 = mongo_libs.ins_doc(cfg, dbs, tbl, data)
 
         if not status2[0]:
-            print("data_out:  Error Detected:  %s" % (status2[1]))
+            print("data_out 2:  Error Detected:  %s" % (status2[1]))
 
     if mail and not status[0]:
         mail.send_mail()
