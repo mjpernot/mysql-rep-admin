@@ -848,7 +848,8 @@ def call_run_chk(args, func_dict, master, slaves):
     Description:  Calls the specified option function calls based on what
         instances are available.  Both the master and slaves
         instances are passed to the functions, the functions will
-        determine what instances to be used.
+        determine what instances to be used.  The data results will be
+        consolidated and then processed.
 
     Arguments:
         (input) args -> ArgParser class instance
@@ -868,6 +869,11 @@ def call_run_chk(args, func_dict, master, slaves):
     sup_std = args.arg_exist("-z")
     mode = "a" if args.arg_exist("-a") else "w"
     indent = 4 if args.arg_exist("-f") else None
+    data = {"Application": "MySQL Replication",
+            "Master": master.name,
+            "AsOf": datetime.datetime.strftime(datetime.datetime.now(),
+                                               "%Y-%m-%d %H:%M:%S"),
+            "Checks": []}
 
     if args.arg_exist("-m"):
         mongo_cfg = gen_libs.load_module(
@@ -879,29 +885,34 @@ def call_run_chk(args, func_dict, master, slaves):
 
     if args.arg_exist("-A"):
         for opt in func_dict["-A"]:
-            func_dict[opt](
+            tdata = func_dict[opt](
                 master, slaves, json_fmt=json_fmt, ofile=outfile,
                 db_tbl=db_tbl, class_cfg=mongo_cfg, mail=mail, sup_std=sup_std,
                 mode=mode, indent=indent)
+            data["Checks"].append(tdata)
 
         # The option is in func_dict but not under the ALL option and is not
         #   the ALL option itself.
         for item in (opt for opt in args.get_args() if opt in func_dict and
                      opt not in func_dict["-A"] and opt != "-A"):
 
-            func_dict[item](
+            tdata = func_dict[item](
                 master, slaves, json_fmt=json_fmt, ofile=outfile,
                 db_tbl=db_tbl, class_cfg=mongo_cfg, mail=mail,
                 sup_std=sup_std, mode=mode, indent=indent)
+            data["Checks"].append(tdata)
 
     else:
 
         # Intersect args & func_dict to find which functions to call.
         for opt in set(args.get_args_keys()) & set(func_dict.keys()):
-            func_dict[opt](
+            tdata = func_dict[opt](
                 master, slaves, json_fmt=json_fmt, ofile=outfile,
                 db_tbl=db_tbl, class_cfg=mongo_cfg, mail=mail, sup_std=sup_std,
                 mode=mode, indent=indent)
+            data["Checks"].append(tdata)
+
+    # STOPPED HERE
 
 
 def run_program(args, func_dict, **kwargs):
