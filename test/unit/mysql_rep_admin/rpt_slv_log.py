@@ -57,9 +57,9 @@ class SlaveRep(object):
 
         """
 
-        self.name = "Server_Name"
-        self.mst_file = "Master_Log_Name"
-        self.relay_file = "Slave_Relay_Name"
+        self.name = "Slave1"
+        self.mst_file = "MasterLog"
+        self.relay_file = "MasterRelay"
         self.read_pos = 3456
         self.exec_pos = 4567
         self.gtid_mode = gtid_mode
@@ -114,9 +114,16 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.slave = SlaveRep()
-
-# STOPPED HERE
+        self.slave1 = SlaveRep()
+        self.slave2 = SlaveRep()
+        self.slave2.name = "Slave2"
+        self.slaves = [self.slave1]
+        self.slaves2 = [self.slave1, self.slave2]
+        self.results = {
+            "SlaveLog": [{
+                "ExecPosition": 4567, "MasterFile": "MasterLog",
+                "MasterPosition": 3456, "RelayFile": "MasterRelay",
+                "RetrievedGTID": 12345678, "Slave": "Slave1"}]}
 
     def test_no_slaves(self):
 
@@ -131,19 +138,19 @@ class UnitTest(unittest.TestCase):
         with gen_libs.no_std_out():
             self.assertFalse(mysql_rep_admin.rpt_slv_log(self.master, []))
 
-    def test_rpt_slv_log(self):
+# STOPPED HERE - test_two_slaves, test_gtid
+    def test_one_slave(self):
 
-        """Function:  test_rpt_slv_log
+        """Function:  test_one_slave
 
-        Description:  Test rpt_slv_log method.
+        Description:  Test with one slave.
 
         Arguments:
 
         """
 
-        with gen_libs.no_std_out():
-            self.assertFalse(mysql_rep_admin.rpt_slv_log(self.master,
-                                                         [self.slave]))
+        self.assertEqual(
+            mysql_rep_admin.rpt_slv_log(slaves=self.slaves), self.results)
 
 
 if __name__ == "__main__":
