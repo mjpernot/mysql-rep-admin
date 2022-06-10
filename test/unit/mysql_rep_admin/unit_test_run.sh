@@ -15,8 +15,9 @@ test/unit/mysql_rep_admin/chk_slv_err.py
 test/unit/mysql_rep_admin/chk_slv_other.py
 test/unit/mysql_rep_admin/chk_slv_thr.py
 test/unit/mysql_rep_admin/chk_slv_time.py
-test/unit/mysql_rep_admin/help_message.py
+test/unit/mysql_rep_admin/data_out.py
 test/unit/mysql_rep_admin/dict_out.py
+test/unit/mysql_rep_admin/help_message.py
 test/unit/mysql_rep_admin/main.py
 test/unit/mysql_rep_admin/process_json.py
 test/unit/mysql_rep_admin/process_time_lag.py
