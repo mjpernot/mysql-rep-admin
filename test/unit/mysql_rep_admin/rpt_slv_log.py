@@ -34,30 +34,6 @@ import version
 __version__ = version.__version__
 
 
-class MasterRep(object):
-
-    """Class:  MasterRep
-
-    Description:  Class stub holder for mysql_class.MasterRep class.
-
-    Methods:
-        __init__
-
-    """
-
-    def __init__(self, gtid_mode="ON"):
-
-        """Method:  __init__
-
-        Description:  Class initialization.
-
-        Arguments:
-
-        """
-
-        self.gtid_mode = gtid_mode
-
-
 class SlaveRep(object):
 
     """Class:  SlaveRep
@@ -139,7 +115,8 @@ class UnitTest(unittest.TestCase):
         """
 
         self.slave = SlaveRep()
-        self.master = MasterRep()
+
+# STOPPED HERE
 
     def test_no_slaves(self):
 
