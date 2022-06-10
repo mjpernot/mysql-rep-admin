@@ -88,30 +88,6 @@ class MasterRep(object):
         return self.name
 
 
-class SlaveRep(object):
-
-    """Class:  SlaveRep
-
-    Description:  Class stub holder for mysql_class.SlaveRep class.
-
-    Methods:
-        __init__
-
-    """
-
-    def __init__(self, gtid_mode="ON"):
-
-        """Method:  __init__
-
-        Description:  Class initialization.
-
-        Arguments:
-
-        """
-
-        self.gtid_mode = gtid_mode
-
-
 class UnitTest(unittest.TestCase):
 
     """Class:  UnitTest
@@ -121,7 +97,8 @@ class UnitTest(unittest.TestCase):
     Methods:
         setUp
         test_no_master
-        test_rpt_mst_log
+        test_gtid
+        test_default
 
     """
 
@@ -135,35 +112,59 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.slave = SlaveRep()
         self.master = MasterRep()
+        self.results = {
+            "MasterLog": {
+                "LogPosition": 2345, "Master": "Server_Name",
+                "MasterLog": "Master_Log_Name"}}
+        self.results2 = {
+            "MasterLog": {
+                "GTIDPosition": 12345678, "LogPosition": 2345,
+                "Master": "Server_Name", "MasterLog": "Master_Log_Name"}}
+        self.results3 = {"MasterLog": {}}
 
     def test_no_master(self):
 
         """Function:  test_no_master
 
-        Description:  Test no master present.
+        Description:  Test with no master present.
 
         Arguments:
 
         """
 
         with gen_libs.no_std_out():
-            self.assertFalse(mysql_rep_admin.rpt_mst_log(None, [self.slave]))
+            data=mysql_rep_admin.rpt_mst_log(master=None)
 
-    def test_rpt_mst_log(self):
+        self.assertEqual(data, self.results3)
 
-        """Function:  test_rpt_mst_log
+    def test_gtid(self):
 
-        Description:  Test rpt_msg_log method.
+        """Function:  test_gtid
+
+        Description:  Test with GTID setting.
 
         Arguments:
 
         """
 
-        with gen_libs.no_std_out():
-            self.assertFalse(mysql_rep_admin.rpt_mst_log(self.master,
-                                                         [self.slave]))
+        self.assertEqual(
+            mysql_rep_admin.rpt_mst_log(master=self.master), self.results2)
+
+    def test_default(self):
+
+        """Function:  test_default
+
+        Description:  Test with default settings.
+
+        Arguments:
+
+        """
+
+        self.master.gtid_mode = None
+
+        self.assertEqual(
+            mysql_rep_admin.rpt_mst_log(master=self.master), self.results)
 
 
 if __name__ == "__main__":
