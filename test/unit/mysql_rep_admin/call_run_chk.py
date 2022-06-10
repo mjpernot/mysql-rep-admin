@@ -41,8 +41,6 @@ def chk_mst_log(master, slaves, **kwargs):
     Description:  Function stub holder for mysql_rep_admin.chk_mst_log.
 
     Arguments:
-        master -> Stub holder
-        slaves -> Stub holder
 
     """
 
@@ -62,8 +60,6 @@ def chk_slv_thr(master, slaves, **kwargs):
     Description:  Function stub holder for mysql_rep_admin.chk_slv_thr.
 
     Arguments:
-        master -> Stub holder
-        slaves -> Stub holder
 
     """
 
@@ -83,8 +79,6 @@ def rpt_slv_log(master, slaves, **kwargs):
     Description:  Function stub holder for mysql_rep_admin.rpt_slv_log.
 
     Arguments:
-        master -> Stub holder
-        slaves -> Stub holder
 
     """
 
