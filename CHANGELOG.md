@@ -7,6 +7,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 ## [4.0.0] - 2022-06-02
 Breaking change
 
+- Changed output format from strings to dictionary format.
 - Replaced args_parser module with the gen_class.ArgParser class.
 - Upgrade mysql-connector to v8.0.22.
 - Upgrade mysql-libs to v5.3.1.
@@ -18,6 +19,7 @@ Breaking change
 - dict_out: Print dictionary to a file, standard out, and/or an email instance either in expanded or flatten JSON format.
 
 ### Changed
+- rpt_mst_log, rpt_slv_log: Converted output to dictionary and returned results to calling function.
 - main, run_program, call_run_chk: Replaced the use of arg_parser (args_array) with gen_class.ArgParser class (args).
 - main, call_run_chk: Changed "-b" option to "-i" option to be inline with the other programs.
 - config/mysql_cfg.py.TEMPLATE: Added TLS version entry.

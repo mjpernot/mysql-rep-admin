@@ -14,24 +14,65 @@
         database and multiple slave databases.
 
     Usage:
-        mysql_rep_admin.py -d path
-            {-C -c file -s [path/]slave.txt |
-             -S -s [path/]slave.txt |
-             -B -c file |
-             -D -s [path/]slave.txt |
-             -T -c file -s [path]/slave.txt [-j [-f]] [-o dir_path/file [-a]]
-                [-i db:coll -m file]
+        mysql_rep_admin.py
+            {-B -c mysql_cfg -d path [-z] [-e] [-o /path/file [-a]]
+                 [-i [db:coll] -m mongo_cfg]
+                 [-t ToEmail [ToEmail2 ...] [-u SubjectLine]] |
+             -D -c mysql_cfg -s [/path/]slave.txt -d path [-z] [-e]
+                 [-o /path/file [-a]]
+                 [-i [db:coll] -m mongo_cfg]
+                 [-t ToEmail [ToEmail2 ...] [-u SubjectLine]] |
+
+             -C -c file -s [/path/]slave.txt |
+             -S -s [/path/]slave.txt |
+             -T -c file -s [/path]/slave.txt [-j [-f]] [-o /path/file [-a]]
+                [-i [db:coll] -m file]
                 [-t ToEmail [ToEmail2 ...] [-u SubjectLine]] |
              -E -s [path/]slave.txt |
-             -A -c file -s [path/]slave.txt [-j [-f]] [-o dir_path/file [-a]]
-                [-i db:coll -m file]
+             -A -c file -s [/path/]slave.txt [-j [-f]] [-o /path/file [-a]]
+                [-i [db:coll] -m file]
                 [-t ToEmail [ToEmail2 ...] [-u SubjectLine]] |
-             -O -s [path/]slave.txt}
-            [-y flavor_id] [-p path] [-z]
+             -O -s [/path/]slave.txt}
+            [-y flavor_id] [-p path]
             [-v | -h]
 
     Arguments:
-        -d dir path => Directory path to the config files. Required arg.
+        -B => Display the master binlog filename and position.
+            -c mysql_cfg => Master config file.
+            -d path => Directory path to the config file.
+            -z => Suppress standard out.
+            -e => Expand the JSON data structure.
+            -o /path/file => Directory path and file name for output.
+                -a => Append output to file.
+            -i [database:collection] => Insert results of command into Mongo
+                    database. List the name of database and collection.
+                    Default: sysmon:mysql_rep_lag
+                -m mongo_cfg => File is the Mongo configuration file for
+                    inserting results into a Mongo database.  This is loaded as
+                    a python module, do not include the .py extension with the
+                    name.
+            -t to_addresses => Enables emailing capability.  Sends output to
+                one or more email addresses.
+                -u subject_line => Subject line of email.
+
+        -D => Display the slave(s) binlog filename and position.
+            -c mysql_cfg => Master config file.
+            -s [/path/]slave.txt => Slave config file.
+            -d path => Directory path to the config files.
+            -z => Suppress standard out.
+            -e => Expand the JSON data structure.
+            -o /path/file => Directory path and file name for output.
+                -a => Append output to file.
+            -i [database:collection] => Insert results of command into Mongo
+                    database. List the name of database and collection.
+                    Default: sysmon:mysql_rep_lag
+                -m mongo_cfg => File is the Mongo configuration file for
+                    inserting results into a Mongo database.  This is loaded as
+                    a python module, do not include the .py extension with the
+                    name.
+            -t to_addresses => Enables emailing capability.  Sends output to
+                one or more email addresses.
+                -u subject_line => Subject line of email.
 
         -C => Compare master binlog position to the slaves' and return any
                 differences detected if not the same positions.
@@ -40,12 +81,6 @@
 
         -S => Check the slave(s) IO and SQL threads and return any errors or
                 warnings detected.
-            -s [path/]slave.txt => Slave config file.
-
-        -B => Display the master binlog filename and position.
-            -c file => Master config file.
-
-        -D => Display the slave(s) binlog filename and position.
             -s [path/]slave.txt => Slave config file.
 
         -T => Check time lag for the slave(s) and return any differences
@@ -57,18 +92,16 @@
             # -e => Expand the JSON data structure.
                 # NOTE: This is replacing -f option.
             -o path/file => Directory path and file name for output.
-            -a => Append output to output file.
+                -a => Append output to file.
             -i [database:collection] => Insert results of command into Mongo
                     database. List the name of database and collection.
                     Default: sysmon:mysql_rep_lag
                 -m file => File is the Mongo configuration file for inserting
                     results into a Mongo database.  This is loaded as a python
                     module, do not include the .py extension with the name.
-            -t to_email_addresses => Enables emailing capability for an option
-                if the option allows it.  Sends output to one or more email
-                addresses.
-            -u subject_line => Subject line of email.  Will create own subject
-                line if one is not provided.
+            -t to_addresses => Enables emailing capability.  Sends output to
+                one or more email addresses.
+                -u subject_line => Subject line of email.
             NOTE:  If returning as standard format and there is no time lag,
                 nothing will be returned.  However, if -j option is selected,
                 then a JSON doc will be returned even if no time lag.
@@ -84,18 +117,16 @@
             # -e => Expand the JSON data structure.
                 # NOTE: This is replacing -f option.
             -o path/file => Directory path and file name for output.
-            -a => Append output to output file.
+                -a => Append output to file.
             -i [database:collection] => Insert results of command into Mongo
                     database. List the name of database and collection.
                     Default: sysmon:mysql_rep_lag
                 -m file => File is the Mongo configuration file for inserting
                     results into a Mongo database.  This is loaded as a python
                     module, do not include the .py extension with the name.
-            -t to_email_addresses => Enables emailing capability for an option
-                if the option allows it.  Sends output to one or more email
-                addresses.
-            -u subject_line => Subject line of email.  Will create own subject
-                line if one is not provided.
+            -t to_addresses => Enables emailing capability.  Sends output to
+                one or more email addresses.
+                -u subject_line => Subject line of email.
             NOTE:  If returning as standard format and there is no time lag,
                 nothing will be returned.  However, if -j option is selected,
                 then a JSON doc will be returned even if no time lag.
@@ -105,7 +136,6 @@
 
         -p dir_path => Directory path to the mysql binary programs.
         -y value => A flavor id for the program lock.  To create unique lock.
-        -z => Suppress standard out.
         -v => Display version of this program.
         -h => Help and usage message.
 
@@ -300,73 +330,75 @@ def help_message():
     print(__doc__)
 
 
-def rpt_mst_log(master, slaves, **kwargs):
+def rpt_mst_log(**kwargs):
 
     """Function:  rpt_mst_log
 
     Description:  Returns the master log file name and position.
 
     Arguments:
-        (input) master -> Master instance.
-        (input) slaves -> Slave instances.
+        (input) kwargs:
+            master -> Master instance
+            slaves -> Slave instances
+        (output) data -> Results of the command
 
     """
 
-    slaves = list(slaves)
+    master = kwargs.get("master", None)
+    data = {"MasterLog": {}}
 
     if master:
         fname, log_pos = master.get_log_info()
-        name = master.get_name()
-
-        print("\nMaster: {0}".format(name))
-        print("\tMaster Log:\t{0}".format(fname))
-        print("\tLog Position:\t{0}".format(log_pos))
+        data["MasterLog"]["Master"] = master.get_name()
+        data["MasterLog"]["MasterLog"] = fname
+        data["MasterLog"]["LogPosition"] = log_pos
 
         if master.gtid_mode:
-            print("\tGTID Position:\t{0}".format(master.exe_gtid))
+            data["MasterLog"]["GTIDPosition"] = master.exe_gtid
 
     else:
-        print("\nrpt_mst_log:  Warning:  No Master instance detected.")
+        print("rpt_mst_log:  Error:  No Master instance detected.")
+
+    return data
 
 
-def rpt_slv_log(master, slaves, **kwargs):
+def rpt_slv_log(**kwargs):
 
     """Function:  rpt_slv_log
 
     Description:  Returns the master and relay master log file names along with
-        the read and exec master log positions.
+        the read and exec master log positions from each of the slave nodes.
 
     Arguments:
-        (input) master -> Master instance.
-        (input) slaves -> Slave instances.
+        (input) kwargs:
+            master -> Master instance
+            slaves -> Slave instances
+        (output) data -> Results of the command
 
     """
 
-    global PRT_TEMPLATE
-
-    slaves = list(slaves)
+    slaves = list(kwargs.get("slaves", list()))
+    data = {"SlaveLog": []}
 
     if slaves:
-
         for slv in slaves:
             mst_file, relay_file, read_pos, exec_pos = slv.get_log_info()
-            name = slv.get_name()
-
-            print(PRT_TEMPLATE.format(name))
-            print("\tMaster File:\t\t{0}".format(mst_file))
-            print("\tMaster Position:\t{0}".format(read_pos))
-
-            if slv.gtid_mode:
-                print("\tRetrieved GTID:\t\t{0}".format(slv.retrieved_gtid))
-
-            print("\tRelay File:\t\t{0}".format(relay_file))
-            print("\tExec Position:\t\t{0}".format(exec_pos))
+            tdata = {}
+            tdata["Slave"] = slv.get_name()
+            tdata["MasterFile"] = mst_file
+            tdata["MasterPosition"] = read_pos
+            tdata["RelayFile"] = relay_file
+            tdata["ExecPosition"] = exec_pos
 
             if slv.gtid_mode:
-                print("\tExecuted GTID:\t\t{0}".format(slv.exe_gtid))
+                tdata["RetrievedGTID"] = slv.retrieved_gtid
+
+            data["SlaveLog"].append(tdata)
 
     else:
-        print("\nrpt_slv_log:  Warning:  No Slave instance detected.")
+        print("rpt_slv_log:  Error:  No Slave instances detected.")
+
+    return data
 
 
 def chk_slv(slave, **kwargs):
@@ -778,7 +810,7 @@ def dict_out(data, **kwargs):
     indent = 4 if kwargs.get("expand", False) else None
     mode = kwargs.get("mode", "w")
     ofile = kwargs.get("ofile", None)
-    no_std = kwargs.get("mail", False)
+    no_std = kwargs.get("no_std", False)
 
     if isinstance(data, dict):
         if ofile:
@@ -813,7 +845,7 @@ def data_out(data, args, **kwargs):
     """
 
     data = dict(data)
-    def_subj = kwargs.get("def_subj", "NoSubjectLine")
+    def_subj = kwargs.get("def_subj", "MySQLRepAdminCheck")
     mail = None
 
     if args.get_val("-t", def_val=False):
@@ -826,7 +858,7 @@ def data_out(data, args, **kwargs):
         expand=args.get_val("-e", def_val=False),
         no_std=args.get_val("-z", def_val=False), mail=mail)
 
-    if not status[0]:
+    if status[0]:
         print("data_out 1:  Error detected: %s" % (status[1]))
 
     elif args.arg_exist("-i") and args.arg_exist("-m"):
@@ -869,7 +901,7 @@ def call_run_chk(args, func_dict, master, slaves):
     sup_std = args.arg_exist("-z")
     mode = "a" if args.arg_exist("-a") else "w"
     indent = 4 if args.arg_exist("-f") else None
-    data = {"Application": "MySQL Replication",
+    data = {"Application": "MySQLReplication",
             "Master": master.name,
             "AsOf": datetime.datetime.strftime(datetime.datetime.now(),
                                                "%Y-%m-%d %H:%M:%S"),
@@ -889,7 +921,9 @@ def call_run_chk(args, func_dict, master, slaves):
                 master, slaves, json_fmt=json_fmt, ofile=outfile,
                 db_tbl=db_tbl, class_cfg=mongo_cfg, mail=mail, sup_std=sup_std,
                 mode=mode, indent=indent)
-            data["Checks"].append(tdata)
+            data["Checks"].append(tdata) # Not sure this is correct as will
+                # already be consolidated once it comes back from -A option
+                # and doesn't need to be in another list.
 
         # The option is in func_dict but not under the ALL option and is not
         #   the ALL option itself.
@@ -906,13 +940,14 @@ def call_run_chk(args, func_dict, master, slaves):
 
         # Intersect args & func_dict to find which functions to call.
         for opt in set(args.get_args_keys()) & set(func_dict.keys()):
-            tdata = func_dict[opt](
-                master, slaves, json_fmt=json_fmt, ofile=outfile,
-                db_tbl=db_tbl, class_cfg=mongo_cfg, mail=mail, sup_std=sup_std,
-                mode=mode, indent=indent)
+            tdata = func_dict[opt](master=master, slaves=slaves)
+#            tdata = func_dict[opt](
+#                master, slaves, json_fmt=json_fmt, ofile=outfile,
+#                db_tbl=db_tbl, class_cfg=mongo_cfg, mail=mail, sup_std=sup_std,
+#                mode=mode, indent=indent)
             data["Checks"].append(tdata)
 
-    # STOPPED HERE
+    data_out(data, args)
 
 
 def run_program(args, func_dict, **kwargs):
@@ -1001,7 +1036,7 @@ def main():
     opt_def_dict = {"-i": "sysmon:mysql_rep_lag"}
     opt_multi_list = ["-u", "-t"]
     opt_or_dict_list = {"-c": ["-s"]}
-    opt_req_list = ["-d"]
+    opt_req_list = ["-c", "-d"]
     opt_val_list = ["-d", "-c", "-p", "-s", "-o", "-i", "-m", "-u", "-t", "-y"]
     slv_key = {"sid": "int", "port": "int", "cfg_file": "None",
                "ssl_client_ca": "None", "ssl_ca_path": "None",
