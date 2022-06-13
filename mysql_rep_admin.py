@@ -405,73 +405,103 @@ def chk_slv(slave, **kwargs):
 
     """Function:  chk_slv
 
-    Description:  Compares the Slave's read file and postition with the
+    Description:  Returns the Slave's read file and postition with the
         executed file and position.  Will also print GTID info, in pre-MySQL
-        5.6 this will be NULL.
+        5.6 this will be NULL.  Include a status on whether the slave might
+        be lagging behind the master database.
 
     Arguments:
-        (input) slave -> Slave instance.
+        (input) slave -> Slave instance
+        (output) Slave log information and status in dictionary format
 
     """
 
-    global PRT_TEMPLATE
+#    global PRT_TEMPLATE
 
     mst_file, relay_file, read_pos, exec_pos = slave.get_log_info()
     name = slave.get_name()
+    data = {"Name": name, "ReadLog": mst_file, "ReadPosition": read_pos,
+            "ExecLog": relay_file, "ExecPosition": exec_pos}
+    tdata = {"Status": "OK"}
 
     # Slave's master info doesn't match slave's relay info.
     if mst_file != relay_file or read_pos != exec_pos:
-        print(PRT_TEMPLATE.format(name))
-        print("Warning:  Slave might be lagging in execution of log.")
-        print("\tRead Log:\t{0}".format(mst_file))
-        print("\tRead Pos:\t{0}".format(read_pos))
+        tdata = {
+            "Status": "Warning:  Slave might be lagging in execution of log"}
+
+#        print(PRT_TEMPLATE.format(name))
+#        print("Warning:  Slave might be lagging in execution of log.")
+#        print("\tRead Log:\t{0}".format(mst_file))
+#        print("\tRead Pos:\t{0}".format(read_pos))
 
         if slave.gtid_mode:
-            print("\tRetrieved GTID:\t{0}".format(slave.retrieved_gtid))
+            tdata["RetrievedGTID"] = slave.retrieved_gtid
+            tdata["ExecutedGTID"] = slave.exe_gtid
+            
+#            print("\tRetrieved GTID:\t{0}".format(slave.retrieved_gtid))
+#
+#        print("\tExec Log:\t{0}".format(relay_file))
+#        print("\tExec Pos:\t{0}".format(exec_pos))
+#
+#        if slave.gtid_mode:
+#            print("\tExecuted GTID:\t{0}".format(slave.exe_gtid))
 
-        print("\tExec Log:\t{0}".format(relay_file))
-        print("\tExec Pos:\t{0}".format(exec_pos))
-
-        if slave.gtid_mode:
-            print("\tExecuted GTID:\t{0}".format(slave.exe_gtid))
+    return gen_libs.merge_two_dicts(data, tdata)[0]
 
 
-def chk_mst_log(master, slaves, **kwargs):
+
+def chk_mst_log(**kwargs):
 
     """Function:  chk_mst_log
 
-    Description:  Compares the binary log and position between the master and
-        slave(s) and also compares the read and execute positions of
-        the log on the slave itself.
+    Description:  Returns the binary log and position between the master and
+        slave(s) and the read and execute positions of the log on the slave.
+        Includes a status of whether the master and slaves are in sync.
 
     Arguments:
-        (input) master -> Master instance.
-        (input) slaves -> Slave instances.
+        (input) kwargs:
+            master -> Master instance.
+            slaves -> Slave instances.
+        (output) data -> Results of the command
 
     """
 
-    slaves = list(slaves)
+    master = kwargs.get("master", None)
+    slaves = list(kwargs.get("slaves", list()))
+    data = {"CheckMasterLog": {"MasterLog": {}, "SlaveLog": []}}
 
     if master and slaves:
         fname, log_pos = master.get_log_info()
 
+        data["CheckMasterLog"]["MasterLog"]["Master"] = {
+            "Name": master.name, "Log": fname, "Position": log_pos}
+        data["CheckMasterLog"]["MasterLog"]["Slaves"] = list()
+
         for slv in slaves:
             mst_file, _, read_pos, _ = slv.get_log_info()
             name = slv.get_name()
+            status = "OK"
 
             # Master's log file or position doesn't match slave's log info.
             if fname != mst_file or log_pos != read_pos:
+                status = "Warning:  Slave lagging in reading master log")
 
-                print("\nWarning:  Slave lagging in reading master log.")
-                print("Master: {0}".format(master.name))
-                print("\tMaster Log: {0}".format(fname))
-                print("\tMaster Pos: {0}".format(log_pos))
-                print("Slave: {0}".format(name))
-                print("\tSlave Log: {0}".format(mst_file))
-                print("\tSlave Pos: {0}".format(read_pos))
+#                print("\nWarning:  Slave lagging in reading master log.")
+#                print("Master: {0}".format(master.name))
+#                print("\tMaster Log: {0}".format(fname))
+#                print("\tMaster Pos: {0}".format(log_pos))
+#                print("Slave: {0}".format(name))
+#                print("\tSlave Log: {0}".format(mst_file))
+#                print("\tSlave Pos: {0}".format(read_pos))
 
-            chk_slv(slv, **kwargs)
+            data["CheckMasterLog"]["MasterLog"]["Slaves"].append(
+                {"Name": name, "Log": mst_file, "Position": read_pos,
+                 "Status": status})
 
+            tdata = chk_slv(slv, **kwargs)
+            data["CheckMasterLog"]["MasterLog"]["SlaveLog"].append(tdata)
+
+# STOPPED HERE
     elif slaves:
         print("\nchk_mst_log:  Warning:  Missing Master instance.")
 
