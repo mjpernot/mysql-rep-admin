@@ -378,7 +378,7 @@ def rpt_slv_log(**kwargs):
     """
 
     slaves = list(kwargs.get("slaves", list()))
-    data = {"SlaveLog": []}
+    data = {"SlaveLogs": []}
 
     if slaves:
         for slv in slaves:
@@ -419,9 +419,9 @@ def chk_slv(slave, **kwargs):
 #    global PRT_TEMPLATE
 
     mst_file, relay_file, read_pos, exec_pos = slave.get_log_info()
-    name = slave.get_name()
-    data = {"Name": name, "ReadLog": mst_file, "ReadPosition": read_pos,
-            "ExecLog": relay_file, "ExecPosition": exec_pos}
+    data = {"Name": slave.get_name(), "ReadLog": mst_file,
+            "ReadPosition": read_pos, "ExecLog": relay_file,
+            "ExecPosition": exec_pos}
     tdata = {"Status": "OK"}
 
     # Slave's master info doesn't match slave's relay info.
@@ -460,26 +460,24 @@ def chk_mst_log(**kwargs):
 
     Arguments:
         (input) kwargs:
-            master -> Master instance.
-            slaves -> Slave instances.
+            master -> Master instance
+            slaves -> Slave instances
         (output) data -> Results of the command
 
     """
 
     master = kwargs.get("master", None)
     slaves = list(kwargs.get("slaves", list()))
-    data = {"CheckMasterLog": {"MasterLog": {}, "SlaveLog": []}}
+    data = {"CheckMasterLog": {"MasterLog": {}, "SlaveLogs": []}}
 
     if master and slaves:
         fname, log_pos = master.get_log_info()
-
         data["CheckMasterLog"]["MasterLog"]["Master"] = {
             "Name": master.name, "Log": fname, "Position": log_pos}
         data["CheckMasterLog"]["MasterLog"]["Slaves"] = list()
 
         for slv in slaves:
             mst_file, _, read_pos, _ = slv.get_log_info()
-            name = slv.get_name()
             status = "OK"
 
             # Master's log file or position doesn't match slave's log info.
@@ -495,62 +493,75 @@ def chk_mst_log(**kwargs):
 #                print("\tSlave Pos: {0}".format(read_pos))
 
             data["CheckMasterLog"]["MasterLog"]["Slaves"].append(
-                {"Name": name, "Log": mst_file, "Position": read_pos,
+                {"Name": slv.get_name(), "Log": mst_file, "Position": read_pos,
                  "Status": status})
 
             tdata = chk_slv(slv, **kwargs)
             data["CheckMasterLog"]["MasterLog"]["SlaveLog"].append(tdata)
 
-# STOPPED HERE
     elif slaves:
-        print("\nchk_mst_log:  Warning:  Missing Master instance.")
+        print("chk_mst_log: Warning:  Missing Master instance.")
 
         for slv in slaves:
-            chk_slv(slv, **kwargs)
+            tdata = chk_slv(slv, **kwargs)
+            data["CheckMasterLog"]["MasterLog"]["SlaveLog"].append(tdata)
 
     else:
-        print("\nchk_mst_log:  Warning:  Missing Master and Slave instances.")
+        print("chk_mst_log:  Warning:  Missing Master and Slave instances.")
 
 
-def chk_slv_thr(master, slaves, **kwargs):
+def chk_slv_thr(**kwargs):
 
     """Function:  chk_slv_thr
 
     Description:  Checks the status of the Slave(s) IO and SQL threads.
 
     Arguments:
-        (input) master -> Master instance.
-        (input) slaves -> Slave instances.
+        (input) kwargs:
+            master -> Master instance
+            slaves -> Slave instances
+        (output) data -> Results of the command
 
     """
 
-    global PRT_TEMPLATE
+#    global PRT_TEMPLATE
 
-    slaves = list(slaves)
+#    slaves = list(slaves)
+    slaves = list(kwargs.get("slaves", list()))
+    data = {"CheckSlaveThread": {"Slaves": []}}
 
     if slaves:
-
         for slv in slaves:
+            tdata = {"Name": slv.get_name(), "IOThread": "Up",
+                     "SQLThread": "Up"}
             thr, io_thr, sql_thr, run = slv.get_thr_stat()
-            name = slv.get_name()
+#            name = slv.get_name()
 
             # Slave IO and run state.
             if not thr or not gen_libs.is_true(run):
-                print(PRT_TEMPLATE.format(name))
-                print("\tError:  Slave IO/SQL Threads are down.")
+                tdata["IOThread"] = "Down"
+                tdata["SQLThread"] = "Down"
+#                print(PRT_TEMPLATE.format(name))
+#                print("\tError:  Slave IO/SQL Threads are down.")
 
             # Slave IO thread.
             elif not gen_libs.is_true(io_thr):
-                print(PRT_TEMPLATE.format(name))
-                print("\tError:  Slave IO Thread is down.")
+                tdata["IOThread"] = "Down"
+#                print(PRT_TEMPLATE.format(name))
+#                print("\tError:  Slave IO Thread is down.")
 
             # Slave SQL thread.
             elif not gen_libs.is_true(sql_thr):
-                print(PRT_TEMPLATE.format(name))
-                print("\tError:  Slave SQL Thread is down.")
+                tdata["SQLThread"] = "Down"
+#                print(PRT_TEMPLATE.format(name))
+#                print("\tError:  Slave SQL Thread is down.")
+
+            data["CheckSlaveThread"]["Slaves"].append(tdata)
 
     else:
-        print("\nchk_slv_thr:  Warning:  No Slave instance detected.")
+        print("chk_slv_thr:  Warning:  No Slave instance detected.")
+
+    return data
 
 
 def chk_slv_err(master, slaves, **kwargs):
@@ -560,76 +571,94 @@ def chk_slv_err(master, slaves, **kwargs):
     Description:  Check the Slave's IO and SQL threads for errors.
 
     Arguments:
-        (input) master -> Master instance.
-        (input) slaves -> Slave instances.
+        (input) kwargs:
+            master -> Master instance
+            slaves -> Slave instances
+        (output) data -> Results of the command
 
     """
 
-    print_template = "\nSlave:\t{0}"
-    slaves = list(slaves)
+#    print_template = "\nSlave:\t{0}"
+#    slaves = list(slaves)
+    slaves = list(kwargs.get("slaves", list()))
+    data = {"CheckSlaveError": {"Slaves": []}}
 
     if slaves:
-
         for slv in slaves:
+            tdata = {"Name": slv.get_name(), "Connection": "Up", "IO": {},
+                     "SQL": {}}
 
             # For pre-MySQL 5.6 versions, will be NULL for these two entries.
             iost, sql, io_msg, sql_msg, io_time, sql_time = slv.get_err_stat()
-            name = slv.get_name()
+#            name = slv.get_name()
 
             # Connection status
             if not slv.conn:
-                print(print_template.format(name))
-                print("\tConnection Error:  No connection detected")
+                tdata["Connection"] = "Down"
+#                print(print_template.format(name))
+#                print("\tConnection Error:  No connection detected")
 
             # IO error
             if iost:
-                print(print_template.format(name))
-                print("\tIO Error Detected:\t{0}".format(iost))
-                print("\tIO Message:\t{0}".format(io_msg))
-
-                print("\tIO Timestamp:\t{0}".format(io_time))
+                tdata["IO"]["Error"] = iost
+                tdata["IO"]["Message"] = io_msg
+                tdata["IO"]["Timestamp"] = io_time
+#                print(print_template.format(name))
+#                print("\tIO Error Detected:\t{0}".format(iost))
+#                print("\tIO Message:\t{0}".format(io_msg))
+#
+#                print("\tIO Timestamp:\t{0}".format(io_time))
 
             # SQL error
             if sql:
-                print(print_template.format(name))
-                print("\tSQL Error Detected:\t{0}".format(sql))
-                print("\tSQL Message:\t{0}".format(sql_msg))
+                tdata["SQL"]["Error"] = sql
+                tdata["SQL"]["Message"] = sql_msg
+                tdata["SQL"]["Timestamp"] = sql_time
+#                print(print_template.format(name))
+#                print("\tSQL Error Detected:\t{0}".format(sql))
+#                print("\tSQL Message:\t{0}".format(sql_msg))
+#
+#                print("\tSQL Timestamp:\t{0}".format(sql_time))
 
-                print("\tSQL Timestamp:\t{0}".format(sql_time))
+            data["CheckSlaveError"]["Slaves"].append(tdata)
 
     else:
-        print("\nchk_slv_err:  Warning:  No Slave instance detected.")
+        print("chk_slv_err:  Warning:  No Slave instance detected.")
+
+    return data
 
 
-def add_miss_slaves(master, outdata):
+def add_miss_slaves(master, data):
 
     """Function:  add_miss_slaves
 
-    Description:  Adds any down slave hosts to the JSON's slave list.
+    Description:  Adds any down slave hosts to the slave list.
 
     Arguments:
-        (input) master -> Master instance.
-        (input) outdata -> JSON document of Check Slave Time output.
-        (output) outdata -> JSON document of Check Slave Time output.
+        (input) master -> Master instance
+        (input) data -> JSON document of Check Slave Time output
+        (output) data -> JSON document of Check Slave Time output
 
     """
 
-    outdata = dict(outdata)
-    all_list = []
-    slv_list = []
+    data = dict(data)
+    all_list = list()
+    slv_list = list()
 
     for slv in master.show_slv_hosts():
         all_list.append(slv["Host"])
 
-    for slv in outdata["Slaves"]:
+    for slv in data["Slaves"]:
         slv_list.append(slv["Name"])
 
     # Add slaves from the slave list that are not in the master's slave list.
     for item in [val for val in all_list if val not in slv_list]:
-        outdata["Slaves"].append({"Name": item, "LagTime": None})
+        data["Slaves"].append({"Name": item, "LagTime": None})
 
-    return outdata
+    return data
 
+
+# STOPPED HERE
 
 def chk_slv_time(master, slaves, **kwargs):
 
@@ -760,8 +789,8 @@ def chk_slv_other(master, slaves, **kwargs):
 
     """Function:  chk_slv_other
 
-    Description:  Checks a number of other status variables that might indicate
-        a problem on the slave(s).
+    Description:  Returns a number of other status variables that might
+        indicate a problem on the slaves.
 
     Arguments:
         (input) master -> Master instance.
