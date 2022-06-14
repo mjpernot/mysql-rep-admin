@@ -980,9 +980,7 @@ def call_run_chk(args, func_dict, master, slaves):
                 master, slaves, json_fmt=json_fmt, ofile=outfile,
                 db_tbl=db_tbl, class_cfg=mongo_cfg, mail=mail, sup_std=sup_std,
                 mode=mode, indent=indent)
-            data["Checks"].append(tdata) # Not sure this is correct as will
-                # already be consolidated once it comes back from -A option
-                # and doesn't need to be in another list.
+            data["Checks"].append(tdata)
 
         # The option is in func_dict but not under the ALL option and is not
         #   the ALL option itself.
