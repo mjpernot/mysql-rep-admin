@@ -449,7 +449,7 @@ def chk_mst_log(**kwargs):
 
             # Master's log file or position doesn't match slave's log info.
             if fname != mst_file or log_pos != read_pos:
-                status = "Warning:  Slave lagging in reading master log")
+                status = "Warning:  Slave lagging in reading master log"
 
 #                print("\nWarning:  Slave lagging in reading master log.")
 #                print("Master: {0}".format(master.name))
@@ -962,7 +962,7 @@ def call_run_chk(args, func_dict, master, slaves):
             data["Checks"].append(tdata)
 
         # The option is in func_dict but not under the ALL option and is not
-        #   the ALL option itself.
+        #   the ALL option itself
         for item in (opt for opt in args.get_args() if opt in func_dict and
                      opt not in func_dict["-A"] and opt != "-A"):
 
