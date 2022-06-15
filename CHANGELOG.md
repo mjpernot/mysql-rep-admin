@@ -7,7 +7,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 ## [4.0.0] - 2022-06-02
 Breaking change
 
-- Changed output format from strings to dictionary format.
+- Changed the program to operate using JSON formats only.
 - Replaced args_parser module with the gen_class.ArgParser class.
 - Upgrade mysql-connector to v8.0.22.
 - Upgrade mysql-libs to v5.3.1.
@@ -19,12 +19,19 @@ Breaking change
 - dict_out: Print dictionary to a file, standard out, and/or an email instance either in expanded or flatten JSON format.
 
 ### Changed
-- rpt_mst_log, rpt_slv_log, chk_mst_log, chk_slv_thr, chk_slv_err: Converted output to dictionary and returned results to calling function.
+- call_run_chk: Removed any data out commands as this was moved to data_out function.
+- \_chk_other: Replaced string standard output with JSON format and returned only those entries with problems detected.
+- \_process_time_lag: Removed standard output and returned only the time lag.
+- add_miss_slaves: Changed from modifying the check slave time dictionary to returning a list of missing slaves.
+- rpt_mst_log, rpt_slv_log, chk_mst_log, chk_slv_thr, chk_slv_err, chk_slv_time, chk_slv_other: Converted output to dictionary and returned results to calling function.
 - main, run_program, call_run_chk: Replaced the use of arg_parser (args_array) with gen_class.ArgParser class (args).
 - main, call_run_chk: Changed "-b" option to "-i" option to be inline with the other programs.
 - config/mysql_cfg.py.TEMPLATE: Added TLS version entry.
 - config/mongo.py.TEMPLATE: Removed old entries.
 - Documentation updates.
+
+## Removed
+- \_process_json: Replaced with data_out function.
 
 
 ## [3.2.0] - 2021-08-19

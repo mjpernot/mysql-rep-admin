@@ -18,47 +18,73 @@
             {-B -c mysql_cfg -d path [-z] [-e] [-o /path/file [-a]]
                  [-i [db:coll] -m mongo_cfg]
                  [-t ToEmail [ToEmail2 ...] [-u SubjectLine]] |
+             -C -c mysql_cfg -s [/path/]slave.txt -d path [-z] [-e]
+                 [-o /path/file [-a]] [-i [db:coll] -m mongo_cfg]
+                 [-t ToEmail [ToEmail2 ...] [-u SubjectLine]] |
              -D -c mysql_cfg -s [/path/]slave.txt -d path [-z] [-e]
-                 [-o /path/file [-a]]
+                 [-o /path/file [-a]] [-i [db:coll] -m mongo_cfg]
+                 [-t ToEmail [ToEmail2 ...] [-u SubjectLine]] |
+             -E -s [path/]slave.txt -d path [-z] [-e] [-o /path/file [-a]]
                  [-i [db:coll] -m mongo_cfg]
                  [-t ToEmail [ToEmail2 ...] [-u SubjectLine]] |
-
-             -C -c file -s [/path/]slave.txt |
-             -S -s [/path/]slave.txt |
-             -T -c file -s [/path]/slave.txt [-j [-f]] [-o /path/file [-a]]
-                [-i [db:coll] -m file]
-                [-t ToEmail [ToEmail2 ...] [-u SubjectLine]] |
-             -E -s [path/]slave.txt |
-             -A -c file -s [/path/]slave.txt [-j [-f]] [-o /path/file [-a]]
-                [-i [db:coll] -m file]
-                [-t ToEmail [ToEmail2 ...] [-u SubjectLine]] |
-             -O -s [/path/]slave.txt}
-            [-y flavor_id] [-p path]
+             -O -s [/path/]slave.txt -d path [-z] [-e] [-o /path/file [-a]]
+                 [-i [db:coll] -m mongo_cfg]
+                 [-t ToEmail [ToEmail2 ...] [-u SubjectLine]] |
+             -S -s [/path/]slave.txt -d path [-z] [-e] [-o /path/file [-a]]
+                 [-i [db:coll] -m mongo_cfg]
+                 [-t ToEmail [ToEmail2 ...] [-u SubjectLine]] |
+             -T -c mysql_cfg -s [/path]/slave.txt -d path [-z] [-e]
+                 [-o /path/file [-a]] [-i [db:coll] -m mongo_cfg]
+                 [-t ToEmail [ToEmail2 ...] [-u SubjectLine]] |
+             -A -c mysql_cfg -s [/path/]slave.txt -d path [-z] [-e]
+                 [-o /path/file [-a]] [-i [db:coll] -m mongo_cfg]
+                 [-t ToEmail [ToEmail2 ...] [-u SubjectLine]]}
+            [-y flavor_id]
+            [-p path]
             [-v | -h]
 
     Arguments:
+        Major options:
         -B => Display the master binlog filename and position.
             -c mysql_cfg => Master config file.
             -d path => Directory path to the config file.
-            -z => Suppress standard out.
-            -e => Expand the JSON data structure.
-            -o /path/file => Directory path and file name for output.
-                -a => Append output to file.
-            -i [database:collection] => Insert results of command into Mongo
-                    database. List the name of database and collection.
-                    Default: sysmon:mysql_rep_lag
-                -m mongo_cfg => File is the Mongo configuration file for
-                    inserting results into a Mongo database.  This is loaded as
-                    a python module, do not include the .py extension with the
-                    name.
-            -t to_addresses => Enables emailing capability.  Sends output to
-                one or more email addresses.
-                -u subject_line => Subject line of email.
+
+        -C => Compare master binlog position to the slaves' and return any
+                differences detected if not the same positions.
+            -c mysql_cfg => Master config file.
+            -s [path/]slave.txt => Slave config file.
+            -d path => Directory path to the config files.
 
         -D => Display the slave(s) binlog filename and position.
             -c mysql_cfg => Master config file.
             -s [/path/]slave.txt => Slave config file.
             -d path => Directory path to the config files.
+
+        -E => Check for any replication errors on the slave(s).
+            -s [path/]slave.txt => Slave config file.
+            -d path => Directory path to the config files.
+
+        -O => Other slave replication checks and return any errors detected.
+            -s [path/]slave.txt => Slave config file.
+            -d path => Directory path to the config files.
+
+        -S => Check the slave(s) IO and SQL threads and return any errors or
+                warnings detected.
+            -s [path/]slave.txt => Slave config file.
+            -d path => Directory path to the config files.
+
+        -T => Check time lag for the slave(s) and return any differences
+                detected.
+            -c mysql_cfg => Master config file.
+            -s [path/]slave.txt => Slave config file.
+            -d path => Directory path to the config files.
+
+        -A => Runs multiple checks which include the options:  -C, -S, -T, -E
+            -c mysql_cfg => Master config file.
+            -s [path/]slave.txt => Slave config file.
+            -d path => Directory path to the config files.
+
+        Options available to the major options above:
             -z => Suppress standard out.
             -e => Expand the JSON data structure.
             -o /path/file => Directory path and file name for output.
@@ -74,67 +100,8 @@
                 one or more email addresses.
                 -u subject_line => Subject line of email.
 
-        -C => Compare master binlog position to the slaves' and return any
-                differences detected if not the same positions.
-            -c file => Master config file.
-            -s [path/]slave.txt => Slave config file.
-
-        -S => Check the slave(s) IO and SQL threads and return any errors or
-                warnings detected.
-            -s [path/]slave.txt => Slave config file.
-
-        -T => Check time lag for the slave(s) and return any differences
-                detected.
-            -c file => Master config file.
-            -s [path/]slave.txt => Slave config file.
-            -j => Return output in JSON format.
-            -f => Flatten the JSON data structure to file and standard out.
-            # -e => Expand the JSON data structure.
-                # NOTE: This is replacing -f option.
-            -o path/file => Directory path and file name for output.
-                -a => Append output to file.
-            -i [database:collection] => Insert results of command into Mongo
-                    database. List the name of database and collection.
-                    Default: sysmon:mysql_rep_lag
-                -m file => File is the Mongo configuration file for inserting
-                    results into a Mongo database.  This is loaded as a python
-                    module, do not include the .py extension with the name.
-            -t to_addresses => Enables emailing capability.  Sends output to
-                one or more email addresses.
-                -u subject_line => Subject line of email.
-            NOTE:  If returning as standard format and there is no time lag,
-                nothing will be returned.  However, if -j option is selected,
-                then a JSON doc will be returned even if no time lag.
-
-        -E => Check for any replication errors on the slave(s).
-            -s [path/]slave.txt => Slave config file.
-
-        -A => Runs multiple checks which include the options:  -C, -S, -T, -E
-            -c file => Master config file.
-            -s [path/]slave.txt => Slave config file.
-            -j => Return output in JSON format.
-            -f => Flatten the JSON data structure to file and standard out.
-            # -e => Expand the JSON data structure.
-                # NOTE: This is replacing -f option.
-            -o path/file => Directory path and file name for output.
-                -a => Append output to file.
-            -i [database:collection] => Insert results of command into Mongo
-                    database. List the name of database and collection.
-                    Default: sysmon:mysql_rep_lag
-                -m file => File is the Mongo configuration file for inserting
-                    results into a Mongo database.  This is loaded as a python
-                    module, do not include the .py extension with the name.
-            -t to_addresses => Enables emailing capability.  Sends output to
-                one or more email addresses.
-                -u subject_line => Subject line of email.
-            NOTE:  If returning as standard format and there is no time lag,
-                nothing will be returned.  However, if -j option is selected,
-                then a JSON doc will be returned even if no time lag.
-
-        -O => Other slave replication checks and return any errors detected.
-            -s [path/]slave.txt => Slave config file.
-
-        -p dir_path => Directory path to the mysql binary programs.
+        General options:
+        -p dir_path => Directory path to the mysql binary programs, if needed.
         -y value => A flavor id for the program lock.  To create unique lock.
         -v => Display version of this program.
         -h => Help and usage message.
@@ -187,7 +154,7 @@
 
         Defaults Extra File format (config/mysql.cfg.TEMPLATE):
             [client]
-            password="PASSWORD"
+            password="PSWORD"
             socket="DIRECTORY_PATH/mysqld.sock"
 
         NOTE 1:  The socket information can be obtained from the my.cnf
@@ -283,7 +250,7 @@
                 auth_mech to be set to: SCRAM-SHA-1 or SCRAM-SHA-256.
 
     Example:
-        mysql_rep_admin.py -c master -d config  -s slave.txt -T
+        mysql_rep_admin.py -c mysql_cfg -d config -s slave.txt -T
 
 """
 
@@ -313,7 +280,7 @@ import version
 __version__ = version.__version__
 
 # Global
-PRT_TEMPLATE = "\nSlave: {0}"
+#PRT_TEMPLATE = "\nSlave: {0}"
 
 
 def help_message():
@@ -340,7 +307,7 @@ def rpt_mst_log(**kwargs):
         (input) kwargs:
             master -> Master instance
             slaves -> Slave instances
-        (output) data -> Results of the command
+        (output) data -> Results of the command in dictionary format
 
     """
 
@@ -373,7 +340,7 @@ def rpt_slv_log(**kwargs):
         (input) kwargs:
             master -> Master instance
             slaves -> Slave instances
-        (output) data -> Results of the command
+        (output) data -> Results of the command in dictionary format
 
     """
 
@@ -462,7 +429,7 @@ def chk_mst_log(**kwargs):
         (input) kwargs:
             master -> Master instance
             slaves -> Slave instances
-        (output) data -> Results of the command
+        (output) data -> Results of the command in dictionary format
 
     """
 
@@ -520,7 +487,7 @@ def chk_slv_thr(**kwargs):
         (input) kwargs:
             master -> Master instance
             slaves -> Slave instances
-        (output) data -> Results of the command
+        (output) data -> Results of the command in dictionary format
 
     """
 
@@ -564,7 +531,7 @@ def chk_slv_thr(**kwargs):
     return data
 
 
-def chk_slv_err(master, slaves, **kwargs):
+def chk_slv_err(**kwargs):
 
     """Function:  chk_slv_err
 
@@ -574,7 +541,7 @@ def chk_slv_err(master, slaves, **kwargs):
         (input) kwargs:
             master -> Master instance
             slaves -> Slave instances
-        (output) data -> Results of the command
+        (output) data -> Results of the command in dictionary format
 
     """
 
@@ -632,141 +599,141 @@ def add_miss_slaves(master, data):
 
     """Function:  add_miss_slaves
 
-    Description:  Adds any down slave hosts to the slave list.
+    Description:  Returns a list of missing slaves.
 
     Arguments:
         (input) master -> Master instance
         (input) data -> JSON document of Check Slave Time output
-        (output) data -> JSON document of Check Slave Time output
+        (output) miss_slv -> List of missing slaves
 
     """
 
     data = dict(data)
     all_list = list()
     slv_list = list()
+    miss_slv = list()
 
     for slv in master.show_slv_hosts():
         all_list.append(slv["Host"])
 
-    for slv in data["Slaves"]:
+    for slv in data["CheckSlaveTime"]["Slaves"]:
         slv_list.append(slv["Name"])
 
     # Add slaves from the slave list that are not in the master's slave list.
-    for item in [val for val in all_list if val not in slv_list]:
-        data["Slaves"].append({"Name": item, "LagTime": None})
+    for name in [val for val in all_list if val not in slv_list]:
+        miss_slv.append({"Name": name, "LagTime": None})
+#        data["CheckSlaveTime"]["Slaves"].append(
+#            {"Name": name, "LagTime": None})
 
-    return data
+    return miss_slv
 
 
-# STOPPED HERE
-
-def chk_slv_time(master, slaves, **kwargs):
+def chk_slv_time(**kwargs):
 
     """Function:  chk_slv_time
 
     Description:  Checks for time delays on the slave(s).
 
     Arguments:
-        (input) master -> Master instance.
-        (input) slaves -> Slave instances.
-        (input) **kwargs:
-            ofile -> file name - Name of output file.
-            db_tbl -> database:collection - Name of db and collection.
-            class_cfg -> Server class configuration settings.
-            mail -> Mail instance.
-            sup_std -> Suppress standard out.
-            json_fmt -> True|False - convert output to JSON format.
-            indent -> Indentation level for JSON document.
+        (input) kwargs:
+            master -> Master instance
+            slaves -> Slave instances
+        (output) data -> Results of the command in dictionary format
 
     """
 
-    slaves = list(slaves)
-    json_fmt = kwargs.get("json_fmt", False)
-
-    if json_fmt:
-        outdata = {"Application": "MySQL Replication",
-                   "Server": master.name,
-                   "AsOf": datetime.datetime.strftime(datetime.datetime.now(),
-                                                      "%Y-%m-%d %H:%M:%S"),
-                   "Slaves": []}
+    master = kwargs.get("master", None)
+    slaves = list(kwargs.get("slaves", list()))
+    data = {"CheckSlaveTime": {"Slaves": []}}
+#    slaves = list(slaves)
+#    json_fmt = kwargs.get("json_fmt", False)
+#
+#    if json_fmt:
+#        outdata = {"Application": "MySQL Replication",
+#                   "Server": master.name,
+#                   "AsOf": datetime.datetime.strftime(datetime.datetime.now(),
+#                                                      "%Y-%m-%d %H:%M:%S"),
+#                   "Slaves": []}
 
     if slaves:
-
         for slv in slaves:
-            time_lag = slv.get_time()
-            name = slv.get_name()
-            time_lag = _process_time_lag(slv, time_lag, name, json_fmt)
+#            time_lag = slv.get_time()
+#            name = slv.get_name()
+#            time_lag = _process_time_lag(slv, slv.get_time())
 
-            if json_fmt:
-                outdata["Slaves"].append({"Name": slv.name,
-                                          "LagTime": time_lag})
+            data["CheckSlaveTime"]["Slaves"].append(
+                {"Name": slv.get_name(),
+                 "LagTime": _process_time_lag(slv, slv.get_time())})
 
-    elif not json_fmt:
-        print("\nchk_slv_time:  Warning:  No Slave instance detected.")
+#            if json_fmt:
+#                outdata["Slaves"].append({"Name": slv.name,
+#                                          "LagTime": time_lag})
+#
+#    elif not json_fmt:
+#        print("chk_slv_time:  Warning:  No Slave instance detected.")
+#
+#    if json_fmt:
+    data["CheckSlaveTime"]["Slaves"].append(add_miss_slaves(master, data))
+#    _process_json(outdata, **kwargs)
 
-    if json_fmt:
-        outdata = add_miss_slaves(master, outdata)
-        _process_json(outdata, **kwargs)
-
-
-def _process_json(outdata, **kwargs):
-
-    """Function:  _process_json
-
-    Description:  Private function for chk_slv_time().  Process JSON data.
-
-    Arguments:
-        (input) outdata -> JSON document of Check Slave Time output.
-        (input) **kwargs:
-            ofile -> file name - Name of output file.
-            db_tbl -> database:collection - Name of db and collection.
-            class_cfg -> Server class configuration settings.
-            mail -> Mail instance.
-            sup_std -> Suppress standard out.
-            mode -> File write mode.
-            indent -> Indentation level for JSON document.
-
-    """
-
-    indent = kwargs.get("indent", None)
-    jdata = json.dumps(outdata, indent=indent)
-    mongo_cfg = kwargs.get("class_cfg", None)
-    db_tbl = kwargs.get("db_tbl", None)
-    ofile = kwargs.get("ofile", None)
-    mail = kwargs.get("mail", None)
-    mode = kwargs.get("mode", "w")
-
-    if mongo_cfg and db_tbl:
-        dbn, tbl = db_tbl.split(":")
-        status = mongo_libs.ins_doc(mongo_cfg, dbn, tbl, outdata)
-
-        if not status[0]:
-            print("\n_process_json:  Error Detected:  %s" % (status[1]))
-
-    if ofile:
-        gen_libs.write_file(ofile, mode, jdata)
-
-    if mail:
-        mail.add_2_msg(jdata)
-        mail.send_mail()
-
-    if not kwargs.get("sup_std", False):
-        gen_libs.print_data(jdata)
+    return data
 
 
-def _process_time_lag(slv, time_lag, name, json_fmt):
+#def _process_json(outdata, **kwargs):
+#
+#    """Function:  _process_json
+#
+#    Description:  Private function for chk_slv_time().  Process JSON data.
+#
+#    Arguments:
+#        (input) outdata -> JSON document of Check Slave Time output.
+#        (input) **kwargs:
+#            ofile -> file name - Name of output file.
+#            db_tbl -> database:collection - Name of db and collection.
+#            class_cfg -> Server class configuration settings.
+#            mail -> Mail instance.
+#            sup_std -> Suppress standard out.
+#            mode -> File write mode.
+#            indent -> Indentation level for JSON document.
+#
+#    """
+#
+#    indent = kwargs.get("indent", None)
+#    jdata = json.dumps(outdata, indent=indent)
+#    mongo_cfg = kwargs.get("class_cfg", None)
+#    db_tbl = kwargs.get("db_tbl", None)
+#    ofile = kwargs.get("ofile", None)
+#    mail = kwargs.get("mail", None)
+#    mode = kwargs.get("mode", "w")
+#
+#    if mongo_cfg and db_tbl:
+#        dbn, tbl = db_tbl.split(":")
+#        status = mongo_libs.ins_doc(mongo_cfg, dbn, tbl, outdata)
+#
+#        if not status[0]:
+#            print("\n_process_json:  Error Detected:  %s" % (status[1]))
+#
+#    if ofile:
+#        gen_libs.write_file(ofile, mode, jdata)
+#
+#    if mail:
+#        mail.add_2_msg(jdata)
+#        mail.send_mail()
+#
+#    if not kwargs.get("sup_std", False):
+#        gen_libs.print_data(jdata)
+
+
+def _process_time_lag(slv, time_lag):
 
     """Function:  _process_time_lag
 
-    Description:  Private function for chk_slv_time().  Process time lag for
-        slave.
+    Description:  Check to see if the time lag still exists.
 
     Arguments:
-        (input) slv -> Slave instance.
-        (input) time_lag -> Time lag between master and slave.
-        (input) name -> Name of slave.
-        (input) json_fmt -> True|False - output to JSON format.
-        (output) time_lag -> Time lag between master and slave.
+        (input) slv -> Slave instance
+        (input) time_lag -> Current time lag between master and slave
+        (output) time_lag -> Updated time lag between master and slave
 
     """
 
@@ -775,17 +742,16 @@ def _process_time_lag(slv, time_lag, name, json_fmt):
 
         if slv.conn:
             slv.upd_slv_time()
+            time_lag = slv.get_time()
 
-        time_lag = slv.get_time()
-
-        if (time_lag > 0 or time_lag is None) and not json_fmt:
-            print("\nSlave:  {0}".format(name))
-            print("\tTime Lag:  {0}".format(time_lag or "No Time Detected"))
+#        if (time_lag > 0 or time_lag is None) and not json_fmt:
+#            print("\nSlave:  {0}".format(name))
+#            print("\tTime Lag:  {0}".format(time_lag or "No Time Detected"))
 
     return time_lag
 
 
-def chk_slv_other(master, slaves, **kwargs):
+def chk_slv_other(**kwargs):
 
     """Function:  chk_slv_other
 
@@ -793,22 +759,26 @@ def chk_slv_other(master, slaves, **kwargs):
         indicate a problem on the slaves.
 
     Arguments:
-        (input) master -> Master instance.
-        (input) slaves -> Slave instances.
+        (input) kwargs:
+            master -> Master instance
+            slaves -> Slave instances
+        (output) data -> Results of the command in dictionary format
 
     """
 
-    slaves = list(slaves)
+    slaves = list(kwargs.get("slaves", list()))
+    data = {"CheckSlaveOther": {"Slaves": []}}
+#    slaves = list(slaves)
 
     if slaves:
-
         for slv in slaves:
             skip, tmp_tbl, retry = slv.get_others()
-            name = slv.get_name()
-            _chk_other(skip, tmp_tbl, retry, name, slv.version)
+#            name = slv.get_name()
+            data["CheckSlaveOther"]["Slaves"].append(
+                _chk_other(skip, tmp_tbl, retry, slv.get_name(), slv.version))
 
     else:
-        print("\nchk_slv_other:  Warning:  No Slave instance detected.")
+        print("chk_slv_other:  Warning:  No Slave instance detected.")
 
 
 def _chk_other(skip, tmp_tbl, retry, name, sql_ver):
@@ -819,28 +789,35 @@ def _chk_other(skip, tmp_tbl, retry, name, sql_ver):
         problems found.
 
     Arguments:
-        (input) skip -> Mysql's skip count.
-        (input) tmp_tbl -> Mysql's temp tables created count.
-        (input) retry -> Mysql's retry count.
-        (input) name -> Name of Mysql server.
-        (input) sql_ver -> Slave's MySQL version.
+        (input) skip -> Skip count
+        (input) tmp_tbl -> Temp tables create count
+        (input) retry -> Retry count
+        (input) name -> Name of Mysql server
+        (input) sql_ver -> Slave's MySQL version
+        (output) data -> Dictionary of problems detected in slave
 
     """
 
-    global PRT_TEMPLATE
+#    global PRT_TEMPLATE
+    data = {"Name": name}
 
     if skip is None or skip > 0:
-        print(PRT_TEMPLATE.format(name))
-        print("\tSkip Count:  {0}".format(skip))
+        data["SkipCount"] = skip
+#        print(PRT_TEMPLATE.format(name))
+#        print("\tSkip Count:  {0}".format(skip))
 
     if not tmp_tbl or int(tmp_tbl) > 5:
-        print(PRT_TEMPLATE.format(name))
-        print("\tTemp Table Count:  {0}".format(tmp_tbl))
+        data["TempTableCount"] = tmp_tbl
+#        print(PRT_TEMPLATE.format(name))
+#        print("\tTemp Table Count:  {0}".format(tmp_tbl))
 
     if (sql_ver[0] < 8 and (not retry or int(retry) > 0)) \
        or (sql_ver[0] >= 8 and retry > 0):
-        print(PRT_TEMPLATE.format(name))
-        print("\tRetried Transaction Count:  {0}".format(retry))
+        data["RetryTransactionCount"] = retry
+#        print(PRT_TEMPLATE.format(name))
+#        print("\tRetried Transaction Count:  {0}".format(retry))
+
+    return data
 
 
 def dict_out(data, **kwargs):
@@ -952,34 +929,36 @@ def call_run_chk(args, func_dict, master, slaves):
 
     func_dict = dict(func_dict)
     slaves = list(slaves)
-    mail = None
-    mongo_cfg = None
-    json_fmt = args.arg_exist("-j")
-    outfile = args.get_val("-o", def_val=None)
-    db_tbl = args.get_val("-i", def_val=None)
-    sup_std = args.arg_exist("-z")
-    mode = "a" if args.arg_exist("-a") else "w"
-    indent = 4 if args.arg_exist("-f") else None
+#    mail = None
+#    mongo_cfg = None
+#    json_fmt = args.arg_exist("-j")
+#    outfile = args.get_val("-o", def_val=None)
+#    db_tbl = args.get_val("-i", def_val=None)
+#    sup_std = args.arg_exist("-z")
+#    mode = "a" if args.arg_exist("-a") else "w"
+#    indent = 4 if args.arg_exist("-f") else None
+
     data = {"Application": "MySQLReplication",
             "Master": master.name,
             "AsOf": datetime.datetime.strftime(datetime.datetime.now(),
                                                "%Y-%m-%d %H:%M:%S"),
             "Checks": []}
 
-    if args.arg_exist("-m"):
-        mongo_cfg = gen_libs.load_module(
-            args.get_val("-m"), args.get_val("-d"))
-
-    if args.arg_exist("-t"):
-        mail = gen_class.setup_mail(
-            args.get_val("-t"), subj=args.get_val("-u", def_val=None))
+#    if args.arg_exist("-m"):
+#        mongo_cfg = gen_libs.load_module(
+#            args.get_val("-m"), args.get_val("-d"))
+#
+#    if args.arg_exist("-t"):
+#        mail = gen_class.setup_mail(
+#            args.get_val("-t"), subj=args.get_val("-u", def_val=None))
 
     if args.arg_exist("-A"):
         for opt in func_dict["-A"]:
-            tdata = func_dict[opt](
-                master, slaves, json_fmt=json_fmt, ofile=outfile,
-                db_tbl=db_tbl, class_cfg=mongo_cfg, mail=mail, sup_std=sup_std,
-                mode=mode, indent=indent)
+            tdata = func_dict[opt](master=master, slaves=slaves)
+#            tdata = func_dict[opt](
+#                master, slaves, json_fmt=json_fmt, ofile=outfile,
+#                db_tbl=db_tbl, class_cfg=mongo_cfg, mail=mail, sup_std=sup_std,
+#                mode=mode, indent=indent)
             data["Checks"].append(tdata)
 
         # The option is in func_dict but not under the ALL option and is not
@@ -987,10 +966,11 @@ def call_run_chk(args, func_dict, master, slaves):
         for item in (opt for opt in args.get_args() if opt in func_dict and
                      opt not in func_dict["-A"] and opt != "-A"):
 
-            tdata = func_dict[item](
-                master, slaves, json_fmt=json_fmt, ofile=outfile,
-                db_tbl=db_tbl, class_cfg=mongo_cfg, mail=mail,
-                sup_std=sup_std, mode=mode, indent=indent)
+            tdata = func_dict[opt](master=master, slaves=slaves)
+#            tdata = func_dict[item](
+#                master, slaves, json_fmt=json_fmt, ofile=outfile,
+#                db_tbl=db_tbl, class_cfg=mongo_cfg, mail=mail,
+#                sup_std=sup_std, mode=mode, indent=indent)
             data["Checks"].append(tdata)
 
     else:
