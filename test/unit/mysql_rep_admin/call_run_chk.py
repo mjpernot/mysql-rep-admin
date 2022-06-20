@@ -50,7 +50,7 @@ def chk_mst_log(master, slaves, **kwargs):
     if master and slaves and json_fmt:
         status = True
 
-    return status
+    return {"master": status}
 
 
 def chk_slv_thr(master, slaves, **kwargs):
@@ -69,7 +69,7 @@ def chk_slv_thr(master, slaves, **kwargs):
     if master and slaves and json_fmt:
         status = True
 
-    return status
+    return {"slave_thread": status}
 
 
 def rpt_slv_log(master, slaves, **kwargs):
@@ -88,7 +88,7 @@ def rpt_slv_log(master, slaves, **kwargs):
     if master and slaves and json_fmt:
         status = True
 
-    return status
+    return {"slave_log": status}
 
 
 class ArgParser(object):
@@ -116,7 +116,7 @@ class ArgParser(object):
 
         """
 
-        self.args_array = {"-A": True, "-D": True, "-m": "Mongo", "-d": "cfg"}
+        self.args_array = {"-A": True, "-D": True, "-m": "mongo", "-d": "cfg"}
 
     def arg_exist(self, arg):
 
@@ -223,9 +223,8 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp
-        test_flatten_json
-        test_file_append
         test_single_func
+        test_argsarray_all2
         test_argsarray_all
 
     """
@@ -246,45 +245,8 @@ class UnitTest(unittest.TestCase):
         self.func_dict = {"-A": ["-C", "-S"], "-C": chk_mst_log,
                           "-S": chk_slv_thr, "-D": rpt_slv_log}
 
-    @mock.patch("mysql_rep_admin.gen_libs.load_module")
-    def test_flatten_json(self, mock_cfg):
-
-        """Function:  test_flatten_json
-
-        Description:  Test with flatten option for JSON format.
-
-        Arguments:
-
-        """
-
-        self.args.args_array["-f"] = True
-
-        mock_cfg.return_value = "MongoCfg"
-
-        self.assertFalse(mysql_rep_admin.call_run_chk(
-            self.args, self.func_dict, self.master, [self.slave]))
-
-    @mock.patch("mysql_rep_admin.gen_libs.load_module")
-    def test_file_append(self, mock_cfg):
-
-        """Function:  test_file_append
-
-        Description:  Test with file append mode.
-
-        Arguments:
-
-        """
-
-        self.args.args_array["-a"] = True
-
-        mock_cfg.return_value = "MongoCfg"
-
-        self.assertFalse(mysql_rep_admin.call_run_chk(
-            self.args, self.func_dict, self.master, [self.slave]))
-
-    @mock.patch("mysql_rep_admin.gen_class.setup_mail")
-    @mock.patch("mysql_rep_admin.gen_libs.load_module")
-    def test_single_func(self, mock_cfg, mock_mail):
+    @mock.patch("mysql_rep_admin.data_out", mock.Mock(return_value=True))
+    def test_single_func(self):
 
         """Function:  test_single_func
 
@@ -296,16 +258,27 @@ class UnitTest(unittest.TestCase):
 
         del self.args.args_array["-A"]
 
-        self.args.args_array["-t"] = "ToMail"
+        self.assertFalse(mysql_rep_admin.call_run_chk(
+            self.args, self.func_dict, self.master, [self.slave]))
 
-        mock_cfg.return_value = "MongoCfg"
-        mock_mail.return_value = "MailInstance"
+    @mock.patch("mysql_rep_admin.data_out", mock.Mock(return_value=True))
+    def test_argsarray_all2(self):
+
+        """Function:  test_argsarray_all2
+
+        Description:  Test with all option in args_array.
+
+        Arguments:
+
+        """
+
+        del self.args.args_array["-D"]
 
         self.assertFalse(mysql_rep_admin.call_run_chk(
             self.args, self.func_dict, self.master, [self.slave]))
 
-    @mock.patch("mysql_rep_admin.gen_libs.load_module")
-    def test_argsarray_all(self, mock_cfg):
+    @mock.patch("mysql_rep_admin.data_out", mock.Mock(return_value=True))
+    def test_argsarray_all(self):
 
         """Function:  test_argsarray_all
 
@@ -314,8 +287,6 @@ class UnitTest(unittest.TestCase):
         Arguments:
 
         """
-
-        mock_cfg.return_value = "MongoCfg"
 
         self.assertFalse(mysql_rep_admin.call_run_chk(
             self.args, self.func_dict, self.master, [self.slave]))

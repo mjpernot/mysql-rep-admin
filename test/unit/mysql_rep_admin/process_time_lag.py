@@ -101,7 +101,6 @@ class UnitTest(unittest.TestCase):
         test_lag_zero
         test_lag_none
         test_lag_json
-        test_lag_stdout
         test_no_lag
 
     """
@@ -120,9 +119,6 @@ class UnitTest(unittest.TestCase):
         self.slave2 = SlaveRep(lag_time=None)
         self.slave3 = SlaveRep(lag_time=0)
         self.slave4 = SlaveRep(lag_time=None, conn=None)
-        self.name = "SlaveName"
-        self.json_fmt = False
-        self.json_fmt2 = True
         self.time_lag0 = 0
         self.time_lag1 = 1
         self.time_lag2 = None
@@ -138,11 +134,9 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        with gen_libs.no_std_out():
-            self.assertEqual(
-                mysql_rep_admin._process_time_lag(
-                    self.slave4, self.time_lag2, self.name, self.json_fmt),
-                self.time_lag2)
+        self.assertEqual(
+            mysql_rep_admin._process_time_lag(self.slave4, self.time_lag2),
+            self.time_lag2)
 
     @mock.patch("time.sleep", mock.Mock(return_value=True))
     def test_mysql_down_json(self):
@@ -156,8 +150,7 @@ class UnitTest(unittest.TestCase):
         """
 
         self.assertEqual(
-            mysql_rep_admin._process_time_lag(
-                self.slave4, self.time_lag2, self.name, self.json_fmt2),
+            mysql_rep_admin._process_time_lag(self.slave4, self.time_lag2),
             self.time_lag2)
 
     @mock.patch("time.sleep", mock.Mock(return_value=True))
@@ -172,8 +165,7 @@ class UnitTest(unittest.TestCase):
         """
 
         self.assertEqual(
-            mysql_rep_admin._process_time_lag(
-                self.slave3, self.time_lag1, self.name, self.json_fmt),
+            mysql_rep_admin._process_time_lag(self.slave3, self.time_lag1),
             self.time_lag0)
 
     @mock.patch("time.sleep", mock.Mock(return_value=True))
@@ -187,11 +179,9 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        with gen_libs.no_std_out():
-            self.assertEqual(
-                mysql_rep_admin._process_time_lag(
-                    self.slave, self.time_lag1, self.name, self.json_fmt),
-                self.time_lag1)
+        self.assertEqual(
+            mysql_rep_admin._process_time_lag(self.slave, self.time_lag1),
+            self.time_lag1)
 
     @mock.patch("time.sleep", mock.Mock(return_value=True))
     def test_lag_zero(self):
@@ -205,8 +195,7 @@ class UnitTest(unittest.TestCase):
         """
 
         self.assertEqual(
-            mysql_rep_admin._process_time_lag(
-                self.slave, self.time_lag0, self.name, self.json_fmt),
+            mysql_rep_admin._process_time_lag(self.slave, self.time_lag0),
             self.time_lag0)
 
     @mock.patch("time.sleep", mock.Mock(return_value=True))
@@ -220,11 +209,9 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        with gen_libs.no_std_out():
-            self.assertEqual(
-                mysql_rep_admin._process_time_lag(
-                    self.slave2, self.time_lag2, self.name, self.json_fmt),
-                self.time_lag2)
+        self.assertEqual(
+            mysql_rep_admin._process_time_lag(self.slave2, self.time_lag2),
+            self.time_lag2)
 
     @mock.patch("time.sleep", mock.Mock(return_value=True))
     def test_lag_json(self):
@@ -238,26 +225,8 @@ class UnitTest(unittest.TestCase):
         """
 
         self.assertEqual(
-            mysql_rep_admin._process_time_lag(
-                self.slave, self.time_lag1, self.name, self.json_fmt2),
+            mysql_rep_admin._process_time_lag(self.slave, self.time_lag1),
             self.time_lag1)
-
-    @mock.patch("time.sleep", mock.Mock(return_value=True))
-    def test_lag_stdout(self):
-
-        """Function:  test_lag_stdout
-
-        Description:  Test with time lag to standard out.
-
-        Arguments:
-
-        """
-
-        with gen_libs.no_std_out():
-            self.assertEqual(
-                mysql_rep_admin._process_time_lag(
-                    self.slave, self.time_lag1, self.name, self.json_fmt),
-                self.time_lag1)
 
     def test_no_lag(self):
 
@@ -270,8 +239,7 @@ class UnitTest(unittest.TestCase):
         """
 
         self.assertEqual(
-            mysql_rep_admin._process_time_lag(
-                self.slave, self.time_lag0, self.name, self.json_fmt),
+            mysql_rep_admin._process_time_lag( self.slave, self.time_lag0),
             self.time_lag0)
 
 
