@@ -673,7 +673,10 @@ def chk_slv_time(**kwargs):
 #        print("chk_slv_time:  Warning:  No Slave instance detected.")
 #
 #    if json_fmt:
+# NOT THIS:
     data["CheckSlaveTime"]["Slaves"].append(add_miss_slaves(master, data))
+# TRY THIS:
+# data["Slaves"] = data["Slaves"] + newdata
 #    _process_json(outdata, **kwargs)
 
     return data
@@ -767,7 +770,7 @@ def chk_slv_other(**kwargs):
     """
 
     slaves = list(kwargs.get("slaves", list()))
-    data = {"CheckSlaveOther": {"Slaves": []}}
+    data = {"CheckSlaveOther": {"Slaves": list()}}
 #    slaves = list(slaves)
 
     if slaves:
@@ -779,6 +782,8 @@ def chk_slv_other(**kwargs):
 
     else:
         print("chk_slv_other:  Warning:  No Slave instance detected.")
+
+    return data
 
 
 def _chk_other(skip, tmp_tbl, retry, name, sql_ver):
@@ -923,7 +928,7 @@ def call_run_chk(args, func_dict, master, slaves):
         (input) args -> ArgParser class instance
         (input) func_dict -> Dictionary list of functions and options
         (input) master -> Master instance
-        (input) slaves -> Slave instances
+        (input) slaves -> List of slave instances
 
     """
 
