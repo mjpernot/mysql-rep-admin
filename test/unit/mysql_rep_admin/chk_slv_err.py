@@ -34,30 +34,6 @@ import version
 __version__ = version.__version__
 
 
-class MasterRep(object):
-
-    """Class:  MasterRep
-
-    Description:  Class stub holder for mysql_class.MasterRep class.
-
-    Methods:
-        __init__
-
-    """
-
-    def __init__(self):
-
-        """Method:  __init__
-
-        Description:  Class initialization.
-
-        Arguments:
-
-        """
-
-        self.name = "Master_Name"
-
-
 class SlaveRep(object):
 
     """Class:  SlaveRep
@@ -142,13 +118,32 @@ class UnitTest(unittest.TestCase):
         Arguments:
 
         """
-
-        self.master = MasterRep()
+        self.maxDiff=None
         self.slave = SlaveRep()
         self.slave2 = SlaveRep(ios=None, sql=None)
         self.slave3 = SlaveRep(sql=None)
         self.slave4 = SlaveRep(ios=None)
         self.slave5 = SlaveRep(ios=None, sql=None, conn=None)
+        self.data = {"Name": self.slave.name, "Connection": "Up", "IO": {},
+                     "SQL": {}}
+
+        self.results = {"CheckSlaveError": {"Slaves": [dict(self.data)]}}
+        self.results["CheckSlaveError"]["Slaves"][0]["Connection"] = "Down"
+
+        self.results2 = {"CheckSlaveError": {"Slaves": [dict(self.data)]}}
+        self.results2["CheckSlaveError"]["Slaves"][0]["SQL"]["Error"] = "Error"
+        self.results2[
+            "CheckSlaveError"]["Slaves"][0]["SQL"]["Message"] = "SQL_Message"
+        self.results2[
+            "CheckSlaveError"]["Slaves"][0]["SQL"]["Timestamp"] = "SQL_Time"
+
+        self.results3 = {"CheckSlaveError": {"Slaves": [dict(self.data)]}}
+
+        self.results4 = {"CheckSlaveError": {"Slaves": [dict(self.data)]}}
+
+        self.results5 = {"CheckSlaveError": {"Slaves": [dict(self.data)]}}
+
+        self.results6 = {"CheckSlaveError": {"Slaves": [dict(self.data)]}}
 
     def test_no_conn(self):
 
@@ -160,9 +155,8 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        with gen_libs.no_std_out():
-            self.assertFalse(mysql_rep_admin.chk_slv_err(self.master,
-                                                         [self.slave5]))
+        self.assertEqual(mysql_rep_admin.chk_slv_err(slaves=[self.slave5]),
+                         self.results)
 
     def test_sql_error(self):
 
@@ -174,10 +168,10 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        with gen_libs.no_std_out():
-            self.assertFalse(mysql_rep_admin.chk_slv_err(self.master,
-                                                         [self.slave4]))
+        self.assertEqual(mysql_rep_admin.chk_slv_err(slaves=[self.slave4]),
+                         self.results2)
 
+# STOPPED HERE
     def test_io_error(self):
 
         """Function:  test_io_error
@@ -188,9 +182,8 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        with gen_libs.no_std_out():
-            self.assertFalse(mysql_rep_admin.chk_slv_err(self.master,
-                                                         [self.slave3]))
+        self.assertEqual(mysql_rep_admin.chk_slv_err(slaves=[self.slave3]),
+                         self.results)
 
     def test_no_slv_present(self):
 
@@ -202,8 +195,8 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        with gen_libs.no_std_out():
-            self.assertFalse(mysql_rep_admin.chk_slv_err(self.master, []))
+        #with gen_libs.no_std_out():
+        self.assertEqual(mysql_rep_admin.chk_slv_err(slaves=[]), self.results)
 
     def test_no_error(self):
 
@@ -215,8 +208,8 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.assertFalse(mysql_rep_admin.chk_slv_err(self.master,
-                                                     [self.slave2]))
+        self.assertEqual(mysql_rep_admin.chk_slv_err(slaves=[self.slave2]),
+                         self.results)
 
     def test_iosql_error(self):
 
@@ -228,9 +221,8 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        with gen_libs.no_std_out():
-            self.assertFalse(mysql_rep_admin.chk_slv_err(self.master,
-                                                         [self.slave]))
+        self.assertEqual(mysql_rep_admin.chk_slv_err(slaves=[self.slave]),
+                         self.results)
 
 
 if __name__ == "__main__":
