@@ -673,10 +673,9 @@ def chk_slv_time(**kwargs):
 #        print("chk_slv_time:  Warning:  No Slave instance detected.")
 #
 #    if json_fmt:
-# NOT THIS:
-    data["CheckSlaveTime"]["Slaves"].append(add_miss_slaves(master, data))
-# TRY THIS:
-# data["Slaves"] = data["Slaves"] + newdata
+#    data["CheckSlaveTime"]["Slaves"].append(add_miss_slaves(master, data))
+    data["CheckSlaveTime"]["Slaves"] = \
+        data["CheckSlaveTime"]["Slaves"] + add_miss_slaves(master, data)
 #    _process_json(outdata, **kwargs)
 
     return data
