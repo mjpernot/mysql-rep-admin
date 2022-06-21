@@ -156,9 +156,27 @@ class UnitTest(unittest.TestCase):
         Arguments:
 
         """
+        self.maxDiff=None
 
         self.master = MasterRep()
         self.slave = SlaveRep()
+        self.chk_slv_data = {"Name": "SlaveName", "Status": "OK"}
+        self.results = {"CheckMasterLog": {"MasterLog": {}, "SlaveLogs": []}}
+        self.results2 = {
+            "CheckMasterLog": {
+                "MasterLog": {}, "SlaveLogs": [
+                    {"Name": "SlaveName", "Status": "OK"}]}}
+        self.results3 = {
+            "CheckMasterLog": {
+                "MasterLog": {
+                    "Master": {
+                        "Name": "Master_Name", "Log": "Master_Log2",
+                        "Position": 5678},
+                    "Slaves": 
+                        [{"Log": "Master_Log", "Name": "Slave_Name",
+                         "Position": 3456,
+                "Status": "Warning:  Slave lagging in reading master log"}]},
+                "SlaveLogs": [{"Name": "SlaveName", "Status": "OK"}]}}
 
     def test_no_present(self):
 
@@ -171,7 +189,9 @@ class UnitTest(unittest.TestCase):
         """
 
         with gen_libs.no_std_out():
-            self.assertFalse(mysql_rep_admin.chk_mst_log(None, []))
+            self.assertEqual(
+                mysql_rep_admin.chk_mst_log(
+                    master=None, slaves=[]), self.results)
 
     @mock.patch("mysql_rep_admin.chk_slv")
     def test_slv_present(self, mock_chk):
@@ -184,10 +204,12 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_chk.return_value = True
+        mock_chk.return_value = [dict(self.chk_slv_data)]
 
         with gen_libs.no_std_out():
-            self.assertFalse(mysql_rep_admin.chk_mst_log(None, [self.slave]))
+            self.assertEqual(
+                mysql_rep_admin.chk_mst_log(
+                    master=None, slaves=[self.slave]), self.results2)
 
     @mock.patch("mysql_rep_admin.chk_slv")
     def test_mst_slv_present(self, mock_chk):
@@ -200,11 +222,11 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_chk.return_value = True
+        mock_chk.return_value = [dict(self.chk_slv_data)]
 
-        with gen_libs.no_std_out():
-            self.assertFalse(mysql_rep_admin.chk_mst_log(self.master,
-                                                         [self.slave]))
+        self.assertEqual(
+            mysql_rep_admin.chk_mst_log(
+                master=self.master, slaves=[self.slave]), self.results3)
 
 
 if __name__ == "__main__":

@@ -124,26 +124,61 @@ class UnitTest(unittest.TestCase):
         self.slave3 = SlaveRep(sql=None)
         self.slave4 = SlaveRep(ios=None)
         self.slave5 = SlaveRep(ios=None, sql=None, conn=None)
-        self.data = {"Name": self.slave.name, "Connection": "Up", "IO": {},
-                     "SQL": {}}
+#        self.data = {"Name": self.slave.name, "Connection": "Up", "IO": dict(),
+#                     "SQL": dict()}
 
-        self.results = {"CheckSlaveError": {"Slaves": [dict(self.data)]}}
+        self.results = {
+            "CheckSlaveError": {
+                "Slaves": [
+                    {"Name": self.slave.name, "Connection": "Up", "IO": dict(),
+                     "SQL": dict()}]}}
         self.results["CheckSlaveError"]["Slaves"][0]["Connection"] = "Down"
 
-        self.results2 = {"CheckSlaveError": {"Slaves": [dict(self.data)]}}
+        self.results2 = {
+            "CheckSlaveError": {
+                "Slaves": [
+                    {"Name": self.slave.name, "Connection": "Up", "IO": dict(),
+                     "SQL": dict()}]}}
         self.results2["CheckSlaveError"]["Slaves"][0]["SQL"]["Error"] = "Error"
         self.results2[
             "CheckSlaveError"]["Slaves"][0]["SQL"]["Message"] = "SQL_Message"
         self.results2[
             "CheckSlaveError"]["Slaves"][0]["SQL"]["Timestamp"] = "SQL_Time"
 
-        self.results3 = {"CheckSlaveError": {"Slaves": [dict(self.data)]}}
+        self.results3 = {
+            "CheckSlaveError": {
+                "Slaves": [
+                    {"Name": self.slave.name, "Connection": "Up", "IO": dict(),
+                     "SQL": dict()}]}}
+        self.results3["CheckSlaveError"]["Slaves"][0]["IO"]["Error"] = "Error"
+        self.results3[
+            "CheckSlaveError"]["Slaves"][0]["IO"]["Message"] = "IO_Message"
+        self.results3[
+            "CheckSlaveError"]["Slaves"][0]["IO"]["Timestamp"] = "IO_Time"
 
-        self.results4 = {"CheckSlaveError": {"Slaves": [dict(self.data)]}}
+        self.results4 = {"CheckSlaveError": {"Slaves": []}}
 
-        self.results5 = {"CheckSlaveError": {"Slaves": [dict(self.data)]}}
+        self.results5 = {
+            "CheckSlaveError": {
+                "Slaves": [
+                    {"Name": self.slave.name, "Connection": "Up", "IO": dict(),
+                     "SQL": dict()}]}}
 
-        self.results6 = {"CheckSlaveError": {"Slaves": [dict(self.data)]}}
+        self.results6 = {
+            "CheckSlaveError": {
+                "Slaves": [
+                    {"Name": self.slave.name, "Connection": "Up", "IO": dict(),
+                     "SQL": dict()}]}}
+        self.results6["CheckSlaveError"]["Slaves"][0]["SQL"]["Error"] = "Error"
+        self.results6[
+            "CheckSlaveError"]["Slaves"][0]["SQL"]["Message"] = "SQL_Message"
+        self.results6[
+            "CheckSlaveError"]["Slaves"][0]["SQL"]["Timestamp"] = "SQL_Time"
+        self.results6["CheckSlaveError"]["Slaves"][0]["IO"]["Error"] = "Error"
+        self.results6[
+            "CheckSlaveError"]["Slaves"][0]["IO"]["Message"] = "IO_Message"
+        self.results6[
+            "CheckSlaveError"]["Slaves"][0]["IO"]["Timestamp"] = "IO_Time"
 
     def test_no_conn(self):
 
@@ -171,7 +206,6 @@ class UnitTest(unittest.TestCase):
         self.assertEqual(mysql_rep_admin.chk_slv_err(slaves=[self.slave4]),
                          self.results2)
 
-# STOPPED HERE
     def test_io_error(self):
 
         """Function:  test_io_error
@@ -183,7 +217,7 @@ class UnitTest(unittest.TestCase):
         """
 
         self.assertEqual(mysql_rep_admin.chk_slv_err(slaves=[self.slave3]),
-                         self.results)
+                         self.results3)
 
     def test_no_slv_present(self):
 
@@ -195,8 +229,9 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        #with gen_libs.no_std_out():
-        self.assertEqual(mysql_rep_admin.chk_slv_err(slaves=[]), self.results)
+        with gen_libs.no_std_out():
+            self.assertEqual(
+                mysql_rep_admin.chk_slv_err(slaves=[]), self.results4)
 
     def test_no_error(self):
 
@@ -209,7 +244,7 @@ class UnitTest(unittest.TestCase):
         """
 
         self.assertEqual(mysql_rep_admin.chk_slv_err(slaves=[self.slave2]),
-                         self.results)
+                         self.results5)
 
     def test_iosql_error(self):
 
@@ -222,7 +257,7 @@ class UnitTest(unittest.TestCase):
         """
 
         self.assertEqual(mysql_rep_admin.chk_slv_err(slaves=[self.slave]),
-                         self.results)
+                         self.results6)
 
 
 if __name__ == "__main__":

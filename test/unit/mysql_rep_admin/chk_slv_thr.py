@@ -34,30 +34,6 @@ import version
 __version__ = version.__version__
 
 
-class MasterRep(object):
-
-    """Class:  MasterRep
-
-    Description:  Class stub holder for mysql_class.MasterRep class.
-
-    Methods:
-        __init__
-
-    """
-
-    def __init__(self):
-
-        """Method:  __init__
-
-        Description:  Class initialization.
-
-        Arguments:
-
-        """
-
-        self.name = "Master_Name"
-
-
 class SlaveRep(object):
 
     """Class:  SlaveRep
@@ -137,8 +113,23 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.master = MasterRep()
         self.slave = None
+        self.results = {"CheckSlaveThread": {"Slaves": []}}
+        self.results2 = {
+            "CheckSlaveThread": {
+                "Slaves": [
+                    {"Name": "Slave_Name", "IOThread": "Up",
+                     "SQLThread": "Down"}]}}
+        self.results3 = {
+            "CheckSlaveThread": {
+                "Slaves": [
+                    {"Name": "Slave_Name", "IOThread": "Down",
+                     "SQLThread": "Up"}]}}
+        self.results4 = {
+            "CheckSlaveThread": {
+                "Slaves": [
+                    {"Name": "Slave_Name", "IOThread": "Down",
+                     "SQLThread": "Down"}]}}
 
     def test_no_slv_present(self):
 
@@ -151,7 +142,8 @@ class UnitTest(unittest.TestCase):
         """
 
         with gen_libs.no_std_out():
-            self.assertFalse(mysql_rep_admin.chk_slv_thr(self.master, []))
+            self.assertEqual(
+                mysql_rep_admin.chk_slv_thr(slaves=[]), self.results)
 
     def test_sqlthr_down(self):
 
@@ -165,9 +157,9 @@ class UnitTest(unittest.TestCase):
 
         self.slave = SlaveRep(thr="ON", run="ON", io_thr="ON")
 
-        with gen_libs.no_std_out():
-            self.assertFalse(mysql_rep_admin.chk_slv_thr(self.master,
-                                                         [self.slave]))
+        #with gen_libs.no_std_out():
+        self.assertEqual(
+            mysql_rep_admin.chk_slv_thr(slaves=[self.slave]), self.results2)
 
     def test_iothr_down(self):
 
@@ -181,9 +173,9 @@ class UnitTest(unittest.TestCase):
 
         self.slave = SlaveRep(thr="ON", run="ON")
 
-        with gen_libs.no_std_out():
-            self.assertFalse(mysql_rep_admin.chk_slv_thr(self.master,
-                                                         [self.slave]))
+        #with gen_libs.no_std_out():
+        self.assertEqual(
+            mysql_rep_admin.chk_slv_thr(slaves=[self.slave]), self.results3)
 
     def test_thr_run_down(self):
 
@@ -197,9 +189,9 @@ class UnitTest(unittest.TestCase):
 
         self.slave = SlaveRep()
 
-        with gen_libs.no_std_out():
-            self.assertFalse(mysql_rep_admin.chk_slv_thr(self.master,
-                                                         [self.slave]))
+        #with gen_libs.no_std_out():
+        self.assertEqual(
+            mysql_rep_admin.chk_slv_thr(slaves=[self.slave]), self.results4)
 
 
 if __name__ == "__main__":

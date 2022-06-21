@@ -47,8 +47,8 @@ class SlaveRep(object):
 
     """
 
-    def __init__(self, gtid_mode="ON", mst_file="Master_Log",
-                 relay_file="Slave_Relay", read_pos=3456, exec_pos=4567):
+    def __init__(self, gtid_mode="ON", mst_file="FileName",
+                 relay_file="FileName", read_pos=3456, exec_pos=4567):
 
         """Method:  __init__
 
@@ -100,7 +100,8 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp
-        test_chk_slv
+        test_chk_slv_lag
+        test_chk_slv_ok
 
     """
 
@@ -114,20 +115,44 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.slave = SlaveRep()
+        self.results = {
+            "Name": "Server_Name", "ReadLog": "FileName",
+            "ReadPosition": 4567, "ExecLog": "FileName",
+            "ExecPosition": 4567, "Status": "OK"}
+        self.results2 = {
+            "Name": "Server_Name", "ReadLog": "FileName",
+            "ReadPosition": 3456, "ExecLog": "FileName",
+            "ExecPosition": 4567,
+            "Status": "Warning:  Slave might be lagging in execution of log",
+            "RetrievedGTID": 12345678, "ExecutedGTID": 23456789}
 
-    def test_chk_slv(self):
+    def test_chk_slv_lag(self):
 
-        """Function:  test_chk_slv
+        """Function:  test_chk_slv_lag
 
-        Description:  Test chk_slv method.
+        Description:  Test with slave with lag problem.
 
         Arguments:
 
         """
 
-        with gen_libs.no_std_out():
-            self.assertFalse(mysql_rep_admin.chk_slv(self.slave))
+        slave = SlaveRep()
+
+        self.assertEqual(mysql_rep_admin.chk_slv(slave), self.results2)
+
+    def test_chk_slv_ok(self):
+
+        """Function:  test_chk_slv_ok
+
+        Description:  Test with slave with OK status.
+
+        Arguments:
+
+        """
+
+        slave = SlaveRep(read_pos=4567)
+
+        self.assertEqual(mysql_rep_admin.chk_slv(slave), self.results)
 
 
 if __name__ == "__main__":
