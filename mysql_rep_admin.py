@@ -360,7 +360,7 @@ def rpt_slv_log(**kwargs):
             if slv.gtid_mode:
                 tdata["RetrievedGTID"] = slv.retrieved_gtid
 
-            data["SlaveLog"].append(tdata)
+            data["SlaveLogs"].append(tdata)
 
     else:
         print("rpt_slv_log:  Error:  No Slave instances detected.")
@@ -463,18 +463,23 @@ def chk_mst_log(**kwargs):
                 {"Name": slv.get_name(), "Log": mst_file, "Position": read_pos,
                  "Status": status})
 
-            tdata = chk_slv(slv, **kwargs)
-            data["CheckMasterLog"]["MasterLog"]["SlaveLog"].append(tdata)
+#            tdata = chk_slv(slv, **kwargs)
+#            data["CheckMasterLog"]["SlaveLogs"].append(tdata)
+            data["CheckMasterLog"]["SlaveLogs"] = \
+                data["CheckMasterLog"]["SlaveLogs"] + chk_slv(slv, **kwargs)
 
     elif slaves:
         print("chk_mst_log: Warning:  Missing Master instance.")
 
         for slv in slaves:
-            tdata = chk_slv(slv, **kwargs)
-            data["CheckMasterLog"]["MasterLog"]["SlaveLog"].append(tdata)
+#            tdata = chk_slv(slv, **kwargs)
+            data["CheckMasterLog"]["SlaveLogs"] = \
+                data["CheckMasterLog"]["SlaveLogs"] + chk_slv(slv, **kwargs)
 
     else:
         print("chk_mst_log:  Warning:  Missing Master and Slave instances.")
+
+    return data
 
 
 def chk_slv_thr(**kwargs):
