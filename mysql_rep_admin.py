@@ -280,7 +280,7 @@ import version
 __version__ = version.__version__
 
 # Global
-#PRT_TEMPLATE = "\nSlave: {0}"
+# PRT_TEMPLATE = "\nSlave: {0}"
 
 
 def help_message():
@@ -404,7 +404,7 @@ def chk_slv(slave, **kwargs):
         if slave.gtid_mode:
             tdata["RetrievedGTID"] = slave.retrieved_gtid
             tdata["ExecutedGTID"] = slave.exe_gtid
-            
+
 #            print("\tRetrieved GTID:\t{0}".format(slave.retrieved_gtid))
 #
 #        print("\tExec Log:\t{0}".format(relay_file))
@@ -414,7 +414,6 @@ def chk_slv(slave, **kwargs):
 #            print("\tExecuted GTID:\t{0}".format(slave.exe_gtid))
 
     return gen_libs.merge_two_dicts(data, tdata)[0]
-
 
 
 def chk_mst_log(**kwargs):
@@ -472,9 +471,9 @@ def chk_mst_log(**kwargs):
         print("chk_mst_log: Warning:  Missing Master instance.")
 
         for slv in slaves:
-#            tdata = chk_slv(slv, **kwargs)
             data["CheckMasterLog"]["SlaveLogs"] = \
                 data["CheckMasterLog"]["SlaveLogs"] + chk_slv(slv, **kwargs)
+#            tdata = chk_slv(slv, **kwargs)
 
     else:
         print("chk_mst_log:  Warning:  Missing Master and Slave instances.")
@@ -662,14 +661,14 @@ def chk_slv_time(**kwargs):
 
     if slaves:
         for slv in slaves:
-#            time_lag = slv.get_time()
-#            name = slv.get_name()
-#            time_lag = _process_time_lag(slv, slv.get_time())
-
             data["CheckSlaveTime"]["Slaves"].append(
                 {"Name": slv.get_name(),
                  "LagTime": _process_time_lag(slv, slv.get_time())})
 
+#            time_lag = slv.get_time()
+#            name = slv.get_name()
+#            time_lag = _process_time_lag(slv, slv.get_time())
+#
 #            if json_fmt:
 #                outdata["Slaves"].append({"Name": slv.name,
 #                                          "LagTime": time_lag})
@@ -686,7 +685,7 @@ def chk_slv_time(**kwargs):
     return data
 
 
-#def _process_json(outdata, **kwargs):
+# def _process_json(outdata, **kwargs):
 #
 #    """Function:  _process_json
 #
@@ -966,8 +965,8 @@ def call_run_chk(args, func_dict, master, slaves):
             tdata = func_dict[opt](master=master, slaves=slaves)
 #            tdata = func_dict[opt](
 #                master, slaves, json_fmt=json_fmt, ofile=outfile,
-#                db_tbl=db_tbl, class_cfg=mongo_cfg, mail=mail, sup_std=sup_std,
-#                mode=mode, indent=indent)
+#                db_tbl=db_tbl, class_cfg=mongo_cfg, mail=mail,
+#                sup_std=sup_std, mode=mode, indent=indent)
             data["Checks"].append(tdata)
 
         # The option is in func_dict but not under the ALL option and is not
@@ -989,8 +988,8 @@ def call_run_chk(args, func_dict, master, slaves):
             tdata = func_dict[opt](master=master, slaves=slaves)
 #            tdata = func_dict[opt](
 #                master, slaves, json_fmt=json_fmt, ofile=outfile,
-#                db_tbl=db_tbl, class_cfg=mongo_cfg, mail=mail, sup_std=sup_std,
-#                mode=mode, indent=indent)
+#                db_tbl=db_tbl, class_cfg=mongo_cfg, mail=mail,
+#                sup_std=sup_std, mode=mode, indent=indent)
             data["Checks"].append(tdata)
 
     data_out(data, args)
