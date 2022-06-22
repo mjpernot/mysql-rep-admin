@@ -114,7 +114,7 @@ class UnitTest(unittest.TestCase):
         Arguments:
 
         """
-        self.maxDiff=None
+
         self.results = {"SlaveLogs": []}
         self.results2 = {
             "SlaveLogs": [{

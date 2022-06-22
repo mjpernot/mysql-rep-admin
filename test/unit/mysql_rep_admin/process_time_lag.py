@@ -239,7 +239,7 @@ class UnitTest(unittest.TestCase):
         """
 
         self.assertEqual(
-            mysql_rep_admin._process_time_lag( self.slave, self.time_lag0),
+            mysql_rep_admin._process_time_lag(self.slave, self.time_lag0),
             self.time_lag0)
 
 

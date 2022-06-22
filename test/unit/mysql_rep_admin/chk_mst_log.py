@@ -156,7 +156,6 @@ class UnitTest(unittest.TestCase):
         Arguments:
 
         """
-        self.maxDiff=None
 
         self.master = MasterRep()
         self.slave = SlaveRep()
@@ -172,10 +171,11 @@ class UnitTest(unittest.TestCase):
                     "Master": {
                         "Name": "Master_Name", "Log": "Master_Log2",
                         "Position": 5678},
-                    "Slaves": 
+                    "Slaves":
                         [{"Log": "Master_Log", "Name": "Slave_Name",
-                         "Position": 3456,
-                "Status": "Warning:  Slave lagging in reading master log"}]},
+                          "Position": 3456,
+                          "Status": "Warning:  Slave lagging in reading \
+master log"}]},
                 "SlaveLogs": [{"Name": "SlaveName", "Status": "OK"}]}}
 
     def test_no_present(self):

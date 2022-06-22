@@ -118,14 +118,12 @@ class UnitTest(unittest.TestCase):
         Arguments:
 
         """
-        self.maxDiff=None
+
         self.slave = SlaveRep()
         self.slave2 = SlaveRep(ios=None, sql=None)
         self.slave3 = SlaveRep(sql=None)
         self.slave4 = SlaveRep(ios=None)
         self.slave5 = SlaveRep(ios=None, sql=None, conn=None)
-#        self.data = {"Name": self.slave.name, "Connection": "Up", "IO": dict(),
-#                     "SQL": dict()}
 
         self.results = {
             "CheckSlaveError": {

@@ -134,7 +134,7 @@ class UnitTest(unittest.TestCase):
         """
 
         with gen_libs.no_std_out():
-            data=mysql_rep_admin.rpt_mst_log(master=None)
+            data = mysql_rep_admin.rpt_mst_log(master=None)
 
         self.assertEqual(data, self.results3)
 

@@ -157,7 +157,6 @@ class UnitTest(unittest.TestCase):
 
         self.slave = SlaveRep(thr="ON", run="ON", io_thr="ON")
 
-        #with gen_libs.no_std_out():
         self.assertEqual(
             mysql_rep_admin.chk_slv_thr(slaves=[self.slave]), self.results2)
 
@@ -173,7 +172,6 @@ class UnitTest(unittest.TestCase):
 
         self.slave = SlaveRep(thr="ON", run="ON")
 
-        #with gen_libs.no_std_out():
         self.assertEqual(
             mysql_rep_admin.chk_slv_thr(slaves=[self.slave]), self.results3)
 
@@ -189,7 +187,6 @@ class UnitTest(unittest.TestCase):
 
         self.slave = SlaveRep()
 
-        #with gen_libs.no_std_out():
         self.assertEqual(
             mysql_rep_admin.chk_slv_thr(slaves=[self.slave]), self.results4)
 
