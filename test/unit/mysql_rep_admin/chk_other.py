@@ -27,7 +27,6 @@ else:
 
 # Local
 sys.path.append(os.getcwd())
-import lib.gen_libs as gen_libs
 import mysql_rep_admin
 import version
 

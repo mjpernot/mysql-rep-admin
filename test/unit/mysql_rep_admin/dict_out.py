@@ -24,6 +24,7 @@ else:
     import unittest
 
 # Third-party
+import json
 import mock
 
 # Local
