@@ -138,6 +138,14 @@ class UnitTest(unittest.TestCase):
         self.master = MasterRep()
         self.slave = SlaveRep()
         self.slave2 = SlaveRep(0, 0, 0)
+        self.results = {
+            "CheckSlaveOther": {"Slaves": [{'Name': 'Slave_Name'}]}}
+        self.results2 = {
+            "CheckSlaveOther": {"Slaves": []}}
+        self.results3 = {
+            "CheckSlaveOther": {"Slaves": [
+                {"Name": "Slave_Name", "RetryTransactionCount": "1",
+                 "SkipCount": 1, "TempTableCount": "6"}]}}
 
     def test_chk_slv_other2(self):
 
@@ -149,8 +157,9 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.assertFalse(
-            mysql_rep_admin.chk_slv_other(self.master, [self.slave2]))
+        self.assertEqual(
+            mysql_rep_admin.chk_slv_other(
+                master=self.master, slaves=[self.slave2]), self.results)
 
     def test_no_slv(self):
 
@@ -163,7 +172,9 @@ class UnitTest(unittest.TestCase):
         """
 
         with gen_libs.no_std_out():
-            self.assertFalse(mysql_rep_admin.chk_slv_other(self.master, []))
+            self.assertEqual(
+                mysql_rep_admin.chk_slv_other(master=self.master, slaves=[]),
+                self.results2)
 
     def test_chk_slv_other(self):
 
@@ -175,9 +186,9 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        with gen_libs.no_std_out():
-            self.assertFalse(
-                mysql_rep_admin.chk_slv_other(self.master, [self.slave]))
+        self.assertEqual(
+            mysql_rep_admin.chk_slv_other(
+                master=self.master, slaves=[self.slave]), self.results3)
 
 
 if __name__ == "__main__":

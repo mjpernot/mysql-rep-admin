@@ -28,7 +28,6 @@ import mock
 
 # Local
 sys.path.append(os.getcwd())
-import lib.gen_libs as gen_libs
 import mysql_rep_admin
 import version
 
@@ -124,59 +123,6 @@ class SlaveRep(object):
         return True
 
 
-class Mail(object):
-
-    """Class:  Mail
-
-    Description:  Class stub holder for gen_class.Mail class.
-
-    Methods:
-        __init__
-        add_2_msg
-        send_mail
-
-    """
-
-    def __init__(self, lag_time=1):
-
-        """Method:  __init__
-
-        Description:  Class initialization.
-
-        Arguments:
-
-        """
-
-        self.lag_time = lag_time
-        self.data = None
-
-    def add_2_msg(self, data):
-
-        """Method:  add_2_msg
-
-        Description:  Stub method holder for Mail.add_2_msg.
-
-        Arguments:
-
-        """
-
-        self.data = data
-
-        return True
-
-    def send_mail(self):
-
-        """Method:  get_name
-
-        Description:  Stub method holder for Mail.send_mail.
-
-        Arguments:
-
-        """
-
-        return True
-
-
 class UnitTest(unittest.TestCase):
 
     """Class:  UnitTest
@@ -185,13 +131,9 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp
-        test_mail
         test_no_slv
-        test_json_stdout
-        test_json_no_stdout
         test_json
-        test_std_no_lag
-        test_std_out
+        test_no_lag
 
     """
 
@@ -207,35 +149,15 @@ class UnitTest(unittest.TestCase):
 
         self.master = MasterRep()
         self.slave = SlaveRep()
-        self.mail = Mail()
-        self.outdata = {"key": "value"}
-        self.db_tbl = "db:tbl"
-        self.status = (True, None)
+        self.results = {"CheckSlaveTime": {"Slaves": []}}
+        self.results2 = {
+            "CheckSlaveTime": {
+                "Slaves": [{'LagTime': 0, 'Name': 'Slave_Name'}]}}
+        self.results3 = {
+            "CheckSlaveTime": {
+                "Slaves": [{'LagTime': 1, 'Name': 'Slave_Name'}]}}
 
-    @mock.patch("mysql_rep_admin.gen_libs.write_file",
-                mock.Mock(return_value=True))
-    @mock.patch("mysql_rep_admin.time.sleep",
-                mock.Mock(return_value=True))
-    @mock.patch("mysql_rep_admin.mongo_libs.ins_doc")
-    @mock.patch("mysql_rep_admin.add_miss_slaves")
-    def test_mail(self, mock_miss, mock_mongo):
-
-        """Function:  test_mail
-
-        Description:  Test sending JSON data to mail.
-
-        Arguments:
-
-        """
-
-        mock_miss.return_value = self.outdata
-        mock_mongo.return_value = self.status
-
-        self.assertFalse(mysql_rep_admin.chk_slv_time(
-            self.master, [self.slave], json_fmt=True, class_cfg="Cfg",
-            db_tbl=self.db_tbl, ofile="FileName", mail=self.mail,
-            sup_std=True))
-
+    @mock.patch("mysql_rep_admin.add_miss_slaves", mock.Mock(return_value=[]))
     def test_no_slv(self):
 
         """Function:  test_no_slv
@@ -246,112 +168,43 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        with gen_libs.no_std_out():
-            self.assertFalse(mysql_rep_admin.chk_slv_time(self.master, []))
+        self.assertEqual(
+            mysql_rep_admin.chk_slv_time(master=self.master, slaves=[]),
+            self.results)
 
-    @mock.patch("mysql_rep_admin.gen_libs.write_file",
-                mock.Mock(return_value=True))
-    @mock.patch("mysql_rep_admin.time.sleep",
-                mock.Mock(return_value=True))
-    @mock.patch("mysql_rep_admin.mongo_libs.ins_doc")
-    @mock.patch("mysql_rep_admin.add_miss_slaves")
-    def test_json_stdout(self, mock_miss, mock_mongo):
+    @mock.patch("mysql_rep_admin.time.sleep", mock.Mock(return_value=True))
+    @mock.patch("mysql_rep_admin.add_miss_slaves", mock.Mock(return_value=[]))
+    def test_lag(self):
 
-        """Function:  test_json_stdout
+        """Function:  test_lag
 
-        Description:  Test with JSON format with standard out.
+        Description:  Test with time lag.
 
         Arguments:
 
         """
 
-        mock_miss.return_value = self.outdata
-        mock_mongo.return_value = self.status
+        self.assertEqual(
+            mysql_rep_admin.chk_slv_time(
+                master=self.master, slaves=[self.slave]), self.results3)
 
-        with gen_libs.no_std_out():
-            self.assertFalse(mysql_rep_admin.chk_slv_time(
-                self.master, [self.slave], json_fmt=True, class_cfg="Cfg",
-                db_tbl=self.db_tbl, ofile="FileName", sup_std=False))
-
-    @mock.patch("mysql_rep_admin.gen_libs.write_file",
-                mock.Mock(return_value=True))
-    @mock.patch("mysql_rep_admin.time.sleep",
-                mock.Mock(return_value=True))
-    @mock.patch("mysql_rep_admin.mongo_libs.ins_doc")
-    @mock.patch("mysql_rep_admin.add_miss_slaves")
-    def test_json_no_stdout(self, mock_miss, mock_mongo):
-
-        """Function:  test_json_no_stdout
-
-        Description:  Test with JSON format with standard out suppressed.
-
-        Arguments:
-
-        """
-
-        mock_miss.return_value = self.outdata
-        mock_mongo.return_value = self.status
-
-        self.assertFalse(mysql_rep_admin.chk_slv_time(
-            self.master, [self.slave], json_fmt=True, class_cfg="Cfg",
-            db_tbl=self.db_tbl, ofile="FileName", sup_std=True))
-
-    @mock.patch("mysql_rep_admin.gen_libs.write_file",
-                mock.Mock(return_value=True))
-    @mock.patch("mysql_rep_admin.time.sleep",
-                mock.Mock(return_value=True))
-    @mock.patch("mysql_rep_admin.mongo_libs.ins_doc")
-    @mock.patch("mysql_rep_admin.add_miss_slaves")
-    def test_json(self, mock_miss, mock_mongo):
-
-        """Function:  test_json
-
-        Description:  Test with JSON format.
-
-        Arguments:
-
-        """
-
-        mock_miss.return_value = self.outdata
-        mock_mongo.return_value = self.status
-
-        self.assertFalse(mysql_rep_admin.chk_slv_time(
-            self.master, [self.slave], json_fmt=True, class_cfg="Cfg",
-            db_tbl=self.db_tbl, ofile="FileName", sup_std=True))
-
-    @mock.patch("mysql_rep_admin.time.sleep")
-    def test_std_no_lag(self, mock_sleep):
+    @mock.patch("mysql_rep_admin.time.sleep", mock.Mock(return_value=True))
+    @mock.patch("mysql_rep_admin.add_miss_slaves", mock.Mock(return_value=[]))
+    def test_no_lag(self):
 
         """Function:  test_std_no_lag
 
-        Description:  Test standard out with no time lag.
+        Description:  Test with no time lag.
 
         Arguments:
 
         """
 
-        mock_sleep.return_value = True
         self.slave = SlaveRep(lag_time=0)
 
-        self.assertFalse(mysql_rep_admin.chk_slv_time(self.master,
-                                                      [self.slave]))
-
-    @mock.patch("mysql_rep_admin.time.sleep")
-    def test_std_out(self, mock_sleep):
-
-        """Function:  test_std_out
-
-        Description:  Test standard out.
-
-        Arguments:
-
-        """
-
-        mock_sleep.return_value = True
-
-        with gen_libs.no_std_out():
-            self.assertFalse(mysql_rep_admin.chk_slv_time(self.master,
-                                                          [self.slave]))
+        self.assertEqual(
+            mysql_rep_admin.chk_slv_time(
+                master=self.master, slaves=[self.slave]), self.results2)
 
 
 if __name__ == "__main__":
