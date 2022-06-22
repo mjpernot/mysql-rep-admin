@@ -100,6 +100,7 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp
+        test_chk_slv_lag_gtid
         test_chk_slv_lag
         test_chk_slv_ok
 
@@ -115,16 +116,36 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.results = {
-            "Name": "Server_Name", "ReadLog": "FileName",
-            "ReadPosition": 4567, "ExecLog": "FileName",
-            "ExecPosition": 4567, "Status": "OK"}
+        self.results = {"Name": "Server_Name", "Status": "OK"}
         self.results2 = {
-            "Name": "Server_Name", "ReadLog": "FileName",
-            "ReadPosition": 3456, "ExecLog": "FileName",
-            "ExecPosition": 4567,
+            "Name": "Server_Name",
             "Status": "Warning:  Slave might be lagging in execution of log",
-            "RetrievedGTID": 12345678, "ExecutedGTID": 23456789}
+            "Info": {
+                "ReadLog": "FileName",
+                "ReadPosition": 3456, "ExecLog": "FileName",
+                "ExecPosition": 4567}}
+        self.results3 = {
+            "Name": "Server_Name",
+            "Status": "Warning:  Slave might be lagging in execution of log",
+            "Info": {
+                "ReadLog": "FileName",
+                "ReadPosition": 3456, "ExecLog": "FileName",
+                "ExecPosition": 4567,
+                "RetrievedGTID": 12345678, "ExecutedGTID": 23456789}}
+
+    def test_chk_slv_lag_gtid(self):
+
+        """Function:  test_chk_slv_lag_gtid
+
+        Description:  Test with slave with lag problem with GTID mode.
+
+        Arguments:
+
+        """
+
+        slave = SlaveRep()
+
+        self.assertEqual(mysql_rep_admin.chk_slv(slave), self.results3)
 
     def test_chk_slv_lag(self):
 
@@ -137,6 +158,7 @@ class UnitTest(unittest.TestCase):
         """
 
         slave = SlaveRep()
+        slave.gtid_mode = None
 
         self.assertEqual(mysql_rep_admin.chk_slv(slave), self.results2)
 
