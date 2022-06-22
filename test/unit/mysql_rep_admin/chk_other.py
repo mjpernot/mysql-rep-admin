@@ -27,7 +27,6 @@ else:
 
 # Local
 sys.path.append(os.getcwd())
-import lib.gen_libs as gen_libs
 import mysql_rep_admin
 import version
 
@@ -75,6 +74,13 @@ class UnitTest(unittest.TestCase):
         self.name = "SlaveName"
         self.version = (5, 6, 31)
         self.version2 = (8, 0, 23)
+        self.results = {"Name": self.name}
+        self.results2 = {"Name": self.name, "SkipCount": self.skip1}
+        self.results3 = {"Name": self.name, "TempTableCount": self.tmp_tbl6}
+        self.results4 = {
+            "Name": self.name, "RetryTransactionCount": self.retry1}
+        self.results5 = {"Name": self.name, "SkipCount": self.skip2}
+        self.results6 = {"Name": self.name, "TempTableCount": self.tmp_tbl2}
 
     def test_retry_80(self):
 
@@ -86,10 +92,9 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        with gen_libs.no_std_out():
-            self.assertFalse(mysql_rep_admin._chk_other(
-                self.skip0, self.tmp_tbl0, self.retry1, self.name,
-                self.version2))
+        self.assertEqual(mysql_rep_admin._chk_other(
+            self.skip0, self.tmp_tbl0, self.retry1, self.name,
+            self.version2), self.results4)
 
     def test_retry_pre80(self):
 
@@ -101,10 +106,9 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        with gen_libs.no_std_out():
-            self.assertFalse(mysql_rep_admin._chk_other(
-                self.skip0, self.tmp_tbl0, self.retry1, self.name,
-                self.version))
+        self.assertEqual(mysql_rep_admin._chk_other(
+            self.skip0, self.tmp_tbl0, self.retry1, self.name,
+            self.version), self.results4)
 
     def test_tmp_tbl_down(self):
 
@@ -116,10 +120,9 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        with gen_libs.no_std_out():
-            self.assertFalse(mysql_rep_admin._chk_other(
-                self.skip0, self.tmp_tbl2, self.retry0, self.name,
-                self.version))
+        self.assertEqual(mysql_rep_admin._chk_other(
+            self.skip0, self.tmp_tbl2, self.retry0, self.name,
+            self.version), self.results6)
 
     def test_skip_down(self):
 
@@ -131,10 +134,9 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        with gen_libs.no_std_out():
-            self.assertFalse(mysql_rep_admin._chk_other(
-                self.skip2, self.tmp_tbl0, self.retry0, self.name,
-                self.version))
+        self.assertEqual(mysql_rep_admin._chk_other(
+            self.skip2, self.tmp_tbl0, self.retry0, self.name,
+            self.version), self.results5)
 
     def test_retry_error(self):
 
@@ -146,10 +148,9 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        with gen_libs.no_std_out():
-            self.assertFalse(mysql_rep_admin._chk_other(
-                self.skip0, self.tmp_tbl0, self.retry1, self.name,
-                self.version))
+        self.assertEqual(mysql_rep_admin._chk_other(
+            self.skip0, self.tmp_tbl0, self.retry1, self.name,
+            self.version), self.results4)
 
     def test_tmp_tbl_error(self):
 
@@ -161,10 +162,9 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        with gen_libs.no_std_out():
-            self.assertFalse(mysql_rep_admin._chk_other(
-                self.skip0, self.tmp_tbl6, self.retry0, self.name,
-                self.version))
+        self.assertEqual(mysql_rep_admin._chk_other(
+            self.skip0, self.tmp_tbl6, self.retry0, self.name,
+            self.version), self.results3)
 
     def test_skip_error(self):
 
@@ -176,10 +176,10 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        with gen_libs.no_std_out():
-            self.assertFalse(mysql_rep_admin._chk_other(
+        self.assertEqual(
+            mysql_rep_admin._chk_other(
                 self.skip1, self.tmp_tbl0, self.retry0, self.name,
-                self.version))
+                self.version), self.results2)
 
     def test_no_errors(self):
 
@@ -191,8 +191,10 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.assertFalse(mysql_rep_admin._chk_other(
-            self.skip0, self.tmp_tbl0, self.retry0, self.name, self.version))
+        self.assertEqual(
+            mysql_rep_admin._chk_other(
+                self.skip0, self.tmp_tbl0, self.retry0, self.name,
+                self.version), self.results)
 
 
 if __name__ == "__main__":

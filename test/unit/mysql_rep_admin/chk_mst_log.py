@@ -143,7 +143,8 @@ class UnitTest(unittest.TestCase):
         setUp
         test_no_present
         test_slv_present
-        test_mst_slv_present
+        test_mst_slv_present_lag
+        test_mst_slv_present_ok
 
     """
 
@@ -158,7 +159,34 @@ class UnitTest(unittest.TestCase):
         """
 
         self.master = MasterRep()
+        self.slave2 = SlaveRep(mst_file="Master_Log2", read_pos=5678)
         self.slave = SlaveRep()
+        self.chk_slv_data = {"Name": "SlaveName", "Status": "OK"}
+        self.results = {"CheckMasterLog": {"MasterLog": {}, "SlaveLogs": []}}
+        self.results2 = {
+            "CheckMasterLog": {
+                "MasterLog": {}, "SlaveLogs": [
+                    {"Name": "SlaveName", "Status": "OK"}]}}
+        self.results3 = {
+            "CheckMasterLog": {
+                "MasterLog": {
+                    "Master": {
+                        "Name": "Master_Name", "Log": "Master_Log2",
+                        "Position": 5678},
+                    "Slaves":
+                        [{"Name": "Slave_Name",
+                          "Info": {"Position": 3456, "Log": "Master_Log"},
+                          "Status": "Warning:  Slave lagging in reading \
+master log"}]},
+                "SlaveLogs": [{"Name": "SlaveName", "Status": "OK"}]}}
+        self.results4 = {
+            "CheckMasterLog": {
+                "MasterLog": {
+                    "Master": {
+                        "Name": "Master_Name", "Log": "Master_Log2",
+                        "Position": 5678},
+                    "Slaves": [{"Name": "Slave_Name", "Status": "OK"}]},
+                "SlaveLogs": [{"Name": "SlaveName", "Status": "OK"}]}}
 
     def test_no_present(self):
 
@@ -171,7 +199,9 @@ class UnitTest(unittest.TestCase):
         """
 
         with gen_libs.no_std_out():
-            self.assertFalse(mysql_rep_admin.chk_mst_log(None, []))
+            self.assertEqual(
+                mysql_rep_admin.chk_mst_log(
+                    master=None, slaves=[]), self.results)
 
     @mock.patch("mysql_rep_admin.chk_slv")
     def test_slv_present(self, mock_chk):
@@ -184,27 +214,46 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_chk.return_value = True
+        mock_chk.return_value = [dict(self.chk_slv_data)]
 
         with gen_libs.no_std_out():
-            self.assertFalse(mysql_rep_admin.chk_mst_log(None, [self.slave]))
+            self.assertEqual(
+                mysql_rep_admin.chk_mst_log(
+                    master=None, slaves=[self.slave]), self.results2)
 
     @mock.patch("mysql_rep_admin.chk_slv")
-    def test_mst_slv_present(self, mock_chk):
+    def test_mst_slv_present_lag(self, mock_chk):
 
-        """Function:  test_mst_slv_present
+        """Function:  test_mst_slv_present_lag
 
-        Description:  Test with master and slave present.
+        Description:  Test with master and slave present with lag.
 
         Arguments:
 
         """
 
-        mock_chk.return_value = True
+        mock_chk.return_value = [dict(self.chk_slv_data)]
 
-        with gen_libs.no_std_out():
-            self.assertFalse(mysql_rep_admin.chk_mst_log(self.master,
-                                                         [self.slave]))
+        self.assertEqual(
+            mysql_rep_admin.chk_mst_log(
+                master=self.master, slaves=[self.slave]), self.results3)
+
+    @mock.patch("mysql_rep_admin.chk_slv")
+    def test_mst_slv_present_ok(self, mock_chk):
+
+        """Function:  test_mst_slv_present_ok
+
+        Description:  Test with master and slave present with no lag.
+
+        Arguments:
+
+        """
+
+        mock_chk.return_value = [dict(self.chk_slv_data)]
+
+        self.assertEqual(
+            mysql_rep_admin.chk_mst_log(
+                master=self.master, slaves=[self.slave2]), self.results4)
 
 
 if __name__ == "__main__":

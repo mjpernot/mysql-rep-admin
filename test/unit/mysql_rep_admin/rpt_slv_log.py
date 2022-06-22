@@ -34,30 +34,6 @@ import version
 __version__ = version.__version__
 
 
-class MasterRep(object):
-
-    """Class:  MasterRep
-
-    Description:  Class stub holder for mysql_class.MasterRep class.
-
-    Methods:
-        __init__
-
-    """
-
-    def __init__(self, gtid_mode="ON"):
-
-        """Method:  __init__
-
-        Description:  Class initialization.
-
-        Arguments:
-
-        """
-
-        self.gtid_mode = gtid_mode
-
-
 class SlaveRep(object):
 
     """Class:  SlaveRep
@@ -71,7 +47,7 @@ class SlaveRep(object):
 
     """
 
-    def __init__(self, gtid_mode="ON"):
+    def __init__(self, gtid_mode=None):
 
         """Method:  __init__
 
@@ -81,9 +57,9 @@ class SlaveRep(object):
 
         """
 
-        self.name = "Server_Name"
-        self.mst_file = "Master_Log_Name"
-        self.relay_file = "Slave_Relay_Name"
+        self.name = "Slave1"
+        self.mst_file = "MasterLog"
+        self.relay_file = "MasterRelay"
         self.read_pos = 3456
         self.exec_pos = 4567
         self.gtid_mode = gtid_mode
@@ -124,7 +100,8 @@ class UnitTest(unittest.TestCase):
     Methods:
         setUp
         test_no_slaves
-        test_rpt_slv_log
+        test_slave
+        test_gtid
 
     """
 
@@ -138,8 +115,17 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.slave = SlaveRep()
-        self.master = MasterRep()
+        self.results = {"SlaveLogs": []}
+        self.results2 = {
+            "SlaveLogs": [{
+                "ExecPosition": 4567, "MasterFile": "MasterLog",
+                "MasterPosition": 3456, "RelayFile": "MasterRelay",
+                "Slave": "Slave1"}]}
+        self.results3 = {
+            "SlaveLogs": [{
+                "ExecPosition": 4567, "MasterFile": "MasterLog",
+                "MasterPosition": 3456, "RelayFile": "MasterRelay",
+                "RetrievedGTID": 12345678, "Slave": "Slave1"}]}
 
     def test_no_slaves(self):
 
@@ -152,21 +138,38 @@ class UnitTest(unittest.TestCase):
         """
 
         with gen_libs.no_std_out():
-            self.assertFalse(mysql_rep_admin.rpt_slv_log(self.master, []))
+            self.assertEqual(
+                mysql_rep_admin.rpt_slv_log(slaves=[]), self.results)
 
-    def test_rpt_slv_log(self):
+    def test_slave(self):
 
-        """Function:  test_rpt_slv_log
+        """Function:  test_slave
 
-        Description:  Test rpt_slv_log method.
+        Description:  Test with slave present.
 
         Arguments:
 
         """
 
-        with gen_libs.no_std_out():
-            self.assertFalse(mysql_rep_admin.rpt_slv_log(self.master,
-                                                         [self.slave]))
+        slave = SlaveRep()
+
+        self.assertEqual(
+            mysql_rep_admin.rpt_slv_log(slaves=[slave]), self.results2)
+
+    def test_gtid(self):
+
+        """Function:  test_gtid
+
+        Description:  Test with GTID present.
+
+        Arguments:
+
+        """
+
+        slave = SlaveRep(gtid_mode="ON")
+
+        self.assertEqual(
+            mysql_rep_admin.rpt_slv_log(slaves=[slave]), self.results3)
 
 
 if __name__ == "__main__":
