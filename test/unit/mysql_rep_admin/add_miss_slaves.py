@@ -96,14 +96,16 @@ class UnitTest(unittest.TestCase):
         """
 
         self.master = MasterRep()
-        self.outdata = {"Slaves": [{"Name": "slave1", "LagTime": None},
-                                   {"Name": "slave2", "LagTime": None}]}
-        self.outdata2 = {"Slaves": [{"Name": "slave1", "LagTime": None},
-                                    {"Name": "slave2", "LagTime": None},
-                                    {"Name": "slave3", "LagTime": None}]}
-        self.final_list = {"Slaves": [{"Name": "slave1", "LagTime": None},
-                                      {"Name": "slave2", "LagTime": None},
-                                      {"Name": "slave3", "LagTime": None}]}
+        self.data = {
+            "CheckSlaveTime": {
+                "Slaves": [{"Name": "slave1", "LagTime": None},
+                           {"Name": "slave2", "LagTime": None}]}}
+        self.data2 = {
+            "CheckSlaveTime": {
+                "Slaves": [{"Name": "slave1", "LagTime": None},
+                           {"Name": "slave2", "LagTime": None},
+                           {"Name": "slave3", "LagTime": None}]}}
+        self.results = [{"Name": "slave3", "LagTime": None}]
 
     def test_no_slv_miss(self):
 
@@ -115,9 +117,8 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.assertEqual(mysql_rep_admin.add_miss_slaves(self.master,
-                                                         self.outdata2),
-                         self.final_list)
+        self.assertEqual(
+            mysql_rep_admin.add_miss_slaves(self.master, self.data2), [])
 
     def test_one_slv_miss(self):
 
@@ -129,9 +130,9 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.assertEqual(mysql_rep_admin.add_miss_slaves(self.master,
-                                                         self.outdata),
-                         self.final_list)
+        self.assertEqual(
+            mysql_rep_admin.add_miss_slaves(self.master, self.data),
+            self.results)
 
 
 if __name__ == "__main__":
