@@ -279,9 +279,6 @@ import version
 
 __version__ = version.__version__
 
-# Global
-# PRT_TEMPLATE = "\nSlave: {0}"
-
 
 def help_message():
 
@@ -350,12 +347,9 @@ def rpt_slv_log(**kwargs):
     if slaves:
         for slv in slaves:
             mst_file, relay_file, read_pos, exec_pos = slv.get_log_info()
-            tdata = {}
-            tdata["Slave"] = slv.get_name()
-            tdata["MasterFile"] = mst_file
-            tdata["MasterPosition"] = read_pos
-            tdata["RelayFile"] = relay_file
-            tdata["ExecPosition"] = exec_pos
+            tdata = {"Slave": slv.get_name(), "MasterFile": mst_file,
+                     "MasterPosition": read_pos, "RelayFile": relay_file,
+                     "ExecPosition": exec_pos}
 
             if slv.gtid_mode:
                 tdata["RetrievedGTID"] = slv.retrieved_gtid
@@ -368,7 +362,7 @@ def rpt_slv_log(**kwargs):
     return data
 
 
-def chk_slv(slave, **kwargs):
+def chk_slv(slave):
 
     """Function:  chk_slv
 
@@ -383,37 +377,20 @@ def chk_slv(slave, **kwargs):
 
     """
 
-#    global PRT_TEMPLATE
-
     mst_file, relay_file, read_pos, exec_pos = slave.get_log_info()
-    data = {"Name": slave.get_name(), "ReadLog": mst_file,
-            "ReadPosition": read_pos, "ExecLog": relay_file,
-            "ExecPosition": exec_pos}
-    tdata = {"Status": "OK"}
+    data = {"Name": slave.get_name(), "Status": "OK"}
 
     # Slave's master info doesn't match slave's relay info.
     if mst_file != relay_file or read_pos != exec_pos:
-        tdata = {
-            "Status": "Warning:  Slave might be lagging in execution of log"}
-
-#        print(PRT_TEMPLATE.format(name))
-#        print("Warning:  Slave might be lagging in execution of log.")
-#        print("\tRead Log:\t{0}".format(mst_file))
-#        print("\tRead Pos:\t{0}".format(read_pos))
+        data["Status"] = "Warning:  Slave might be lagging in execution of log"
+        data["Info"] = {"ReadLog": mst_file, "ReadPosition": read_pos,
+                        "ExecLog": relay_file, "ExecPosition": exec_pos}
 
         if slave.gtid_mode:
-            tdata["RetrievedGTID"] = slave.retrieved_gtid
-            tdata["ExecutedGTID"] = slave.exe_gtid
+            data["Info"]["RetrievedGTID"] = slave.retrieved_gtid
+            data["Info"]["ExecutedGTID"] = slave.exe_gtid
 
-#            print("\tRetrieved GTID:\t{0}".format(slave.retrieved_gtid))
-#
-#        print("\tExec Log:\t{0}".format(relay_file))
-#        print("\tExec Pos:\t{0}".format(exec_pos))
-#
-#        if slave.gtid_mode:
-#            print("\tExecuted GTID:\t{0}".format(slave.exe_gtid))
-
-    return gen_libs.merge_two_dicts(data, tdata)[0]
+    return data
 
 
 def chk_mst_log(**kwargs):
@@ -444,36 +421,24 @@ def chk_mst_log(**kwargs):
 
         for slv in slaves:
             mst_file, _, read_pos, _ = slv.get_log_info()
-            status = "OK"
+            tdata = {"Name": slv.get_name(), "Status": "OK"}
 
             # Master's log file or position doesn't match slave's log info.
             if fname != mst_file or log_pos != read_pos:
-                status = "Warning:  Slave lagging in reading master log"
+                tdata["Status"] = \
+                    "Warning:  Slave lagging in reading master log"
+                tdata["Info"] = {"Log": mst_file, "Position": read_pos}
 
-#                print("\nWarning:  Slave lagging in reading master log.")
-#                print("Master: {0}".format(master.name))
-#                print("\tMaster Log: {0}".format(fname))
-#                print("\tMaster Pos: {0}".format(log_pos))
-#                print("Slave: {0}".format(name))
-#                print("\tSlave Log: {0}".format(mst_file))
-#                print("\tSlave Pos: {0}".format(read_pos))
-
-            data["CheckMasterLog"]["MasterLog"]["Slaves"].append(
-                {"Name": slv.get_name(), "Log": mst_file, "Position": read_pos,
-                 "Status": status})
-
-#            tdata = chk_slv(slv, **kwargs)
-#            data["CheckMasterLog"]["SlaveLogs"].append(tdata)
+            data["CheckMasterLog"]["MasterLog"]["Slaves"].append(tdata)
             data["CheckMasterLog"]["SlaveLogs"] = \
-                data["CheckMasterLog"]["SlaveLogs"] + chk_slv(slv, **kwargs)
+                data["CheckMasterLog"]["SlaveLogs"] + chk_slv(slv)
 
     elif slaves:
         print("chk_mst_log: Warning:  Missing Master instance.")
 
         for slv in slaves:
             data["CheckMasterLog"]["SlaveLogs"] = \
-                data["CheckMasterLog"]["SlaveLogs"] + chk_slv(slv, **kwargs)
-#            tdata = chk_slv(slv, **kwargs)
+                data["CheckMasterLog"]["SlaveLogs"] + chk_slv(slv)
 
     else:
         print("chk_mst_log:  Warning:  Missing Master and Slave instances.")
@@ -495,9 +460,6 @@ def chk_slv_thr(**kwargs):
 
     """
 
-#    global PRT_TEMPLATE
-
-#    slaves = list(slaves)
     slaves = list(kwargs.get("slaves", list()))
     data = {"CheckSlaveThread": {"Slaves": []}}
 
@@ -506,26 +468,19 @@ def chk_slv_thr(**kwargs):
             tdata = {"Name": slv.get_name(), "IOThread": "Up",
                      "SQLThread": "Up"}
             thr, io_thr, sql_thr, run = slv.get_thr_stat()
-#            name = slv.get_name()
 
             # Slave IO and run state.
             if not thr or not gen_libs.is_true(run):
                 tdata["IOThread"] = "Down"
                 tdata["SQLThread"] = "Down"
-#                print(PRT_TEMPLATE.format(name))
-#                print("\tError:  Slave IO/SQL Threads are down.")
 
             # Slave IO thread.
             elif not gen_libs.is_true(io_thr):
                 tdata["IOThread"] = "Down"
-#                print(PRT_TEMPLATE.format(name))
-#                print("\tError:  Slave IO Thread is down.")
 
             # Slave SQL thread.
             elif not gen_libs.is_true(sql_thr):
                 tdata["SQLThread"] = "Down"
-#                print(PRT_TEMPLATE.format(name))
-#                print("\tError:  Slave SQL Thread is down.")
 
             data["CheckSlaveThread"]["Slaves"].append(tdata)
 
@@ -549,8 +504,6 @@ def chk_slv_err(**kwargs):
 
     """
 
-#    print_template = "\nSlave:\t{0}"
-#    slaves = list(slaves)
     slaves = list(kwargs.get("slaves", list()))
     data = {"CheckSlaveError": {"Slaves": []}}
 
@@ -561,35 +514,22 @@ def chk_slv_err(**kwargs):
 
             # For pre-MySQL 5.6 versions, will be NULL for these two entries.
             iost, sql, io_msg, sql_msg, io_time, sql_time = slv.get_err_stat()
-#            name = slv.get_name()
 
             # Connection status
             if not slv.conn:
                 tdata["Connection"] = "Down"
-#                print(print_template.format(name))
-#                print("\tConnection Error:  No connection detected")
 
             # IO error
             if iost:
                 tdata["IO"]["Error"] = iost
                 tdata["IO"]["Message"] = io_msg
                 tdata["IO"]["Timestamp"] = io_time
-#                print(print_template.format(name))
-#                print("\tIO Error Detected:\t{0}".format(iost))
-#                print("\tIO Message:\t{0}".format(io_msg))
-#
-#                print("\tIO Timestamp:\t{0}".format(io_time))
 
             # SQL error
             if sql:
                 tdata["SQL"]["Error"] = sql
                 tdata["SQL"]["Message"] = sql_msg
                 tdata["SQL"]["Timestamp"] = sql_time
-#                print(print_template.format(name))
-#                print("\tSQL Error Detected:\t{0}".format(sql))
-#                print("\tSQL Message:\t{0}".format(sql_msg))
-#
-#                print("\tSQL Timestamp:\t{0}".format(sql_time))
 
             data["CheckSlaveError"]["Slaves"].append(tdata)
 
@@ -626,8 +566,6 @@ def add_miss_slaves(master, data):
     # Add slaves from the slave list that are not in the master's slave list.
     for name in [val for val in all_list if val not in slv_list]:
         miss_slv.append({"Name": name, "LagTime": None})
-#        data["CheckSlaveTime"]["Slaves"].append(
-#            {"Name": name, "LagTime": None})
 
     return miss_slv
 
@@ -649,15 +587,6 @@ def chk_slv_time(**kwargs):
     master = kwargs.get("master", None)
     slaves = list(kwargs.get("slaves", list()))
     data = {"CheckSlaveTime": {"Slaves": []}}
-#    slaves = list(slaves)
-#    json_fmt = kwargs.get("json_fmt", False)
-#
-#    if json_fmt:
-#        outdata = {"Application": "MySQL Replication",
-#                   "Server": master.name,
-#                   "AsOf": datetime.datetime.strftime(datetime.datetime.now(),
-#                                                      "%Y-%m-%d %H:%M:%S"),
-#                   "Slaves": []}
 
     if slaves:
         for slv in slaves:
@@ -665,69 +594,10 @@ def chk_slv_time(**kwargs):
                 {"Name": slv.get_name(),
                  "LagTime": _process_time_lag(slv, slv.get_time())})
 
-#            time_lag = slv.get_time()
-#            name = slv.get_name()
-#            time_lag = _process_time_lag(slv, slv.get_time())
-#
-#            if json_fmt:
-#                outdata["Slaves"].append({"Name": slv.name,
-#                                          "LagTime": time_lag})
-#
-#    elif not json_fmt:
-#        print("chk_slv_time:  Warning:  No Slave instance detected.")
-#
-#    if json_fmt:
-#    data["CheckSlaveTime"]["Slaves"].append(add_miss_slaves(master, data))
     data["CheckSlaveTime"]["Slaves"] = \
         data["CheckSlaveTime"]["Slaves"] + add_miss_slaves(master, data)
-#    _process_json(outdata, **kwargs)
 
     return data
-
-
-# def _process_json(outdata, **kwargs):
-#
-#    """Function:  _process_json
-#
-#    Description:  Private function for chk_slv_time().  Process JSON data.
-#
-#    Arguments:
-#        (input) outdata -> JSON document of Check Slave Time output.
-#        (input) **kwargs:
-#            ofile -> file name - Name of output file.
-#            db_tbl -> database:collection - Name of db and collection.
-#            class_cfg -> Server class configuration settings.
-#            mail -> Mail instance.
-#            sup_std -> Suppress standard out.
-#            mode -> File write mode.
-#            indent -> Indentation level for JSON document.
-#
-#    """
-#
-#    indent = kwargs.get("indent", None)
-#    jdata = json.dumps(outdata, indent=indent)
-#    mongo_cfg = kwargs.get("class_cfg", None)
-#    db_tbl = kwargs.get("db_tbl", None)
-#    ofile = kwargs.get("ofile", None)
-#    mail = kwargs.get("mail", None)
-#    mode = kwargs.get("mode", "w")
-#
-#    if mongo_cfg and db_tbl:
-#        dbn, tbl = db_tbl.split(":")
-#        status = mongo_libs.ins_doc(mongo_cfg, dbn, tbl, outdata)
-#
-#        if not status[0]:
-#            print("\n_process_json:  Error Detected:  %s" % (status[1]))
-#
-#    if ofile:
-#        gen_libs.write_file(ofile, mode, jdata)
-#
-#    if mail:
-#        mail.add_2_msg(jdata)
-#        mail.send_mail()
-#
-#    if not kwargs.get("sup_std", False):
-#        gen_libs.print_data(jdata)
 
 
 def _process_time_lag(slv, time_lag):
@@ -750,10 +620,6 @@ def _process_time_lag(slv, time_lag):
             slv.upd_slv_time()
             time_lag = slv.get_time()
 
-#        if (time_lag > 0 or time_lag is None) and not json_fmt:
-#            print("\nSlave:  {0}".format(name))
-#            print("\tTime Lag:  {0}".format(time_lag or "No Time Detected"))
-
     return time_lag
 
 
@@ -774,12 +640,10 @@ def chk_slv_other(**kwargs):
 
     slaves = list(kwargs.get("slaves", list()))
     data = {"CheckSlaveOther": {"Slaves": list()}}
-#    slaves = list(slaves)
 
     if slaves:
         for slv in slaves:
             skip, tmp_tbl, retry = slv.get_others()
-#            name = slv.get_name()
             data["CheckSlaveOther"]["Slaves"].append(
                 _chk_other(skip, tmp_tbl, retry, slv.get_name(), slv.version))
 
@@ -806,24 +670,17 @@ def _chk_other(skip, tmp_tbl, retry, name, sql_ver):
 
     """
 
-#    global PRT_TEMPLATE
     data = {"Name": name}
 
     if skip is None or skip > 0:
         data["SkipCount"] = skip
-#        print(PRT_TEMPLATE.format(name))
-#        print("\tSkip Count:  {0}".format(skip))
 
     if not tmp_tbl or int(tmp_tbl) > 5:
         data["TempTableCount"] = tmp_tbl
-#        print(PRT_TEMPLATE.format(name))
-#        print("\tTemp Table Count:  {0}".format(tmp_tbl))
 
     if (sql_ver[0] < 8 and (not retry or int(retry) > 0)) \
        or (sql_ver[0] >= 8 and retry > 0):
         data["RetryTransactionCount"] = retry
-#        print(PRT_TEMPLATE.format(name))
-#        print("\tRetried Transaction Count:  {0}".format(retry))
 
     return data
 
@@ -937,36 +794,15 @@ def call_run_chk(args, func_dict, master, slaves):
 
     func_dict = dict(func_dict)
     slaves = list(slaves)
-#    mail = None
-#    mongo_cfg = None
-#    json_fmt = args.arg_exist("-j")
-#    outfile = args.get_val("-o", def_val=None)
-#    db_tbl = args.get_val("-i", def_val=None)
-#    sup_std = args.arg_exist("-z")
-#    mode = "a" if args.arg_exist("-a") else "w"
-#    indent = 4 if args.arg_exist("-f") else None
-
     data = {"Application": "MySQLReplication",
             "Master": master.name,
             "AsOf": datetime.datetime.strftime(datetime.datetime.now(),
                                                "%Y-%m-%d %H:%M:%S"),
             "Checks": []}
 
-#    if args.arg_exist("-m"):
-#        mongo_cfg = gen_libs.load_module(
-#            args.get_val("-m"), args.get_val("-d"))
-#
-#    if args.arg_exist("-t"):
-#        mail = gen_class.setup_mail(
-#            args.get_val("-t"), subj=args.get_val("-u", def_val=None))
-
     if args.arg_exist("-A"):
         for opt in func_dict["-A"]:
             tdata = func_dict[opt](master=master, slaves=slaves)
-#            tdata = func_dict[opt](
-#                master, slaves, json_fmt=json_fmt, ofile=outfile,
-#                db_tbl=db_tbl, class_cfg=mongo_cfg, mail=mail,
-#                sup_std=sup_std, mode=mode, indent=indent)
             data["Checks"].append(tdata)
 
         # The option is in func_dict but not under the ALL option and is not
@@ -974,11 +810,7 @@ def call_run_chk(args, func_dict, master, slaves):
         for item in (opt for opt in args.get_args() if opt in func_dict and
                      opt not in func_dict["-A"] and opt != "-A"):
 
-            tdata = func_dict[opt](master=master, slaves=slaves)
-#            tdata = func_dict[item](
-#                master, slaves, json_fmt=json_fmt, ofile=outfile,
-#                db_tbl=db_tbl, class_cfg=mongo_cfg, mail=mail,
-#                sup_std=sup_std, mode=mode, indent=indent)
+            tdata = func_dict[item](master=master, slaves=slaves)
             data["Checks"].append(tdata)
 
     else:
@@ -986,10 +818,6 @@ def call_run_chk(args, func_dict, master, slaves):
         # Intersect args & func_dict to find which functions to call.
         for opt in set(args.get_args_keys()) & set(func_dict.keys()):
             tdata = func_dict[opt](master=master, slaves=slaves)
-#            tdata = func_dict[opt](
-#                master, slaves, json_fmt=json_fmt, ofile=outfile,
-#                db_tbl=db_tbl, class_cfg=mongo_cfg, mail=mail,
-#                sup_std=sup_std, mode=mode, indent=indent)
             data["Checks"].append(tdata)
 
     data_out(data, args)
