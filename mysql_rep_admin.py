@@ -374,7 +374,7 @@ def chk_slv(slave):
 
     Arguments:
         (input) slave -> Slave instance
-        (output) Slave log information and status in dictionary format
+        (output) data -> Slave log information and status in dictionary format
 
     """
 
@@ -431,15 +431,13 @@ def chk_mst_log(**kwargs):
                 tdata["Info"] = {"Log": mst_file, "Position": read_pos}
 
             data["CheckMasterLog"]["MasterLog"]["Slaves"].append(tdata)
-            data["CheckMasterLog"]["SlaveLogs"] = \
-                data["CheckMasterLog"]["SlaveLogs"] + chk_slv(slv)
+            data["CheckMasterLog"]["SlaveLogs"].append(chk_slv(slv))
 
     elif slaves:
         print("chk_mst_log: Warning:  Missing Master instance.")
 
         for slv in slaves:
-            data["CheckMasterLog"]["SlaveLogs"] = \
-                data["CheckMasterLog"]["SlaveLogs"] + chk_slv(slv)
+            data["CheckMasterLog"]["SlaveLogs"].append(chk_slv(slv))
 
     else:
         print("chk_mst_log:  Warning:  Missing Master and Slave instances.")

@@ -7,6 +7,9 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 ## [4.0.1] - 2022-06-29
 - Added TLS capability
 
+### Fixed
+- chk_mst_log: Fixed problem of appending chk_slv function data to SlaveLogs list.
+
 ### Changed
 - config/slave.txt.TEMPLATE: Added TLS entry.
 - Documentation updates.
