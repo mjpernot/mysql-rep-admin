@@ -134,6 +134,9 @@
             ssl_verify_id = False
             ssl_verify_cert = False
 
+            # Set what TLS versions are allowed in the connection set up:
+            tls_versions = []
+
         NOTE 1:  Include the cfg_file even if running remotely as the
             file will be used in future releases.
         NOTE 2:  In MySQL 5.6 - it now gives warning if password is passed on
