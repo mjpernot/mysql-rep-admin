@@ -154,7 +154,7 @@ class MailTest(object):
             else:
                 self.msg = self.msg + json.dumps(txt_ln)
 
-    def send_mail(self, txt_ln=None):
+    def send_mail(self, use_mailx=False):
 
         """Method:  send_mail
 
@@ -164,7 +164,12 @@ class MailTest(object):
 
         """
 
-        pass
+        status = True
+
+        if use_mailx:
+            status = True
+
+        return status
 
 
 class UnitTest(unittest.TestCase):
@@ -181,6 +186,7 @@ class UnitTest(unittest.TestCase):
         test_mongo2
         test_mongo
         test_mail_subj
+        test_mail_mailx
         test_mail
         test_std_out_errors
         test_std_out
@@ -206,6 +212,7 @@ class UnitTest(unittest.TestCase):
         self.args_array4 = {"-m": "mongo", "-d": "config"}
         self.args_array5 = {"-d": "config", "-i": "DB:Table"}
         self.args_array6 = {"-a": True}
+        self.args_array7 = {"-t": "toaddr", "-w": True}
 
     @mock.patch("mysql_rep_admin.dict_out",
                 mock.Mock(return_value=(False, None)))
@@ -318,6 +325,25 @@ class UnitTest(unittest.TestCase):
         """
 
         self.args.args_array = self.args_array2
+
+        mock_mail.return_value = self.mail
+
+        self.assertFalse(mysql_rep_admin.data_out(self.data, self.args))
+
+    @mock.patch("mysql_rep_admin.dict_out",
+                mock.Mock(return_value=(False, None)))
+    @mock.patch("mysql_rep_admin.gen_class.setup_mail")
+    def test_mail_mailx(self, mock_mail):
+
+        """Function:  test_mail_mailx
+
+        Description:  Test with mail option with the mailx override option.
+
+        Arguments:
+
+        """
+
+        self.args.args_array = self.args_array7
 
         mock_mail.return_value = self.mail
 

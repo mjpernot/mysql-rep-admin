@@ -17,28 +17,28 @@
         mysql_rep_admin.py
             {-B -c mysql_cfg -d path [-z] [-e] [-o /path/file [-a]]
                  [-i [db:coll] -m mongo_cfg]
-                 [-t ToEmail [ToEmail2 ...] [-u SubjectLine]] |
+                 [-t ToEmail [ToEmail2 ...] [-u SubjectLine] [-w]] |
              -C -c mysql_cfg -s [/path/]slave.txt -d path [-z] [-e]
                  [-o /path/file [-a]] [-i [db:coll] -m mongo_cfg]
-                 [-t ToEmail [ToEmail2 ...] [-u SubjectLine]] |
+                 [-t ToEmail [ToEmail2 ...] [-u SubjectLine] [-w]] |
              -D -c mysql_cfg -s [/path/]slave.txt -d path [-z] [-e]
                  [-o /path/file [-a]] [-i [db:coll] -m mongo_cfg]
-                 [-t ToEmail [ToEmail2 ...] [-u SubjectLine]] |
+                 [-t ToEmail [ToEmail2 ...] [-u SubjectLine] [-w]] |
              -E -s [path/]slave.txt -d path [-z] [-e] [-o /path/file [-a]]
                  [-i [db:coll] -m mongo_cfg]
-                 [-t ToEmail [ToEmail2 ...] [-u SubjectLine]] |
+                 [-t ToEmail [ToEmail2 ...] [-u SubjectLine] [-w]] |
              -O -s [/path/]slave.txt -d path [-z] [-e] [-o /path/file [-a]]
                  [-i [db:coll] -m mongo_cfg]
-                 [-t ToEmail [ToEmail2 ...] [-u SubjectLine]] |
+                 [-t ToEmail [ToEmail2 ...] [-u SubjectLine] [-w]] |
              -S -s [/path/]slave.txt -d path [-z] [-e] [-o /path/file [-a]]
                  [-i [db:coll] -m mongo_cfg]
-                 [-t ToEmail [ToEmail2 ...] [-u SubjectLine]] |
+                 [-t ToEmail [ToEmail2 ...] [-u SubjectLine] [-w]] |
              -T -c mysql_cfg -s [/path]/slave.txt -d path [-z] [-e]
                  [-o /path/file [-a]] [-i [db:coll] -m mongo_cfg]
-                 [-t ToEmail [ToEmail2 ...] [-u SubjectLine]] |
+                 [-t ToEmail [ToEmail2 ...] [-u SubjectLine] [-w]] |
              -A -c mysql_cfg -s [/path/]slave.txt -d path [-z] [-e]
                  [-o /path/file [-a]] [-i [db:coll] -m mongo_cfg]
-                 [-t ToEmail [ToEmail2 ...] [-u SubjectLine]]}
+                 [-t ToEmail [ToEmail2 ...] [-u SubjectLine] [-w]]}
             [-y flavor_id]
             [-p path]
             [-v | -h]
@@ -99,6 +99,7 @@
             -t to_addresses => Enables emailing capability.  Sends output to
                 one or more email addresses.
                 -u subject_line => Subject line of email.
+                -w => Override the default mail command and use mailx.
 
         General options:
         -p dir_path => Directory path to the mysql binary programs, if needed.
@@ -770,7 +771,7 @@ def data_out(data, args, **kwargs):
             print("data_out 2:  Error Detected:  %s" % (status2[1]))
 
     if mail and not status[0]:
-        mail.send_mail()
+        mail.send_mail(use_mailx=args.get_val("-w", def_val=False))
 
 
 def call_run_chk(args, func_dict, master, slaves):
@@ -899,12 +900,14 @@ def main():
     dir_perms_chk = {"-d": 5, "-p": 5}
     file_chk_list = ["-o"]
     file_crt_list = ["-o"]
-    func_dict = {"-A": ["-C", "-S", "-E", "-T", "-O"], "-B": rpt_mst_log,
-                 "-D": rpt_slv_log, "-C": chk_mst_log, "-S": chk_slv_thr,
-                 "-E": chk_slv_err, "-T": chk_slv_time, "-O": chk_slv_other}
-    opt_con_req_list = {"-i": ["-m"], "-u": ["-t"], "-A": ["-s"], "-B": ["-c"],
-                        "-C": ["-c", "-s"], "-D": ["-s"], "-E": ["-s"],
-                        "-O": ["-s"], "-T": ["-c", "-s"]}
+    func_dict = {
+        "-A": ["-C", "-S", "-E", "-T", "-O"], "-B": rpt_mst_log,
+        "-D": rpt_slv_log, "-C": chk_mst_log, "-S": chk_slv_thr,
+        "-E": chk_slv_err, "-T": chk_slv_time, "-O": chk_slv_other}
+    opt_con_req_list = {
+        "-i": ["-m"], "-u": ["-t"], "-w": ["-t"], "-A": ["-s"], "-B": ["-c"],
+        "-C": ["-c", "-s"], "-D": ["-s"], "-E": ["-s"],
+        "-O": ["-s"], "-T": ["-c", "-s"]}
     opt_def_dict = {"-i": "sysmon:mysql_rep_lag"}
     opt_multi_list = ["-u", "-t"]
     opt_or_dict_list = {"-c": ["-s"]}
