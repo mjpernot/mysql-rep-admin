@@ -906,18 +906,19 @@ def main():
         "-E": chk_slv_err, "-T": chk_slv_time, "-O": chk_slv_other}
     opt_con_req_list = {
         "-i": ["-m"], "-u": ["-t"], "-w": ["-t"], "-A": ["-s"], "-B": ["-c"],
-        "-C": ["-c", "-s"], "-D": ["-s"], "-E": ["-s"],
-        "-O": ["-s"], "-T": ["-c", "-s"]}
+        "-C": ["-c", "-s"], "-D": ["-s"], "-E": ["-s"], "-O": ["-s"],
+        "-T": ["-c", "-s"]}
     opt_def_dict = {"-i": "sysmon:mysql_rep_lag"}
     opt_multi_list = ["-u", "-t"]
     opt_or_dict_list = {"-c": ["-s"]}
     opt_req_list = ["-c", "-d"]
     opt_val_list = ["-d", "-c", "-p", "-s", "-o", "-i", "-m", "-u", "-t", "-y"]
-    slv_key = {"sid": "int", "port": "int", "cfg_file": "None",
-               "ssl_client_ca": "None", "ssl_ca_path": "None",
-               "ssl_client_key": "None", "ssl_client_cert": "None",
-               "ssl_client_flag": "int", "ssl_disabled": "bool",
-               "ssl_verify_id": "bool", "ssl_verify_cert": "bool"}
+    slv_key = {
+        "sid": "int", "port": "int", "cfg_file": "None",
+        "ssl_client_ca": "None", "ssl_ca_path": "None",
+        "ssl_client_key": "None", "ssl_client_cert": "None",
+        "ssl_client_flag": "int", "ssl_disabled": "bool",
+        "ssl_verify_id": "bool", "ssl_verify_cert": "bool"}
 
     # Process argument list from command line.
     args = gen_class.ArgParser(
