@@ -796,9 +796,7 @@ def is_time_lag(data):
 
     Arguments:
         (input) data -> Data output results
-        (input) args -> ArgParser class instance
-        (input) kwargs:
-            def_subj -> Default subject line for email
+        (output) status -> True|False - If there is a time lag detected
 
     """
 
@@ -861,7 +859,11 @@ def call_run_chk(args, func_dict, master, slaves):
             tdata = func_dict[opt](master=master, slaves=slaves)
             data["Checks"].append(tdata)
 
-    data_out(data, args)
+    if args.arg_exist("-x") and not is_time_lag(data):
+        data = None
+
+    if data:
+        data_out(data, args)
 
 
 def run_program(args, func_dict, **kwargs):

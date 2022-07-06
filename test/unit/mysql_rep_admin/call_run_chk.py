@@ -223,6 +223,8 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp
+        test_x_option_time_lag
+        test_x_option_no_time_lag
         test_single_func
         test_argsarray_all2
         test_argsarray_all
@@ -244,6 +246,39 @@ class UnitTest(unittest.TestCase):
         self.args = ArgParser()
         self.func_dict = {"-A": ["-C", "-S"], "-C": chk_mst_log,
                           "-S": chk_slv_thr, "-D": rpt_slv_log}
+
+    @mock.patch("mysql_rep_admin.is_time_lag", mock.Mock(return_value=True))
+    @mock.patch("mysql_rep_admin.data_out", mock.Mock(return_value=True))
+    def test_x_option_time_lag(self):
+
+        """Function:  test_x_option_time_lag
+
+        Description:  Test with -x option and time lag detected.
+
+        Arguments:
+
+        """
+
+        self.args.args_array["-x"] = True
+
+        self.assertFalse(mysql_rep_admin.call_run_chk(
+            self.args, self.func_dict, self.master, [self.slave]))
+
+    @mock.patch("mysql_rep_admin.is_time_lag", mock.Mock(return_value=False))
+    def test_x_option_no_time_lag(self):
+
+        """Function:  test_x_option_no_time_lag
+
+        Description:  Test with -x option and no time lag detected.
+
+        Arguments:
+
+        """
+
+        self.args.args_array["-x"] = True
+
+        self.assertFalse(mysql_rep_admin.call_run_chk(
+            self.args, self.func_dict, self.master, [self.slave]))
 
     @mock.patch("mysql_rep_admin.data_out", mock.Mock(return_value=True))
     def test_single_func(self):

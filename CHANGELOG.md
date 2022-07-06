@@ -7,6 +7,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 ## [4.0.1] - 2022-06-29
 - Added TLS capability
 - Added ability to override postfix and use mailx command.
+- Added -x option to allow the -T option to return none for email use.
 
 ### Fixed
 - main: Added -x option for the -T option.
@@ -16,6 +17,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - is_time_lag: Checks to see if there is a time lag.
 
 ### Changed
+- call_run_chk: Added check to see if -x option is set and if there is a time lag detected.
 - data_out: Added option to send_mail call to override postfix and use mailx command.
 - config/slave.txt.TEMPLATE: Added TLS entry.
 - Documentation updates.
