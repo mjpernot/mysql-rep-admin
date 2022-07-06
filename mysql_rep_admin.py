@@ -33,7 +33,7 @@
              -S -s [/path/]slave.txt -d path [-z] [-e] [-o /path/file [-a]]
                  [-i [db:coll] -m mongo_cfg]
                  [-t ToEmail [ToEmail2 ...] [-u SubjectLine] [-w]] |
-             -T -c mysql_cfg -s [/path]/slave.txt -d path [-z] [-e]
+             -T -c mysql_cfg -s [/path]/slave.txt -d path [-z] [-e] [-x]
                  [-o /path/file [-a]] [-i [db:coll] -m mongo_cfg]
                  [-t ToEmail [ToEmail2 ...] [-u SubjectLine] [-w]] |
              -A -c mysql_cfg -s [/path/]slave.txt -d path [-z] [-e]
@@ -78,6 +78,10 @@
             -c mysql_cfg => Master config file.
             -s [path/]slave.txt => Slave config file.
             -d path => Directory path to the config files.
+            -x => Returns none if no time lag is detected.  If this option is
+                used, then none of the other options are allowed.
+                Note:  Usually used for email purposes to only email out if a
+                    time lag is detected.
 
         -A => Runs multiple checks which include the options:  -C, -S, -T, -E
             -c mysql_cfg => Master config file.
@@ -253,8 +257,15 @@
             - Lastly, it will require the Mongo configuration file entry
                 auth_mech to be set to: SCRAM-SHA-1 or SCRAM-SHA-256.
 
+    Known Bugs:
+        Bug: The -T option may produce extra entries in the slaves list if the
+            master's show slave hosts names do not match up with the host names
+            in the slave.txt file.
+        Workaround: Ensure the slave.txt's host name entries in the file are
+            set to match the host names from the master. 
+
     Example:
-        mysql_rep_admin.py -c mysql_cfg -d config -s slave.txt -T
+        mysql_rep_admin.py -c mysql_cfg -d config -s slave.txt -T -x
 
 """
 
@@ -907,18 +918,18 @@ def main():
     opt_con_req_list = {
         "-i": ["-m"], "-u": ["-t"], "-w": ["-t"], "-A": ["-s"], "-B": ["-c"],
         "-C": ["-c", "-s"], "-D": ["-s"], "-E": ["-s"], "-O": ["-s"],
-        "-T": ["-c", "-s"]}
+        "-T": ["-c", "-s"], "-x": ["-T"]}
     opt_def_dict = {"-i": "sysmon:mysql_rep_lag"}
     opt_multi_list = ["-u", "-t"]
     opt_or_dict_list = {"-c": ["-s"]}
     opt_req_list = ["-c", "-d"]
     opt_val_list = ["-d", "-c", "-p", "-s", "-o", "-i", "-m", "-u", "-t", "-y"]
-    slv_key = {
-        "sid": "int", "port": "int", "cfg_file": "None",
-        "ssl_client_ca": "None", "ssl_ca_path": "None",
-        "ssl_client_key": "None", "ssl_client_cert": "None",
-        "ssl_client_flag": "int", "ssl_disabled": "bool",
-        "ssl_verify_id": "bool", "ssl_verify_cert": "bool"}
+    opt_xor_val = {"-x": ["-A", "-B", "-C", "-S", "-E", "-D", "-O"]}
+    slv_key = {"sid": "int", "port": "int", "cfg_file": "None",
+               "ssl_client_ca": "None", "ssl_ca_path": "None",
+               "ssl_client_key": "None", "ssl_client_cert": "None",
+               "ssl_client_flag": "int", "ssl_disabled": "bool",
+               "ssl_verify_id": "bool", "ssl_verify_cert": "bool"}
 
     # Process argument list from command line.
     args = gen_class.ArgParser(
@@ -930,7 +941,8 @@ def main():
        and args.arg_require(opt_req=opt_req_list) \
        and args.arg_cond_req(opt_con_req=opt_con_req_list) \
        and args.arg_dir_chk(dir_perms_chk=dir_perms_chk)\
-       and args.arg_file_chk(file_chk=file_chk_list, file_crt=file_crt_list):
+       and args.arg_file_chk(file_chk=file_chk_list, file_crt=file_crt_list) \
+       and args.arg_xor_dict(opt_xor_val=opt_xor_val):
 
         try:
             proglock = gen_class.ProgramLock(

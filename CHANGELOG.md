@@ -9,6 +9,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - Added ability to override postfix and use mailx command.
 
 ### Fixed
+- main: Added -x option for the -T option.
 - chk_mst_log: Fixed problem of appending chk_slv function data to SlaveLogs list.
 
 ### Changed
