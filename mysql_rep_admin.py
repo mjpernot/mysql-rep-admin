@@ -262,7 +262,7 @@
             master's show slave hosts names do not match up with the host names
             in the slave.txt file.
         Workaround: Ensure the slave.txt's host name entries in the file are
-            set to match the host names from the master. 
+            set to match the host names from the master.
 
     Example:
         mysql_rep_admin.py -c mysql_cfg -d config -s slave.txt -T -x
