@@ -12,6 +12,9 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - main: Added -x option for the -T option.
 - chk_mst_log: Fixed problem of appending chk_slv function data to SlaveLogs list.
 
+### Added
+- is_time_lag: Checks to see if there is a time lag.
+
 ### Changed
 - data_out: Added option to send_mail call to override postfix and use mailx command.
 - config/slave.txt.TEMPLATE: Added TLS entry.

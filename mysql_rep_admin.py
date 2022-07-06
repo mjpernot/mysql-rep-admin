@@ -785,6 +785,36 @@ def data_out(data, args, **kwargs):
         mail.send_mail(use_mailx=args.get_val("-w", def_val=False))
 
 
+def is_time_lag(data):
+
+    """Function:  is_time_lag
+
+    Description:  Checks to see if there is a time lag.
+
+    Note:  This should only be called when only the -T option is selected and
+        no other options as the list should only contain one item in the list.
+
+    Arguments:
+        (input) data -> Data output results
+        (input) args -> ArgParser class instance
+        (input) kwargs:
+            def_subj -> Default subject line for email
+
+    """
+
+    status = False
+    data = dict(data)
+
+    # The first list should only contain the -T option results
+    for slv in data["Checks"][0]["CheckSlaveTime"]["Slaves"]:
+
+        if slv["LagTime"] != 0:
+            status = True
+            break
+
+    return status
+
+
 def call_run_chk(args, func_dict, master, slaves):
 
     """Function:  call_run_chk
