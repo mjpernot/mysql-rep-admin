@@ -17,28 +17,28 @@
         mysql_rep_admin.py
             {-B -c mysql_cfg -d path [-z] [-e] [-o /path/file [-a]]
                  [-i [db:coll] -m mongo_cfg]
-                 [-t ToEmail [ToEmail2 ...] [-u SubjectLine]] |
+                 [-t ToEmail [ToEmail2 ...] [-u SubjectLine] [-w]] |
              -C -c mysql_cfg -s [/path/]slave.txt -d path [-z] [-e]
                  [-o /path/file [-a]] [-i [db:coll] -m mongo_cfg]
-                 [-t ToEmail [ToEmail2 ...] [-u SubjectLine]] |
+                 [-t ToEmail [ToEmail2 ...] [-u SubjectLine] [-w]] |
              -D -c mysql_cfg -s [/path/]slave.txt -d path [-z] [-e]
                  [-o /path/file [-a]] [-i [db:coll] -m mongo_cfg]
-                 [-t ToEmail [ToEmail2 ...] [-u SubjectLine]] |
+                 [-t ToEmail [ToEmail2 ...] [-u SubjectLine] [-w]] |
              -E -s [path/]slave.txt -d path [-z] [-e] [-o /path/file [-a]]
                  [-i [db:coll] -m mongo_cfg]
-                 [-t ToEmail [ToEmail2 ...] [-u SubjectLine]] |
+                 [-t ToEmail [ToEmail2 ...] [-u SubjectLine] [-w]] |
              -O -s [/path/]slave.txt -d path [-z] [-e] [-o /path/file [-a]]
                  [-i [db:coll] -m mongo_cfg]
-                 [-t ToEmail [ToEmail2 ...] [-u SubjectLine]] |
+                 [-t ToEmail [ToEmail2 ...] [-u SubjectLine] [-w]] |
              -S -s [/path/]slave.txt -d path [-z] [-e] [-o /path/file [-a]]
                  [-i [db:coll] -m mongo_cfg]
-                 [-t ToEmail [ToEmail2 ...] [-u SubjectLine]] |
-             -T -c mysql_cfg -s [/path]/slave.txt -d path [-z] [-e]
+                 [-t ToEmail [ToEmail2 ...] [-u SubjectLine] [-w]] |
+             -T -c mysql_cfg -s [/path]/slave.txt -d path [-z] [-e] [-x]
                  [-o /path/file [-a]] [-i [db:coll] -m mongo_cfg]
-                 [-t ToEmail [ToEmail2 ...] [-u SubjectLine]] |
+                 [-t ToEmail [ToEmail2 ...] [-u SubjectLine] [-w]] |
              -A -c mysql_cfg -s [/path/]slave.txt -d path [-z] [-e]
                  [-o /path/file [-a]] [-i [db:coll] -m mongo_cfg]
-                 [-t ToEmail [ToEmail2 ...] [-u SubjectLine]]}
+                 [-t ToEmail [ToEmail2 ...] [-u SubjectLine] [-w]]}
             [-y flavor_id]
             [-p path]
             [-v | -h]
@@ -78,6 +78,10 @@
             -c mysql_cfg => Master config file.
             -s [path/]slave.txt => Slave config file.
             -d path => Directory path to the config files.
+            -x => Returns none if no time lag is detected.  If this option is
+                used, then none of the other options are allowed.
+                Note:  Usually used for email purposes to only email out if a
+                    time lag is detected.
 
         -A => Runs multiple checks which include the options:  -C, -S, -T, -E
             -c mysql_cfg => Master config file.
@@ -99,6 +103,7 @@
             -t to_addresses => Enables emailing capability.  Sends output to
                 one or more email addresses.
                 -u subject_line => Subject line of email.
+                -w => Override the default mail command and use mailx.
 
         General options:
         -p dir_path => Directory path to the mysql binary programs, if needed.
@@ -133,6 +138,9 @@
             ssl_disabled = False
             ssl_verify_id = False
             ssl_verify_cert = False
+
+            # Set what TLS versions are allowed in the connection set up:
+            tls_versions = []
 
         NOTE 1:  Include the cfg_file even if running remotely as the
             file will be used in future releases.
@@ -249,8 +257,15 @@
             - Lastly, it will require the Mongo configuration file entry
                 auth_mech to be set to: SCRAM-SHA-1 or SCRAM-SHA-256.
 
+    Known Bugs:
+        Bug: The -T option may produce extra entries in the slaves list if the
+            master's show slave hosts names do not match up with the host names
+            in the slave.txt file.
+        Workaround: Ensure the slave.txt's host name entries in the file are
+            set to match the host names from the master.
+
     Example:
-        mysql_rep_admin.py -c mysql_cfg -d config -s slave.txt -T
+        mysql_rep_admin.py -c mysql_cfg -d config -s slave.txt -T -x
 
 """
 
@@ -371,7 +386,7 @@ def chk_slv(slave):
 
     Arguments:
         (input) slave -> Slave instance
-        (output) Slave log information and status in dictionary format
+        (output) data -> Slave log information and status in dictionary format
 
     """
 
@@ -428,15 +443,13 @@ def chk_mst_log(**kwargs):
                 tdata["Info"] = {"Log": mst_file, "Position": read_pos}
 
             data["CheckMasterLog"]["MasterLog"]["Slaves"].append(tdata)
-            data["CheckMasterLog"]["SlaveLogs"] = \
-                data["CheckMasterLog"]["SlaveLogs"] + chk_slv(slv)
+            data["CheckMasterLog"]["SlaveLogs"].append(chk_slv(slv))
 
     elif slaves:
         print("chk_mst_log: Warning:  Missing Master instance.")
 
         for slv in slaves:
-            data["CheckMasterLog"]["SlaveLogs"] = \
-                data["CheckMasterLog"]["SlaveLogs"] + chk_slv(slv)
+            data["CheckMasterLog"]["SlaveLogs"].append(chk_slv(slv))
 
     else:
         print("chk_mst_log:  Warning:  Missing Master and Slave instances.")
@@ -507,8 +520,8 @@ def chk_slv_err(**kwargs):
 
     if slaves:
         for slv in slaves:
-            tdata = {"Name": slv.get_name(), "Connection": "Up", "IO": {},
-                     "SQL": {}}
+            tdata = {"Name": slv.get_name(), "Connection": "Up",
+                     "IO": {"Status": "Good"}, "SQL": {"Status": "Good"}}
 
             # For pre-MySQL 5.6 versions, will be NULL for these two entries.
             iost, sql, io_msg, sql_msg, io_time, sql_time = slv.get_err_stat()
@@ -522,12 +535,14 @@ def chk_slv_err(**kwargs):
                 tdata["IO"]["Error"] = iost
                 tdata["IO"]["Message"] = io_msg
                 tdata["IO"]["Timestamp"] = io_time
+                tdata["IO"]["Status"] = "Bad"
 
             # SQL error
             if sql:
                 tdata["SQL"]["Error"] = sql
                 tdata["SQL"]["Message"] = sql_msg
                 tdata["SQL"]["Timestamp"] = sql_time
+                tdata["SQL"]["Status"] = "Bad"
 
             data["CheckSlaveError"]["Slaves"].append(tdata)
 
@@ -668,17 +683,20 @@ def _chk_other(skip, tmp_tbl, retry, name, sql_ver):
 
     """
 
-    data = {"Name": name}
+    data = {"Name": name, "Status": "Good"}
 
     if skip is None or skip > 0:
         data["SkipCount"] = skip
+        data["Status"] = "Bad"
 
     if not tmp_tbl or int(tmp_tbl) > 5:
         data["TempTableCount"] = tmp_tbl
+        data["Status"] = "Bad"
 
     if (sql_ver[0] < 8 and (not retry or int(retry) > 0)) \
        or (sql_ver[0] >= 8 and retry > 0):
         data["RetryTransactionCount"] = retry
+        data["Status"] = "Bad"
 
     return data
 
@@ -769,7 +787,35 @@ def data_out(data, args, **kwargs):
             print("data_out 2:  Error Detected:  %s" % (status2[1]))
 
     if mail and not status[0]:
-        mail.send_mail()
+        mail.send_mail(use_mailx=args.get_val("-w", def_val=False))
+
+
+def is_time_lag(data):
+
+    """Function:  is_time_lag
+
+    Description:  Checks to see if there is a time lag.
+
+    Note:  This should only be called when only the -T option is selected and
+        no other options as the list should only contain one item in the list.
+
+    Arguments:
+        (input) data -> Data output results
+        (output) status -> True|False - If there is a time lag detected
+
+    """
+
+    status = False
+    data = dict(data)
+
+    # The first list should only contain the -T option results
+    for slv in data["Checks"][0]["CheckSlaveTime"]["Slaves"]:
+
+        if slv["LagTime"] != 0:
+            status = True
+            break
+
+    return status
 
 
 def call_run_chk(args, func_dict, master, slaves):
@@ -818,7 +864,11 @@ def call_run_chk(args, func_dict, master, slaves):
             tdata = func_dict[opt](master=master, slaves=slaves)
             data["Checks"].append(tdata)
 
-    data_out(data, args)
+    if args.arg_exist("-x") and not is_time_lag(data):
+        data = None
+
+    if data:
+        data_out(data, args)
 
 
 def run_program(args, func_dict, **kwargs):
@@ -898,17 +948,20 @@ def main():
     dir_perms_chk = {"-d": 5, "-p": 5}
     file_chk_list = ["-o"]
     file_crt_list = ["-o"]
-    func_dict = {"-A": ["-C", "-S", "-E", "-T", "-O"], "-B": rpt_mst_log,
-                 "-D": rpt_slv_log, "-C": chk_mst_log, "-S": chk_slv_thr,
-                 "-E": chk_slv_err, "-T": chk_slv_time, "-O": chk_slv_other}
-    opt_con_req_list = {"-i": ["-m"], "-u": ["-t"], "-A": ["-s"], "-B": ["-c"],
-                        "-C": ["-c", "-s"], "-D": ["-s"], "-E": ["-s"],
-                        "-O": ["-s"], "-T": ["-c", "-s"]}
+    func_dict = {
+        "-A": ["-C", "-S", "-E", "-T", "-O"], "-B": rpt_mst_log,
+        "-D": rpt_slv_log, "-C": chk_mst_log, "-S": chk_slv_thr,
+        "-E": chk_slv_err, "-T": chk_slv_time, "-O": chk_slv_other}
+    opt_con_req_list = {
+        "-i": ["-m"], "-u": ["-t"], "-w": ["-t"], "-A": ["-s"], "-B": ["-c"],
+        "-C": ["-c", "-s"], "-D": ["-s"], "-E": ["-s"], "-O": ["-s"],
+        "-T": ["-c", "-s"], "-x": ["-T"]}
     opt_def_dict = {"-i": "sysmon:mysql_rep_lag"}
     opt_multi_list = ["-u", "-t"]
     opt_or_dict_list = {"-c": ["-s"]}
     opt_req_list = ["-c", "-d"]
     opt_val_list = ["-d", "-c", "-p", "-s", "-o", "-i", "-m", "-u", "-t", "-y"]
+    opt_xor_val = {"-x": ["-A", "-B", "-C", "-S", "-E", "-D", "-O"]}
     slv_key = {"sid": "int", "port": "int", "cfg_file": "None",
                "ssl_client_ca": "None", "ssl_ca_path": "None",
                "ssl_client_key": "None", "ssl_client_cert": "None",
@@ -925,7 +978,8 @@ def main():
        and args.arg_require(opt_req=opt_req_list) \
        and args.arg_cond_req(opt_con_req=opt_con_req_list) \
        and args.arg_dir_chk(dir_perms_chk=dir_perms_chk)\
-       and args.arg_file_chk(file_chk=file_chk_list, file_crt=file_crt_list):
+       and args.arg_file_chk(file_chk=file_chk_list, file_crt=file_crt_list) \
+       and args.arg_xor_dict(opt_xor_val=opt_xor_val):
 
         try:
             proglock = gen_class.ProgramLock(

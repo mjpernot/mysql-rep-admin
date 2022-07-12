@@ -128,55 +128,59 @@ class UnitTest(unittest.TestCase):
         self.results = {
             "CheckSlaveError": {
                 "Slaves": [
-                    {"Name": self.slave.name, "Connection": "Up", "IO": dict(),
-                     "SQL": dict()}]}}
+                    {"Name": self.slave.name, "Connection": "Up",
+                     "IO": {"Status": "Good"}, "SQL": {"Status": "Good"}}]}}
         self.results["CheckSlaveError"]["Slaves"][0]["Connection"] = "Down"
 
         self.results2 = {
             "CheckSlaveError": {
                 "Slaves": [
-                    {"Name": self.slave.name, "Connection": "Up", "IO": dict(),
-                     "SQL": dict()}]}}
+                    {"Name": self.slave.name, "Connection": "Up",
+                     "IO": {"Status": "Good"}, "SQL": {"Status": "Good"}}]}}
         self.results2["CheckSlaveError"]["Slaves"][0]["SQL"]["Error"] = "Error"
         self.results2[
             "CheckSlaveError"]["Slaves"][0]["SQL"]["Message"] = "SQL_Message"
         self.results2[
             "CheckSlaveError"]["Slaves"][0]["SQL"]["Timestamp"] = "SQL_Time"
+        self.results2["CheckSlaveError"]["Slaves"][0]["SQL"]["Status"] = "Bad"
 
         self.results3 = {
             "CheckSlaveError": {
                 "Slaves": [
-                    {"Name": self.slave.name, "Connection": "Up", "IO": dict(),
-                     "SQL": dict()}]}}
+                    {"Name": self.slave.name, "Connection": "Up",
+                     "IO": {"Status": "Good"}, "SQL": {"Status": "Good"}}]}}
         self.results3["CheckSlaveError"]["Slaves"][0]["IO"]["Error"] = "Error"
         self.results3[
             "CheckSlaveError"]["Slaves"][0]["IO"]["Message"] = "IO_Message"
         self.results3[
             "CheckSlaveError"]["Slaves"][0]["IO"]["Timestamp"] = "IO_Time"
+        self.results3["CheckSlaveError"]["Slaves"][0]["IO"]["Status"] = "Bad"
 
         self.results4 = {"CheckSlaveError": {"Slaves": []}}
 
         self.results5 = {
             "CheckSlaveError": {
                 "Slaves": [
-                    {"Name": self.slave.name, "Connection": "Up", "IO": dict(),
-                     "SQL": dict()}]}}
+                    {"Name": self.slave.name, "Connection": "Up",
+                     "IO": {"Status": "Good"}, "SQL": {"Status": "Good"}}]}}
 
         self.results6 = {
             "CheckSlaveError": {
                 "Slaves": [
-                    {"Name": self.slave.name, "Connection": "Up", "IO": dict(),
-                     "SQL": dict()}]}}
+                    {"Name": self.slave.name, "Connection": "Up",
+                     "IO": {"Status": "Good"}, "SQL": {"Status": "Good"}}]}}
         self.results6["CheckSlaveError"]["Slaves"][0]["SQL"]["Error"] = "Error"
         self.results6[
             "CheckSlaveError"]["Slaves"][0]["SQL"]["Message"] = "SQL_Message"
         self.results6[
             "CheckSlaveError"]["Slaves"][0]["SQL"]["Timestamp"] = "SQL_Time"
+        self.results6["CheckSlaveError"]["Slaves"][0]["SQL"]["Status"] = "Bad"
         self.results6["CheckSlaveError"]["Slaves"][0]["IO"]["Error"] = "Error"
         self.results6[
             "CheckSlaveError"]["Slaves"][0]["IO"]["Message"] = "IO_Message"
         self.results6[
             "CheckSlaveError"]["Slaves"][0]["IO"]["Timestamp"] = "IO_Time"
+        self.results6["CheckSlaveError"]["Slaves"][0]["IO"]["Status"] = "Bad"
 
     def test_no_conn(self):
 

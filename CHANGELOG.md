@@ -4,6 +4,26 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
+## [4.0.1] - 2022-06-29
+- Added TLS capability
+- Added ability to override postfix and use mailx command.
+- Added -x option to allow the -T option to return none for email use.
+
+### Fixed
+- main: Added -x option for the -T option.
+- chk_mst_log: Fixed problem of appending chk_slv function data to SlaveLogs list.
+
+### Added
+- is_time_lag: Checks to see if there is a time lag.
+
+### Changed
+- chk_slv_err, \_chk_other: Added "Status" key to IO and SQL error dictionaries.
+- call_run_chk: Added check to see if -x option is set and if there is a time lag detected.
+- data_out: Added option to send_mail call to override postfix and use mailx command.
+- config/slave.txt.TEMPLATE: Added TLS entry.
+- Documentation updates.
+
+
 ## [4.0.0] - 2022-06-02
 Breaking change
 
