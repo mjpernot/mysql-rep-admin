@@ -42,6 +42,7 @@ pipeline {
                 ./test/unit/mysql_rep_admin/data_out.py
                 ./test/unit/mysql_rep_admin/dict_out.py
                 ./test/unit/mysql_rep_admin/help_message.py
+                ./test/unit/mysql_rep_admin/is_time_lag.py
                 ./test/unit/mysql_rep_admin/main.py
                 ./test/unit/mysql_rep_admin/process_time_lag.py
                 ./test/unit/mysql_rep_admin/rpt_mst_log.py

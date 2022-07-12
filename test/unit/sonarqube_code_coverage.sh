@@ -20,6 +20,7 @@ coverage run -a --source=mysql_rep_admin test/unit/mysql_rep_admin/chk_slv_time.
 coverage run -a --source=mysql_rep_admin test/unit/mysql_rep_admin/data_out.py
 coverage run -a --source=mysql_rep_admin test/unit/mysql_rep_admin/dict_out.py
 coverage run -a --source=mysql_rep_admin test/unit/mysql_rep_admin/help_message.py
+coverage run -a --source=mysql_rep_admin test/unit/mysql_rep_admin/is_time_lag.py
 coverage run -a --source=mysql_rep_admin test/unit/mysql_rep_admin/main.py
 coverage run -a --source=mysql_rep_admin test/unit/mysql_rep_admin/process_time_lag.py
 coverage run -a --source=mysql_rep_admin test/unit/mysql_rep_admin/rpt_mst_log.py

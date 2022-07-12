@@ -50,6 +50,7 @@ class ArgParser(object):
         arg_req_or_lst
         get_args
         get_val
+        arg_xor_dict
 
     """
 
@@ -76,6 +77,8 @@ class ArgParser(object):
         self.opt_con_req2 = True
         self.opt_or = None
         self.opt_or2 = True
+        self.opt_xor_val = None
+        self.opt_xor_val2 = True
 
     def arg_cond_req(self, opt_con_req):
 
@@ -173,6 +176,20 @@ class ArgParser(object):
 
         return self.args_array.get(skey, def_val)
 
+    def arg_xor_dict(self, opt_xor_val):
+
+        """Method:  arg_xor_dict
+
+        Description:  Method stub holder for gen_class.ArgParser.arg_xor_dict.
+
+        Arguments:
+
+        """
+
+        self.opt_xor_val = opt_xor_val
+
+        return self.opt_xor_val2
+
 
 class ProgramLock(object):
 
@@ -221,6 +238,8 @@ class UnitTest(unittest.TestCase):
         test_arg_dir_true
         test_arg_file_false
         test_arg_file_true
+        test_arg_xor_dict_false
+        test_arg_xor_dict_true
         test_run_program
         test_programlock_true
         test_programlock_false
@@ -448,16 +467,54 @@ class UnitTest(unittest.TestCase):
 
         self.assertFalse(mysql_rep_admin.main())
 
+    @mock.patch("mysql_rep_admin.gen_libs.help_func",
+                mock.Mock(return_value=False))
+    @mock.patch("mysql_rep_admin.gen_class.ArgParser")
+    def test_arg_file_true(self, mock_arg):
+
+        """Function:  test_arg_file_true
+
+        Description:  Test arg_file_chk if returns true.
+
+        Arguments:
+
+        """
+
+        self.args.opt_xor_val2 = False
+
+        mock_arg.return_value = self.args
+
+        self.assertFalse(mysql_rep_admin.main())
+
+    @mock.patch("mysql_rep_admin.gen_libs.help_func",
+                mock.Mock(return_value=False))
+    @mock.patch("mysql_rep_admin.gen_class.ArgParser")
+    def test_arg_xor_dict_false(self, mock_arg):
+
+        """Function:  test_arg_xor_dict_false
+
+        Description:  Test arg_xor_dict if returns false.
+
+        Arguments:
+
+        """
+
+        self.args.opt_xor_val2 = False
+
+        mock_arg.return_value = self.args
+
+        self.assertFalse(mysql_rep_admin.main())
+
     @mock.patch("mysql_rep_admin.run_program", mock.Mock(return_value=True))
     @mock.patch("mysql_rep_admin.gen_libs.help_func",
                 mock.Mock(return_value=False))
     @mock.patch("mysql_rep_admin.gen_class.ProgramLock")
     @mock.patch("mysql_rep_admin.gen_class.ArgParser")
-    def test_arg_file_true(self, mock_arg, mock_lock):
+    def test_arg_xor_dict_true(self, mock_arg, mock_lock):
 
-        """Function:  test_arg_file_true
+        """Function:  test_arg_xor_dict_true
 
-        Description:  Test arg_file_chk if returns true.
+        Description:  Test arg_xor_dict if returns true.
 
         Arguments:
 
