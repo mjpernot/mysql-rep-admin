@@ -214,7 +214,7 @@ master log"}]},
 
         """
 
-        mock_chk.return_value = [dict(self.chk_slv_data)]
+        mock_chk.return_value = dict(self.chk_slv_data)
 
         with gen_libs.no_std_out():
             self.assertEqual(
@@ -232,7 +232,7 @@ master log"}]},
 
         """
 
-        mock_chk.return_value = [dict(self.chk_slv_data)]
+        mock_chk.return_value = dict(self.chk_slv_data)
 
         self.assertEqual(
             mysql_rep_admin.chk_mst_log(
@@ -249,7 +249,7 @@ master log"}]},
 
         """
 
-        mock_chk.return_value = [dict(self.chk_slv_data)]
+        mock_chk.return_value = dict(self.chk_slv_data)
 
         self.assertEqual(
             mysql_rep_admin.chk_mst_log(

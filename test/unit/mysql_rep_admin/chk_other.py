@@ -74,13 +74,20 @@ class UnitTest(unittest.TestCase):
         self.name = "SlaveName"
         self.version = (5, 6, 31)
         self.version2 = (8, 0, 23)
-        self.results = {"Name": self.name}
-        self.results2 = {"Name": self.name, "SkipCount": self.skip1}
-        self.results3 = {"Name": self.name, "TempTableCount": self.tmp_tbl6}
+        self.results = {"Name": self.name, "Status": "Good"}
+        self.results2 = {
+            "Name": self.name, "SkipCount": self.skip1, "Status": "Bad"}
+        self.results3 = {
+            "Name": self.name, "TempTableCount": self.tmp_tbl6,
+            "Status": "Bad"}
         self.results4 = {
-            "Name": self.name, "RetryTransactionCount": self.retry1}
-        self.results5 = {"Name": self.name, "SkipCount": self.skip2}
-        self.results6 = {"Name": self.name, "TempTableCount": self.tmp_tbl2}
+            "Name": self.name, "RetryTransactionCount": self.retry1,
+            "Status": "Bad"}
+        self.results5 = {
+            "Name": self.name, "SkipCount": self.skip2, "Status": "Bad"}
+        self.results6 = {
+            "Name": self.name, "TempTableCount": self.tmp_tbl2,
+            "Status": "Bad"}
 
     def test_retry_80(self):
 
