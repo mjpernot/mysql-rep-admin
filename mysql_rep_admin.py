@@ -520,8 +520,8 @@ def chk_slv_err(**kwargs):
 
     if slaves:
         for slv in slaves:
-            tdata = {"Name": slv.get_name(), "Connection": "Up", "IO": {},
-                     "SQL": {}}
+            tdata = {"Name": slv.get_name(), "Connection": "Up",
+                     "IO": {"Status": "Good"}, "SQL": {"Status": "Good"}}
 
             # For pre-MySQL 5.6 versions, will be NULL for these two entries.
             iost, sql, io_msg, sql_msg, io_time, sql_time = slv.get_err_stat()
@@ -535,12 +535,14 @@ def chk_slv_err(**kwargs):
                 tdata["IO"]["Error"] = iost
                 tdata["IO"]["Message"] = io_msg
                 tdata["IO"]["Timestamp"] = io_time
+                tdata["IO"]["Status"] = "Bad"
 
             # SQL error
             if sql:
                 tdata["SQL"]["Error"] = sql
                 tdata["SQL"]["Message"] = sql_msg
                 tdata["SQL"]["Timestamp"] = sql_time
+                tdata["SQL"]["Status"] = "Bad"
 
             data["CheckSlaveError"]["Slaves"].append(tdata)
 
