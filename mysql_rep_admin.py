@@ -683,17 +683,20 @@ def _chk_other(skip, tmp_tbl, retry, name, sql_ver):
 
     """
 
-    data = {"Name": name}
+    data = {"Name": name, "Status": "Good"}
 
     if skip is None or skip > 0:
         data["SkipCount"] = skip
+        data["Status"] = "Bad"
 
     if not tmp_tbl or int(tmp_tbl) > 5:
         data["TempTableCount"] = tmp_tbl
+        data["Status"] = "Bad"
 
     if (sql_ver[0] < 8 and (not retry or int(retry) > 0)) \
        or (sql_ver[0] >= 8 and retry > 0):
         data["RetryTransactionCount"] = retry
+        data["Status"] = "Bad"
 
     return data
 

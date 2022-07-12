@@ -139,13 +139,14 @@ class UnitTest(unittest.TestCase):
         self.slave = SlaveRep()
         self.slave2 = SlaveRep(0, 0, 0)
         self.results = {
-            "CheckSlaveOther": {"Slaves": [{'Name': 'Slave_Name'}]}}
+            "CheckSlaveOther": {"Slaves": [
+                {"Name": "Slave_Name", "Status": "Good"}]}}
         self.results2 = {
             "CheckSlaveOther": {"Slaves": []}}
         self.results3 = {
             "CheckSlaveOther": {"Slaves": [
                 {"Name": "Slave_Name", "RetryTransactionCount": "1",
-                 "SkipCount": 1, "TempTableCount": "6"}]}}
+                 "SkipCount": 1, "TempTableCount": "6", "Status": "Bad"}]}}
 
     def test_chk_slv_other2(self):
 
