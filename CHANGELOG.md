@@ -5,6 +5,13 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 
 ## [4.0.2] - 2022-10-11
+- Updated to work in Python 3 too
+- Upgraded python-lib to v2.9.4
+- Upgraded mysql-lib to v5.3.2
+- Upgraded mongo-lib to v4.2.2
+
+### Fixed
+- main: Set up and passed file_perm variable to arg_file_chk method.
 
 
 ## [4.0.1] - 2022-06-29
