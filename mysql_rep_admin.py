@@ -287,7 +287,7 @@ try:
     from .lib import gen_class
     from .lib import machine
     from .mysql_lib import mysql_class
-    from .mysql_lib import mysql_lib
+    from .mysql_lib import mysql_libs
     from .mongo_lib import mongo_libs
     from . import version
 
@@ -636,7 +636,7 @@ def _process_time_lag(slv, time_lag):
 
     """
 
-    if time_lag > 0 or time_lag is None:
+    if time_lag is None or time_lag > 0:
         time.sleep(5)
 
         if slv.conn:

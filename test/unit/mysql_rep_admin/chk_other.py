@@ -1,4 +1,3 @@
-#!/usr/bin/python
 # Classification (U)
 
 """Program:  chk_other.py
@@ -62,14 +61,22 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        if sys.version_info < (3, 0):
+            self.tmp_tbl0 = unicode(0)
+            self.tmp_tbl6 = unicode(6)
+            self.retry0 = unicode(0)
+            self.retry1 = unicode(1)
+
+        else:
+            self.tmp_tbl0 = str(0)
+            self.tmp_tbl6 = str(6)
+            self.retry0 = str(0)
+            self.retry1 = str(1)
+
         self.skip0 = 0
         self.skip1 = 1
         self.skip2 = None
-        self.tmp_tbl0 = unicode(0)
-        self.tmp_tbl6 = unicode(6)
         self.tmp_tbl2 = None
-        self.retry0 = unicode(0)
-        self.retry1 = unicode(1)
         self.retry2 = None
         self.name = "SlaveName"
         self.version = (5, 6, 31)

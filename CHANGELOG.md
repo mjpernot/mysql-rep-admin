@@ -10,6 +10,9 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - Upgraded mysql-lib to v5.3.2
 - Upgraded mongo-lib to v4.2.2
 
+### Changed
+- \_process_time_lag: Refactored "if" statement to check for Nonetype datatype first.
+
 ### Fixed
 - main: Set up and passed file_perm variable to arg_file_chk method.
 

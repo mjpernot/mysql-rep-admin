@@ -1,4 +1,3 @@
-#!/usr/bin/python
 # Classification (U)
 
 """Program:  chk_slv_other.py
@@ -81,10 +80,16 @@ class SlaveRep(object):
 
         """
 
+        if sys.version_info < (3, 0):
+            self.tmp_tbl = unicode(tmp_tbl)
+            self.retry = unicode(retry)
+
+        else:
+            self.tmp_tbl = str(tmp_tbl)
+            self.retry = str(retry)
+
         self.name = "Slave_Name"
         self.skip = skip
-        self.tmp_tbl = unicode(tmp_tbl)
-        self.retry = unicode(retry)
         self.version = (5, 6, 31)
 
     def get_name(self):
