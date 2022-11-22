@@ -12,6 +12,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 ### Changed
 - \_process_time_lag: Refactored "if" statement to check for Nonetype datatype first.
+- Converted imports to use Python 2.7 or Python 3.
 
 ### Fixed
 - main: Set up and passed file_perm variable to arg_file_chk method.
