@@ -12,8 +12,6 @@
 import os
 import setuptools
 
-# Third-party
-
 # Local
 import version
 
@@ -49,6 +47,9 @@ setuptools.setup(
         "Programming Language :: Python :: 2.7",
         "Programming Language :: Python :: 3.6",
         "Topic :: Database",
+        "Topic :: Database :: Mongodb",
+        "Topic :: Database :: Mongodb :: 3.4",
+        "Topic :: Database :: Mongodb :: 4.2",
         "Topic :: Database :: MySQL",
         "Topic :: Database :: MySQL :: 5.6",
         "Topic :: Database :: MySQL :: 5.7",
