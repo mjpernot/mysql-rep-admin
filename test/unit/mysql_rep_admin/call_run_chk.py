@@ -1,4 +1,3 @@
-#!/usr/bin/python
 # Classification (U)
 
 """Program:  call_run_chk.py
@@ -17,13 +16,8 @@
 # Standard
 import sys
 import os
+import unittest
 
-if sys.version_info < (2, 7):
-    import unittest2 as unittest
-else:
-    import unittest
-
-# Third-party
 import mock
 
 # Local
@@ -152,7 +146,7 @@ class ArgParser(object):
 
         """
 
-        return self.args_array.keys()
+        return list(self.args_array.keys())
 
     def get_val(self, skey, def_val=None):
 
@@ -244,7 +238,7 @@ class UnitTest(unittest.TestCase):
         self.master = MasterRep()
         self.slave = SlaveRep()
         self.args = ArgParser()
-        self.func_dict = {"-A": ["-C", "-S"], "-C": chk_mst_log,
+        self.func_list = {"-A": ["-C", "-S"], "-C": chk_mst_log,
                           "-S": chk_slv_thr, "-D": rpt_slv_log}
 
     @mock.patch("mysql_rep_admin.is_time_lag", mock.Mock(return_value=True))
@@ -262,7 +256,7 @@ class UnitTest(unittest.TestCase):
         self.args.args_array["-x"] = True
 
         self.assertFalse(mysql_rep_admin.call_run_chk(
-            self.args, self.func_dict, self.master, [self.slave]))
+            self.args, self.func_list, self.master, [self.slave]))
 
     @mock.patch("mysql_rep_admin.is_time_lag", mock.Mock(return_value=False))
     def test_x_option_no_time_lag(self):
@@ -278,7 +272,7 @@ class UnitTest(unittest.TestCase):
         self.args.args_array["-x"] = True
 
         self.assertFalse(mysql_rep_admin.call_run_chk(
-            self.args, self.func_dict, self.master, [self.slave]))
+            self.args, self.func_list, self.master, [self.slave]))
 
     @mock.patch("mysql_rep_admin.data_out", mock.Mock(return_value=True))
     def test_single_func(self):
@@ -294,7 +288,7 @@ class UnitTest(unittest.TestCase):
         del self.args.args_array["-A"]
 
         self.assertFalse(mysql_rep_admin.call_run_chk(
-            self.args, self.func_dict, self.master, [self.slave]))
+            self.args, self.func_list, self.master, [self.slave]))
 
     @mock.patch("mysql_rep_admin.data_out", mock.Mock(return_value=True))
     def test_argsarray_all2(self):
@@ -310,7 +304,7 @@ class UnitTest(unittest.TestCase):
         del self.args.args_array["-D"]
 
         self.assertFalse(mysql_rep_admin.call_run_chk(
-            self.args, self.func_dict, self.master, [self.slave]))
+            self.args, self.func_list, self.master, [self.slave]))
 
     @mock.patch("mysql_rep_admin.data_out", mock.Mock(return_value=True))
     def test_argsarray_all(self):
@@ -324,7 +318,7 @@ class UnitTest(unittest.TestCase):
         """
 
         self.assertFalse(mysql_rep_admin.call_run_chk(
-            self.args, self.func_dict, self.master, [self.slave]))
+            self.args, self.func_list, self.master, [self.slave]))
 
 
 if __name__ == "__main__":
