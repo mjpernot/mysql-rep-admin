@@ -1,4 +1,3 @@
-#!/usr/bin/python
 # Classification (U)
 
 """Program:  chk_other.py
@@ -17,13 +16,7 @@
 # Standard
 import sys
 import os
-
-if sys.version_info < (2, 7):
-    import unittest2 as unittest
-else:
-    import unittest
-
-# Third-party
+import unittest
 
 # Local
 sys.path.append(os.getcwd())
@@ -62,15 +55,24 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        if sys.version_info < (3, 0):
+            self.tmp_tbl0 = unicode(0)
+            self.tmp_tbl6 = unicode(6)
+            self.retry0 = unicode(0)
+            self.retry1 = unicode(1)
+
+        else:
+            self.tmp_tbl0 = str(0)
+            self.tmp_tbl6 = str(6)
+            self.retry0 = str(0)
+            self.retry1 = str(1)
+
         self.skip0 = 0
         self.skip1 = 1
         self.skip2 = None
-        self.tmp_tbl0 = unicode(0)
-        self.tmp_tbl6 = unicode(6)
         self.tmp_tbl2 = None
-        self.retry0 = unicode(0)
-        self.retry1 = unicode(1)
         self.retry2 = None
+        self.retry3 = 1
         self.name = "SlaveName"
         self.version = (5, 6, 31)
         self.version2 = (8, 0, 23)
@@ -82,6 +84,9 @@ class UnitTest(unittest.TestCase):
             "Status": "Bad"}
         self.results4 = {
             "Name": self.name, "RetryTransactionCount": self.retry1,
+            "Status": "Bad"}
+        self.results4a = {
+            "Name": self.name, "RetryTransactionCount": self.retry3,
             "Status": "Bad"}
         self.results5 = {
             "Name": self.name, "SkipCount": self.skip2, "Status": "Bad"}
@@ -100,8 +105,8 @@ class UnitTest(unittest.TestCase):
         """
 
         self.assertEqual(mysql_rep_admin._chk_other(
-            self.skip0, self.tmp_tbl0, self.retry1, self.name,
-            self.version2), self.results4)
+            self.skip0, self.tmp_tbl0, self.retry3, self.name,
+            self.version2), self.results4a)
 
     def test_retry_pre80(self):
 

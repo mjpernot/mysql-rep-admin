@@ -1,4 +1,3 @@
-#!/usr/bin/python
 # Classification (U)
 
 """Program:  run_program.py
@@ -17,13 +16,7 @@
 # Standard
 import sys
 import os
-
-if sys.version_info < (2, 7):
-    import unittest2 as unittest
-else:
-    import unittest
-
-# Third-party
+import unittest
 import mock
 
 # Local
@@ -278,7 +271,7 @@ class UnitTest(unittest.TestCase):
         self.slave1 = SlaveRep()
         self.slave2 = SlaveRep()
         self.slv_array = [self.slave1, self.slave2]
-        self.func_dict = {"-D": rpt_slv_log}
+        self.func_list = {"-D": rpt_slv_log}
         self.args = ArgParser()
         self.cfg_array = [{"name": "HOST_NAME", "japd": "japd",
                            "cfg_file": "None", "host": "SERVER",
@@ -316,7 +309,7 @@ class UnitTest(unittest.TestCase):
 
         with gen_libs.no_std_out():
             self.assertFalse(
-                mysql_rep_admin.run_program(self.args, self.func_dict))
+                mysql_rep_admin.run_program(self.args, self.func_list))
 
     @mock.patch("mysql_rep_admin.mysql_libs.disconnect",
                 mock.Mock(return_value=True))
@@ -344,7 +337,7 @@ class UnitTest(unittest.TestCase):
         mock_slv.return_value = self.slv_array
 
         self.assertFalse(
-            mysql_rep_admin.run_program(self.args, self.func_dict))
+            mysql_rep_admin.run_program(self.args, self.func_list))
 
     @mock.patch("mysql_rep_admin.mysql_libs.disconnect",
                 mock.Mock(return_value=True))
@@ -373,7 +366,7 @@ class UnitTest(unittest.TestCase):
         mock_slv.return_value = self.slv_array
 
         self.assertFalse(
-            mysql_rep_admin.run_program(self.args, self.func_dict))
+            mysql_rep_admin.run_program(self.args, self.func_list))
 
     @mock.patch("mysql_rep_admin.mysql_libs.disconnect",
                 mock.Mock(return_value=True))
@@ -403,7 +396,7 @@ class UnitTest(unittest.TestCase):
         mock_slv.return_value = self.slv_array
 
         self.assertFalse(
-            mysql_rep_admin.run_program(self.args, self.func_dict))
+            mysql_rep_admin.run_program(self.args, self.func_list))
 
     @mock.patch("mysql_rep_admin.mysql_libs.disconnect",
                 mock.Mock(return_value=True))
@@ -432,7 +425,7 @@ class UnitTest(unittest.TestCase):
         mock_slv.return_value = self.slv_array
 
         self.assertFalse(
-            mysql_rep_admin.run_program(self.args, self.func_dict))
+            mysql_rep_admin.run_program(self.args, self.func_list))
 
     @mock.patch("mysql_rep_admin.mysql_libs.disconnect",
                 mock.Mock(return_value=True))
@@ -457,7 +450,7 @@ class UnitTest(unittest.TestCase):
         mock_slv.return_value = self.slv_array
 
         self.assertFalse(
-            mysql_rep_admin.run_program(self.args, self.func_dict))
+            mysql_rep_admin.run_program(self.args, self.func_list))
 
     @mock.patch("mysql_rep_admin.mysql_class.MasterRep")
     @mock.patch("mysql_rep_admin.mysql_libs.disconnect")
@@ -481,7 +474,7 @@ class UnitTest(unittest.TestCase):
         mock_rep.return_value = self.master
 
         self.assertFalse(
-            mysql_rep_admin.run_program(self.args, self.func_dict))
+            mysql_rep_admin.run_program(self.args, self.func_list))
 
     @mock.patch("mysql_rep_admin.mysql_libs.disconnect",
                 mock.Mock(return_value=True))
@@ -509,7 +502,7 @@ class UnitTest(unittest.TestCase):
         mock_slv.return_value = self.slv_array
 
         self.assertFalse(
-            mysql_rep_admin.run_program(self.args, self.func_dict))
+            mysql_rep_admin.run_program(self.args, self.func_list))
 
 
 if __name__ == "__main__":

@@ -270,25 +270,33 @@
 """
 
 # Libraries and Global Variables
+from __future__ import print_function
+from __future__ import absolute_import
 
 # Standard
-# For Python 2.6/2.7: Redirection of stdout in a print command.
-from __future__ import print_function
 import sys
 import time
 import datetime
-
-# Third party
 import json
 
 # Local
-import lib.gen_libs as gen_libs
-import lib.machine as machine
-import lib.gen_class as gen_class
-import mysql_lib.mysql_class as mysql_class
-import mysql_lib.mysql_libs as mysql_libs
-import mongo_lib.mongo_libs as mongo_libs
-import version
+try:
+    from .lib import gen_libs
+    from .lib import gen_class
+    from .lib import machine
+    from .mysql_lib import mysql_class
+    from .mysql_lib import mysql_libs
+    from .mongo_lib import mongo_libs
+    from . import version
+
+except (ValueError, ImportError) as err:
+    import lib.gen_libs as gen_libs
+    import lib.gen_class as gen_class
+    import lib.machine as machine
+    import mysql_lib.mysql_class as mysql_class
+    import mysql_lib.mysql_libs as mysql_libs
+    import mongo_lib.mongo_libs as mongo_libs
+    import version
 
 __version__ = version.__version__
 
@@ -626,7 +634,7 @@ def _process_time_lag(slv, time_lag):
 
     """
 
-    if time_lag > 0 or time_lag is None:
+    if time_lag is None or time_lag > 0:
         time.sleep(5)
 
         if slv.conn:
@@ -929,15 +937,18 @@ def main():
 
     Variables:
         dir_perms_chk -> contains options which will be directories and the
-            octal permission settings.
-        file_chk_list -> contains the options which will have files included.
-        file_crt_list -> contains options which require files to be created.
-        func_dict -> dictionary list for the function calls or other options.
-        opt_con_req_list -> contains the options that require other options.
-        opt_def_dict -> contains options with their default values.
-        opt_or_dict_list -> contains list of options that are OR and required.
-        opt_req_list -> contains the options that are required for the program.
-        opt_val_list -> contains options which require values.
+            octal permission settings
+        file_crt_list -> contains options which require files to be created
+        file_perm -> file check options with their perms in octal
+        func_dict -> dictionary list for the function calls or other options
+        opt_con_req_list -> contains the options that require other options
+        opt_def_dict -> contains options with their default values
+        opt_multi_list -> list of options that will have multiple values
+        opt_or_dict_list -> contains list of options that are OR and required
+        opt_req_list -> contains the options that are required for the program
+        opt_val_list -> contains options which require values
+        opt_xor_val -> dictionary with key and values that will be xor
+        slv_key -> dictionary that contains keys and data types
 
     Arguments:
         (input) argv -> Arguments from the command line.
@@ -946,8 +957,8 @@ def main():
 
     cmdline = gen_libs.get_inst(sys)
     dir_perms_chk = {"-d": 5, "-p": 5}
-    file_chk_list = ["-o"]
     file_crt_list = ["-o"]
+    file_perm = {"-o": 6}
     func_dict = {
         "-A": ["-C", "-S", "-E", "-T", "-O"], "-B": rpt_mst_log,
         "-D": rpt_slv_log, "-C": chk_mst_log, "-S": chk_slv_thr,
@@ -973,12 +984,12 @@ def main():
         cmdline.argv, opt_val=opt_val_list, multi_val=opt_multi_list,
         opt_def=opt_def_dict, do_parse=True)
 
-    if not gen_libs.help_func(args.get_args(), __version__, help_message) \
-       and args.arg_req_or_lst(opt_or=opt_or_dict_list) \
-       and args.arg_require(opt_req=opt_req_list) \
-       and args.arg_cond_req(opt_con_req=opt_con_req_list) \
-       and args.arg_dir_chk(dir_perms_chk=dir_perms_chk)\
-       and args.arg_file_chk(file_chk=file_chk_list, file_crt=file_crt_list) \
+    if not gen_libs.help_func(args.get_args(), __version__, help_message)     \
+       and args.arg_req_or_lst(opt_or=opt_or_dict_list)                       \
+       and args.arg_require(opt_req=opt_req_list)                             \
+       and args.arg_cond_req(opt_con_req=opt_con_req_list)                    \
+       and args.arg_dir_chk(dir_perms_chk=dir_perms_chk)                      \
+       and args.arg_file_chk(file_perm_chk=file_perm, file_crt=file_crt_list) \
        and args.arg_xor_dict(opt_xor_val=opt_xor_val):
 
         try:
