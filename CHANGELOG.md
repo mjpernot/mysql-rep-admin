@@ -5,6 +5,8 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 
 ## [4.0.3] - 2023-05-25
+### Fixed
+- data_out: Fixed incorrectly setting the email subject line.
 
 
 ## [4.0.2] - 2022-10-11

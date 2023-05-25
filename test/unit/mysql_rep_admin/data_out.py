@@ -200,7 +200,7 @@ class UnitTest(unittest.TestCase):
         self.mail = MailTest("toaddr")
         self.data = {"Status": "ok"}
         self.args_array1 = {"-t": "toaddr"}
-        self.args_array2 = {"-t": "toaddr", "-s": "SubjectLine"}
+        self.args_array2 = {"-t": "toaddr", "-u": "SubjectLine"}
         self.args_array3 = {"-m": "mongo", "-d": "config", "-i": "DB:Table"}
         self.args_array4 = {"-m": "mongo", "-d": "config"}
         self.args_array5 = {"-d": "config", "-i": "DB:Table"}

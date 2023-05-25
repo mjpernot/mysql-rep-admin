@@ -775,7 +775,7 @@ def data_out(data, args, **kwargs):
 
     if args.get_val("-t", def_val=False):
         mail = gen_class.setup_mail(
-            args.get_val("-t"), subj=args.get_val("-s", def_val=def_subj))
+            args.get_val("-t"), subj=args.get_val("-u", def_val=def_subj))
 
     status = dict_out(
         data, ofile=args.get_val("-o", def_val=None),
