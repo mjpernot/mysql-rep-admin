@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
+## [4.0.3] - 2023-05-25
+### Fixed
+- data_out: Fixed incorrectly setting the email subject line.
+
+### Changed
+- main: Updated gen_libs.help_func call to the new version.
+
+
 ## [4.0.2] - 2022-10-11
 - Updated to work in Python 3 too
 - Upgraded python-lib to v2.9.4
