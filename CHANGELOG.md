@@ -8,6 +8,9 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 ### Fixed
 - data_out: Fixed incorrectly setting the email subject line.
 
+### Changed
+- main: Updated gen_libs.help_func call to the new version.
+
 
 ## [4.0.2] - 2022-10-11
 - Updated to work in Python 3 too

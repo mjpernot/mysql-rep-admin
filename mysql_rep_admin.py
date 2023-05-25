@@ -984,7 +984,7 @@ def main():
         cmdline.argv, opt_val=opt_val_list, multi_val=opt_multi_list,
         opt_def=opt_def_dict, do_parse=True)
 
-    if not gen_libs.help_func(args.get_args(), __version__, help_message)     \
+    if not gen_libs.help_func(args, __version__, help_message)                \
        and args.arg_req_or_lst(opt_or=opt_or_dict_list)                       \
        and args.arg_require(opt_req=opt_req_list)                             \
        and args.arg_cond_req(opt_con_req=opt_con_req_list)                    \
