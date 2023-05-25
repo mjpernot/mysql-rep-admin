@@ -9,3 +9,4 @@ config/*.cfg
 lib
 mongo_lib
 mysql_lib
+.scannerwork
