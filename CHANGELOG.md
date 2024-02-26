@@ -11,6 +11,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - Updated python-lib to v3.0.3
 
 ### Changed
+- main:  Removed the gen_libs.get_inst call.
 - Set simplejson to 3.12.0 for Python 3.
 - Set chardet to 3.0.4 for Python 2.
 - Documentation updates.
