@@ -955,7 +955,6 @@ def main():
 
     """
 
-    cmdline = gen_libs.get_inst(sys)
     dir_perms_chk = {"-d": 5, "-p": 5}
     file_crt_list = ["-o"]
     file_perm = {"-o": 6}
@@ -981,7 +980,7 @@ def main():
 
     # Process argument list from command line.
     args = gen_class.ArgParser(
-        cmdline.argv, opt_val=opt_val_list, multi_val=opt_multi_list,
+        sys.argv, opt_val=opt_val_list, multi_val=opt_multi_list,
         opt_def=opt_def_dict, do_parse=True)
 
     if not gen_libs.help_func(args, __version__, help_message)                \
@@ -994,7 +993,7 @@ def main():
 
         try:
             proglock = gen_class.ProgramLock(
-                cmdline.argv, args.get_val("-y", def_val=""))
+                sys.argv, args.get_val("-y", def_val=""))
             run_program(args, func_dict, slv_key=slv_key)
             del proglock
 
