@@ -11,7 +11,6 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - Updated python-lib to v3.0.3
 
 ### Changed
-- Set mysql-connector-python module to 8.0.22 for Python 2 and Python 3.
 - Set simplejson to 3.12.0 for Python 3.
 - Set chardet to 3.0.4 for Python 2.
 - Documentation updates.
