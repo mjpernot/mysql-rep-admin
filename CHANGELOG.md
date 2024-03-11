@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
+## [4.0.5] - 2024-03-11
+
+
 ## [4.0.4] - 2024-02-26
 - Updated to work in Red Hat 8
 - Updated mysql-lib to v5.3.4
