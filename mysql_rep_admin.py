@@ -709,52 +709,6 @@ def _chk_other(skip, tmp_tbl, retry, name, sql_ver):
     return data
 
 
-def dict_out(data, **kwargs):
-
-    """Function:  dict_out
-
-    Description:  Print dictionary to a file, standard out, and/or an email
-        instance either in expanded or flatten JSON format.
-
-    Arguments:
-        (input) data -> Dictionary document
-        (input) kwargs:
-            expand -> True|False - Expand JSON format
-            mail -> Mail instance
-            ofile -> Name of output file name
-            mode -> w|a => Write or append mode for file
-            no_std -> True|False - Do not print to standard out
-        (output) err_flag -> True|False - If error has occurred
-        (output) err_msg -> Error message
-
-    """
-
-    err_flag = False
-    err_msg = None
-    mail = kwargs.get("mail", None)
-    indent = 4 if kwargs.get("expand", False) else None
-    mode = kwargs.get("mode", "w")
-    ofile = kwargs.get("ofile", None)
-    no_std = kwargs.get("no_std", False)
-
-    if isinstance(data, dict):
-        if ofile:
-            gen_libs.print_data(
-                json.dumps(data, indent=indent), ofile=ofile, mode=mode)
-
-        if not no_std:
-            gen_libs.print_data(json.dumps(data, indent=indent))
-
-        if mail:
-            mail.add_2_msg(json.dumps(data, indent=indent))
-
-    else:
-        err_flag = True
-        err_msg = "Error: Is not a dictionary: %s" % (data)
-
-    return err_flag, err_msg
-
-
 def data_out(data, args, **kwargs):
 
     """Function:  data_out
@@ -777,7 +731,7 @@ def data_out(data, args, **kwargs):
         mail = gen_class.setup_mail(
             args.get_val("-t"), subj=args.get_val("-u", def_val=def_subj))
 
-    status = dict_out(
+    status = gen_libs.dict_out(
         data, ofile=args.get_val("-o", def_val=None),
         mode="a" if args.get_val("-a", def_val=False) else "w",
         expand=args.get_val("-e", def_val=False),

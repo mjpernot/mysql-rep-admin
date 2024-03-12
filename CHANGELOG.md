@@ -6,6 +6,12 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 ## [4.0.5] - 2024-03-11
 
+### Changed
+- data_out: Replaced call to dict_out with call to gen_libs.dict_out.
+
+### Removed
+- dict_out:  Replace by gen_libs.dict_out
+
 
 ## [4.0.4] - 2024-02-26
 - Updated to work in Red Hat 8
