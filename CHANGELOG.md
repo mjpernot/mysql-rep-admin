@@ -5,6 +5,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 
 ## [4.0.5] - 2024-03-11
+- Updated mysql-lib to v5.3.5
 
 ### Changed
 - data_out: Replaced call to dict_out with call to gen_libs.dict_out.
