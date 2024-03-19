@@ -8,6 +8,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - Updated mysql-lib to v5.3.5
 
 ### Changed
+- \_process_time_lag:  Replaced check for None with check for "null".
 - data_out: Replaced call to dict_out with call to gen_libs.dict_out.
 
 ### Removed
