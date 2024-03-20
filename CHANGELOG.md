@@ -7,6 +7,9 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 ## [4.0.5] - 2024-03-11
 - Updated mysql-lib to v5.3.5
 
+### Fixed
+- chk_slv_time: Check to see if slave is down and update slave list.
+
 ### Changed
 - add_miss_slaves: Replaced using Name of the slave with the slaves UUID.
 - chk_slv_time:  Added slave_uuid to each slave dictionary in JSON object.

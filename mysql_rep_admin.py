@@ -611,10 +611,16 @@ def chk_slv_time(**kwargs):
 
     if slaves:
         for slv in slaves:
-            data["CheckSlaveTime"]["Slaves"].append(
-                {"Name": slv.get_name(),
-                 "Slave_UUID": slv.slave_uuid,
-                 "LagTime": _process_time_lag(slv, slv.get_time())})
+            if slv.is_connected():
+                data["CheckSlaveTime"]["Slaves"].append(
+                    {"Name": slv.get_name(),
+                     "Slave_UUID": slv.slave_uuid,
+                     "LagTime": _process_time_lag(slv, slv.get_time())})
+            else:
+                data["CheckSlaveTime"]["Slaves"].append(
+                    {"Name": slv.get_name(),
+                     "Slave_UUID": slv.slave_uuid,
+                     "LagTime": "DOWN"})
 
     data["CheckSlaveTime"]["Slaves"] = \
         data["CheckSlaveTime"]["Slaves"] + add_miss_slaves(master, data)
