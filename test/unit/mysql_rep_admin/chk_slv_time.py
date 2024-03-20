@@ -62,6 +62,7 @@ class SlaveRep(object):
         get_time
         get_name
         upd_slv_time
+        is_connected
 
     """
 
@@ -77,7 +78,9 @@ class SlaveRep(object):
 
         self.lag_time = lag_time
         self.name = "Slave_Name"
+        self.slave_uuid = "1"
         self.conn = conn
+        self.connected = True
 
     def get_time(self):
 
@@ -115,6 +118,18 @@ class SlaveRep(object):
 
         return True
 
+    def is_connected(self):
+
+        """Method:  is_connected
+
+        Description:  Stub method holder for SlaveRep.is_connected.
+
+        Arguments:
+
+        """
+
+        return self.connected
+
 
 class UnitTest(unittest.TestCase):
 
@@ -124,6 +139,7 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp
+        test_down_slv
         test_no_slv
         test_json
         test_no_lag
@@ -142,13 +158,36 @@ class UnitTest(unittest.TestCase):
 
         self.master = MasterRep()
         self.slave = SlaveRep()
-        self.results = {"CheckSlaveTime": {"Slaves": []}}
+        self.results = {
+            "CheckSlaveTime": {
+                "Slaves": [
+                    {'LagTime': 'DOWN', 'Slave_UUID': '1',
+                     'Name': 'Slave_Name'}]}}
         self.results2 = {
             "CheckSlaveTime": {
-                "Slaves": [{'LagTime': 0, 'Name': 'Slave_Name'}]}}
+                "Slaves": [
+                    {'LagTime': 0, 'Slave_UUID': '1', 'Name': 'Slave_Name'}]}}
         self.results3 = {
             "CheckSlaveTime": {
-                "Slaves": [{'LagTime': 1, 'Name': 'Slave_Name'}]}}
+                "Slaves": [
+                    {'LagTime': 1, 'Slave_UUID': '1', 'Name': 'Slave_Name'}]}}
+
+    @mock.patch("mysql_rep_admin.add_miss_slaves", mock.Mock(return_value=[]))
+    def test_down_slv(self):
+
+        """Function:  test_down_slv
+
+        Description:  Test with down slave.
+
+        Arguments:
+
+        """
+
+        self.slave.isconnected = False
+
+        self.assertEqual(
+            mysql_rep_admin.chk_slv_time(
+                master=self.master, slaves=[self.slave]), self.results)
 
     @mock.patch("mysql_rep_admin.add_miss_slaves", mock.Mock(return_value=[]))
     def test_no_slv(self):
@@ -162,8 +201,8 @@ class UnitTest(unittest.TestCase):
         """
 
         self.assertEqual(
-            mysql_rep_admin.chk_slv_time(master=self.master, slaves=[]),
-            self.results)
+            mysql_rep_admin.chk_slv_time(
+                master=self.master, slaves=[]), self.results)
 
     @mock.patch("mysql_rep_admin.time.sleep", mock.Mock(return_value=True))
     @mock.patch("mysql_rep_admin.add_miss_slaves", mock.Mock(return_value=[]))
