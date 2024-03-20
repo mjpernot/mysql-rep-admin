@@ -578,15 +578,17 @@ def add_miss_slaves(master, data):
     slv_list = list()
     miss_slv = list()
 
-    for slv in master.show_slv_hosts():
-        all_list.append(slv["Host"])
+#    for slv in master.show_slv_hosts():
+    for slv in master.slaves:
+        all_list.append(slv["Replica_UUID"])
 
     for slv in data["CheckSlaveTime"]["Slaves"]:
-        slv_list.append(slv["Name"])
+        slv_list.append(slv["Slave_UUID"])
+#        slv_list.append(slv["Name"])
 
     # Add slaves from the slave list that are not in the master's slave list.
-    for name in [val for val in all_list if val not in slv_list]:
-        miss_slv.append({"Name": name, "LagTime": None})
+    for uuid in [val for val in all_list if val not in slv_list]:
+        miss_slv.append({"Slave_UUID": uuid, "LagTime": "UNK"})
 
     return miss_slv
 
@@ -613,6 +615,7 @@ def chk_slv_time(**kwargs):
         for slv in slaves:
             data["CheckSlaveTime"]["Slaves"].append(
                 {"Name": slv.get_name(),
+                 "Slave_UUID": slv.slave_uuid,
                  "LagTime": _process_time_lag(slv, slv.get_time())})
 
     data["CheckSlaveTime"]["Slaves"] = \

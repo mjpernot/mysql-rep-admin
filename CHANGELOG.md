@@ -8,6 +8,8 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - Updated mysql-lib to v5.3.5
 
 ### Changed
+- add_miss_slaves: Replaced using Name of the slave with the slaves UUID.
+- chk_slv_time:  Added slave_uuid to each slave dictionary in JSON object.
 - \_process_time_lag:  Replaced check for None with check for "null".
 - data_out: Replaced call to dict_out with call to gen_libs.dict_out.
 
