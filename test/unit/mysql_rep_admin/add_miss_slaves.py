@@ -34,7 +34,6 @@ class MasterRep(object):
 
     Methods:
         __init__
-        show_slv_hosts
 
     """
 
@@ -49,20 +48,9 @@ class MasterRep(object):
         """
 
         self.name = "Master_Name"
-        self.slv_hosts = [{"Host": "slave1"}, {"Host": "slave2"},
-                          {"Host": "slave3"}]
-
-    def show_slv_hosts(self):
-
-        """Method:  show_slv_hosts
-
-        Description:  Stub method holder for SlaveRep.get_err_stat.
-
-        Arguments:
-
-        """
-
-        return self.slv_hosts
+        self.slaves = [
+            {"Replica_UUID": "1"}, {"Replica_UUID": "2"},
+            {"Replica_UUID": "3"}]
 
 
 class UnitTest(unittest.TestCase):
@@ -91,14 +79,12 @@ class UnitTest(unittest.TestCase):
         self.master = MasterRep()
         self.data = {
             "CheckSlaveTime": {
-                "Slaves": [{"Name": "slave1", "LagTime": None},
-                           {"Name": "slave2", "LagTime": None}]}}
+                "Slaves": [{"Slave_UUID": "1",}, {"Slave_UUID": "2",}]}}
         self.data2 = {
             "CheckSlaveTime": {
-                "Slaves": [{"Name": "slave1", "LagTime": None},
-                           {"Name": "slave2", "LagTime": None},
-                           {"Name": "slave3", "LagTime": None}]}}
-        self.results = [{"Name": "slave3", "LagTime": None}]
+                "Slaves": [{"Slave_UUID": "1"}, {"Slave_UUID": "2"},
+                           {"Slave_UUID": "3"}]}}
+        self.results = [{"Slave_UUID": "3", "LagTime": "UNK"}]
 
     def test_no_slv_miss(self):
 
@@ -111,7 +97,7 @@ class UnitTest(unittest.TestCase):
         """
 
         self.assertEqual(
-            mysql_rep_admin.add_miss_slaves(self.master, self.data2), [])
+            mysql_rep_admin.add_miss_slaves(self.master, self.data2), list())
 
     def test_one_slv_miss(self):
 
