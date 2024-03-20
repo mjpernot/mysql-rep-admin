@@ -578,15 +578,13 @@ def add_miss_slaves(master, data):
     slv_list = list()
     miss_slv = list()
 
-#    for slv in master.show_slv_hosts():
     for slv in master.slaves:
         all_list.append(slv["Replica_UUID"])
 
     for slv in data["CheckSlaveTime"]["Slaves"]:
         slv_list.append(slv["Slave_UUID"])
-#        slv_list.append(slv["Name"])
 
-    # Add slaves from the slave list that are not in the master's slave list.
+    # Add slaves from the master slave list that are not in the slave list.
     for uuid in [val for val in all_list if val not in slv_list]:
         miss_slv.append({"Slave_UUID": uuid, "LagTime": "UNK"})
 
