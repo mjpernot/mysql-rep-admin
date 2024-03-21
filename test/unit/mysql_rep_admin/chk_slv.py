@@ -36,6 +36,7 @@ class SlaveRep(object):
         __init__
         get_log_info
         get_name
+        is_connected
 
     """
 
@@ -58,6 +59,7 @@ class SlaveRep(object):
         self.gtid_mode = gtid_mode
         self.retrieved_gtid = 12345678
         self.exe_gtid = 23456789
+        self.connected = True
 
     def get_log_info(self):
 
@@ -83,6 +85,18 @@ class SlaveRep(object):
 
         return self.name
 
+    def is_connected(self):
+
+        """Method:  is_connected
+
+        Description:  Stub method holder for SlaveRep.is_connected.
+
+        Arguments:
+
+        """
+
+        return self.connected
+
 
 class UnitTest(unittest.TestCase):
 
@@ -92,6 +106,7 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp
+        test_slave_down
         test_chk_slv_lag_gtid
         test_chk_slv_lag
         test_chk_slv_ok
@@ -124,6 +139,23 @@ class UnitTest(unittest.TestCase):
                 "ReadPosition": 3456, "ExecLog": "FileName",
                 "ExecPosition": 4567,
                 "RetrievedGTID": 12345678, "ExecutedGTID": 23456789}}
+        self.results4 = {"Name": "Server_Name", "Status": "DOWN"}
+
+    def test_slave_down(self):
+
+        """Function:  test_slave_down
+
+        Description:  Test with slave down.
+
+        Arguments:
+
+        """
+
+
+        slave = SlaveRep(read_pos=4567)
+        slave.connected = False
+
+        self.assertEqual(mysql_rep_admin.chk_slv(slave), self.results4)
 
     def test_chk_slv_lag_gtid(self):
 

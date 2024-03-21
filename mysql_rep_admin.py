@@ -399,17 +399,23 @@ def chk_slv(slave):
     """
 
     mst_file, relay_file, read_pos, exec_pos = slave.get_log_info()
-    data = {"Name": slave.get_name(), "Status": "OK"}
 
-    # Slave's master info doesn't match slave's relay info.
-    if mst_file != relay_file or read_pos != exec_pos:
-        data["Status"] = "Warning:  Slave might be lagging in execution of log"
-        data["Info"] = {"ReadLog": mst_file, "ReadPosition": read_pos,
-                        "ExecLog": relay_file, "ExecPosition": exec_pos}
+    if slave.is_connected():
+        data = {"Name": slave.get_name(), "Status": "OK"}
 
-        if slave.gtid_mode:
-            data["Info"]["RetrievedGTID"] = slave.retrieved_gtid
-            data["Info"]["ExecutedGTID"] = slave.exe_gtid
+        # Slave's master info doesn't match slave's relay info.
+        if mst_file != relay_file or read_pos != exec_pos:
+            data["Status"] = \
+                "Warning:  Slave might be lagging in execution of log"
+            data["Info"] = {"ReadLog": mst_file, "ReadPosition": read_pos,
+                            "ExecLog": relay_file, "ExecPosition": exec_pos}
+
+            if slave.gtid_mode:
+                data["Info"]["RetrievedGTID"] = slave.retrieved_gtid
+                data["Info"]["ExecutedGTID"] = slave.exe_gtid
+
+    else:
+        data = {"Name": slave.get_name(), "Status": "DOWN"}
 
     return data
 
