@@ -11,6 +11,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - chk_slv_time, chk_slv_other, chk_mst_log, chk_slv, chk_slv_err: Check to see if slave is down and update slave list.
 
 ### Changed
+- rpt_slv_log:  Replaced down slaves nulls with Unknown value.
 - add_miss_slaves: Replaced using Name of the slave with the slaves UUID.
 - chk_slv_time:  Added slave_uuid to each slave dictionary in JSON object.
 - \_process_time_lag:  Replaced check for None with check for "null".

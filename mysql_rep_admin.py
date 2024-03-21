@@ -367,13 +367,19 @@ def rpt_slv_log(**kwargs):
 
     if slaves:
         for slv in slaves:
-            mst_file, relay_file, read_pos, exec_pos = slv.get_log_info()
-            tdata = {"Slave": slv.get_name(), "MasterFile": mst_file,
-                     "MasterPosition": read_pos, "RelayFile": relay_file,
-                     "ExecPosition": exec_pos}
+            if slv.is_connected():
+                mst_file, relay_file, read_pos, exec_pos = slv.get_log_info()
+                tdata = {"Slave": slv.get_name(), "MasterFile": mst_file,
+                         "MasterPosition": read_pos, "RelayFile": relay_file,
+                         "ExecPosition": exec_pos}
 
-            if slv.gtid_mode:
-                tdata["RetrievedGTID"] = slv.retrieved_gtid
+                if slv.gtid_mode:
+                    tdata["RetrievedGTID"] = slv.retrieved_gtid
+
+            else:
+                tdata = {"Slave": slv.get_name(), "MasterFile": "Unknown",
+                         "MasterPosition": "Unknown", "RelayFile": "Unknown",
+                         "ExecPosition": "Unknown"}
 
             data["SlaveLogs"].append(tdata)
 
@@ -632,7 +638,7 @@ def chk_slv_time(**kwargs):
             else:
                 data["CheckSlaveTime"]["Slaves"].append(
                     {"Name": slv.get_name(),
-                     "Slave_UUID": slv.slave_uuid,
+                     "Slave_UUID": "Unknown",
                      "LagTime": "DOWN"})
 
     data["CheckSlaveTime"]["Slaves"] = \

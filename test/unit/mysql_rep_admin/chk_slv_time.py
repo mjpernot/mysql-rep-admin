@@ -170,7 +170,7 @@ class UnitTest(unittest.TestCase):
         self.results4 = {
             "CheckSlaveTime": {
                 "Slaves": [
-                    {'LagTime': 'DOWN', 'Slave_UUID': '1',
+                    {'LagTime': 'DOWN', 'Slave_UUID': 'Unknown',
                      'Name': 'Slave_Name'}]}}
 
     @mock.patch("mysql_rep_admin.add_miss_slaves", mock.Mock(return_value=[]))
