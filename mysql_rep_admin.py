@@ -441,14 +441,18 @@ def chk_mst_log(**kwargs):
         data["CheckMasterLog"]["MasterLog"]["Slaves"] = list()
 
         for slv in slaves:
-            mst_file, _, read_pos, _ = slv.get_log_info()
-            tdata = {"Name": slv.get_name(), "Status": "OK"}
+            if slv.is_connected():
+                mst_file, _, read_pos, _ = slv.get_log_info()
+                tdata = {"Name": slv.get_name(), "Status": "OK"}
 
-            # Master's log file or position doesn't match slave's log info.
-            if fname != mst_file or log_pos != read_pos:
-                tdata["Status"] = \
-                    "Warning:  Slave lagging in reading master log"
-                tdata["Info"] = {"Log": mst_file, "Position": read_pos}
+                # Master's log file or position doesn't match slave's log info.
+                if fname != mst_file or log_pos != read_pos:
+                    tdata["Status"] = \
+                        "Warning:  Slave lagging in reading master log"
+                    tdata["Info"] = {"Log": mst_file, "Position": read_pos}
+
+            else:
+                tdata = {"Name": slv.get_name(), "Status": "DOWN"}
 
             data["CheckMasterLog"]["MasterLog"]["Slaves"].append(tdata)
             data["CheckMasterLog"]["SlaveLogs"].append(chk_slv(slv))

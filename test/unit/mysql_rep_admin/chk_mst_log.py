@@ -79,6 +79,7 @@ class SlaveRep(object):
         __init__
         get_log_info
         get_name
+        is_connected
 
     """
 
@@ -101,6 +102,7 @@ class SlaveRep(object):
         self.gtid_mode = gtid_mode
         self.retrieved_gtid = 12345678
         self.exe_gtid = 23456789
+        self.connected = True
 
     def get_log_info(self):
 
@@ -126,6 +128,18 @@ class SlaveRep(object):
 
         return self.name
 
+    def is_connected(self):
+
+        """Method:  is_connected
+
+        Description:  Stub method holder for SlaveRep.is_connected.
+
+        Arguments:
+
+        """
+
+        return self.connected
+
 
 class UnitTest(unittest.TestCase):
 
@@ -135,6 +149,7 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp
+        test_slave_down
         test_no_present
         test_slv_present
         test_mst_slv_present_lag
@@ -152,10 +167,12 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        self.maxDiff = None
         self.master = MasterRep()
         self.slave2 = SlaveRep(mst_file="Master_Log2", read_pos=5678)
         self.slave = SlaveRep()
         self.chk_slv_data = {"Name": "SlaveName", "Status": "OK"}
+        self.chk_slv_data2 = {"Name": "SlaveName", "Status": "DOWN"}
         self.results = {"CheckMasterLog": {"MasterLog": {}, "SlaveLogs": []}}
         self.results2 = {
             "CheckMasterLog": {
@@ -181,6 +198,33 @@ master log"}]},
                         "Position": 5678},
                     "Slaves": [{"Name": "Slave_Name", "Status": "OK"}]},
                 "SlaveLogs": [{"Name": "SlaveName", "Status": "OK"}]}}
+        self.results5 = {
+            "CheckMasterLog": {
+                "MasterLog": {
+                    "Master": {
+                        "Name": "Master_Name", "Log": "Master_Log2",
+                        "Position": 5678},
+                    "Slaves": [{"Name": "Slave_Name", "Status": "DOWN"}]},
+                "SlaveLogs": [{"Name": "SlaveName", "Status": "DOWN"}]}}
+
+    @mock.patch("mysql_rep_admin.chk_slv")
+    def test_slave_down(self, mock_chk):
+
+        """Function:  test_slave_down
+
+        Description:  Test with slave down.
+
+        Arguments:
+
+        """
+
+        self.slave.connected = False
+
+        mock_chk.return_value = dict(self.chk_slv_data2)
+
+        self.assertEqual(
+            mysql_rep_admin.chk_mst_log(
+                master=self.master, slaves=[self.slave]), self.results5)
 
     def test_no_present(self):
 
