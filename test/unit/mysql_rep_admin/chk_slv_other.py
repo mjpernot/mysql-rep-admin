@@ -61,6 +61,7 @@ class SlaveRep(object):
         __init__
         get_name
         get_others
+        is_connected
 
     """
 
@@ -85,6 +86,7 @@ class SlaveRep(object):
         self.name = "Slave_Name"
         self.skip = skip
         self.version = (5, 6, 31)
+        self.connected = True
 
     def get_name(self):
 
@@ -109,6 +111,18 @@ class SlaveRep(object):
         """
 
         return self.skip, self.tmp_tbl, self.retry
+
+    def is_connected(self):
+
+        """Method:  is_connected
+
+        Description:  Stub method holder for SlaveRep.is_connected.
+
+        Arguments:
+
+        """
+
+        return self.connected
 
 
 class UnitTest(unittest.TestCase):
@@ -146,6 +160,25 @@ class UnitTest(unittest.TestCase):
             "CheckSlaveOther": {"Slaves": [
                 {"Name": "Slave_Name", "RetryTransactionCount": "1",
                  "SkipCount": 1, "TempTableCount": "6", "Status": "Bad"}]}}
+        self.results4 = {
+            "CheckSlaveOther": {"Slaves": [
+                {"Name": "Slave_Name", "Status": "DOWN"}]}}
+
+    def test_down_slave(self):
+
+        """Function:  test_down_slave
+
+        Description:  Test with slave being down.
+
+        Arguments:
+
+        """
+
+        self.slave.connected = False
+
+        self.assertEqual(
+            mysql_rep_admin.chk_slv_other(
+                master=self.master, slaves=[self.slave]), self.results4)
 
     def test_chk_slv_other2(self):
 
