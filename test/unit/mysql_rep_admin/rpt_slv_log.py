@@ -37,6 +37,7 @@ class SlaveRep(object):
         __init__
         get_log_info
         get_name
+        is_connected
 
     """
 
@@ -58,6 +59,7 @@ class SlaveRep(object):
         self.gtid_mode = gtid_mode
         self.retrieved_gtid = 12345678
         self.exe_gtid = 23456789
+        self.connected = True
 
     def get_log_info(self):
 
@@ -83,6 +85,18 @@ class SlaveRep(object):
 
         return self.name
 
+    def is_connected(self):
+
+        """Method:  is_connected
+
+        Description:  Stub method holder for SlaveRep.is_connected.
+
+        Arguments:
+
+        """
+
+        return self.connected
+
 
 class UnitTest(unittest.TestCase):
 
@@ -92,6 +106,7 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp
+        test_slave_down
         test_no_slaves
         test_slave
         test_gtid
@@ -119,6 +134,27 @@ class UnitTest(unittest.TestCase):
                 "ExecPosition": 4567, "MasterFile": "MasterLog",
                 "MasterPosition": 3456, "RelayFile": "MasterRelay",
                 "RetrievedGTID": 12345678, "Slave": "Slave1"}]}
+        self.results4 = {
+            "SlaveLogs": [{
+                "ExecPosition": "Unknown", "MasterFile": "Unknown",
+                "MasterPosition": "Unknown", "RelayFile": "Unknown",
+                "Slave": "Slave1"}]}
+
+    def test_slave_down(self):
+
+        """Function:  test_slave_down
+
+        Description:  Test with slave down.
+
+        Arguments:
+
+        """
+
+        slave = SlaveRep()
+        slave.connected = False
+
+        self.assertEqual(
+            mysql_rep_admin.rpt_slv_log(slaves=[slave]), self.results4)
 
     def test_no_slaves(self):
 

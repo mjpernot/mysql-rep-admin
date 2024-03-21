@@ -37,6 +37,7 @@ class SlaveRep(object):
         __init__
         get_err_stat
         get_name
+        is_connected
 
     """
 
@@ -58,6 +59,7 @@ class SlaveRep(object):
         self.io_time = "IO_Time"
         self.sql_time = "SQL_Time"
         self.conn = conn
+        self.connected = True
 
     def get_err_stat(self):
 
@@ -83,6 +85,18 @@ class SlaveRep(object):
         """
 
         return self.name
+
+    def is_connected(self):
+
+        """Method:  is_connected
+
+        Description:  Stub method holder for SlaveRep.is_connected.
+
+        Arguments:
+
+        """
+
+        return self.connected
 
 
 class UnitTest(unittest.TestCase):
@@ -122,8 +136,9 @@ class UnitTest(unittest.TestCase):
             "CheckSlaveError": {
                 "Slaves": [
                     {"Name": self.slave.name, "Connection": "Up",
-                     "IO": {"Status": "Good"}, "SQL": {"Status": "Good"}}]}}
-        self.results["CheckSlaveError"]["Slaves"][0]["Connection"] = "Down"
+                     "IO": {"Status": "Unknown"},
+                     "SQL": {"Status": "Unknown"}}]}}
+        self.results["CheckSlaveError"]["Slaves"][0]["Connection"] = "DOWN"
 
         self.results2 = {
             "CheckSlaveError": {
@@ -184,6 +199,8 @@ class UnitTest(unittest.TestCase):
         Arguments:
 
         """
+
+        self.slave5.connected = False
 
         self.assertEqual(mysql_rep_admin.chk_slv_err(slaves=[self.slave5]),
                          self.results)

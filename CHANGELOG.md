@@ -4,6 +4,23 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
+## [4.0.5] - 2024-03-11
+- Updated mysql-lib to v5.3.5
+
+### Fixed
+- chk_slv_time, chk_slv_other, chk_mst_log, chk_slv, chk_slv_err: Check to see if slave is down and update slave list.
+
+### Changed
+- rpt_slv_log:  Replaced down slaves nulls with Unknown value.
+- add_miss_slaves: Replaced using Name of the slave with the slaves UUID.
+- chk_slv_time:  Added slave_uuid to each slave dictionary in JSON object.
+- \_process_time_lag:  Replaced check for None with check for "null".
+- data_out: Replaced call to dict_out with call to gen_libs.dict_out.
+
+### Removed
+- dict_out:  Replace by gen_libs.dict_out
+
+
 ## [4.0.4] - 2024-02-26
 - Updated to work in Red Hat 8
 - Updated mysql-lib to v5.3.4

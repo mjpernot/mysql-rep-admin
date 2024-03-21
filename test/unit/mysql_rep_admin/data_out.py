@@ -207,7 +207,7 @@ class UnitTest(unittest.TestCase):
         self.args_array6 = {"-a": True}
         self.args_array7 = {"-t": "toaddr", "-w": True}
 
-    @mock.patch("mysql_rep_admin.dict_out",
+    @mock.patch("mysql_rep_admin.gen_libs.dict_out",
                 mock.Mock(return_value=(False, None)))
     def test_append(self):
 
@@ -223,7 +223,7 @@ class UnitTest(unittest.TestCase):
 
         self.assertFalse(mysql_rep_admin.data_out(self.data, self.args))
 
-    @mock.patch("mysql_rep_admin.dict_out",
+    @mock.patch("mysql_rep_admin.gen_libs.dict_out",
                 mock.Mock(return_value=(False, None)))
     @mock.patch("mysql_rep_admin.gen_libs.load_module",
                 mock.Mock(return_value="Cfg"))
@@ -244,7 +244,7 @@ class UnitTest(unittest.TestCase):
         with gen_libs.no_std_out():
             self.assertFalse(mysql_rep_admin.data_out(self.data, self.args))
 
-    @mock.patch("mysql_rep_admin.dict_out",
+    @mock.patch("mysql_rep_admin.gen_libs.dict_out",
                 mock.Mock(return_value=(False, None)))
     @mock.patch("mysql_rep_admin.gen_libs.load_module",
                 mock.Mock(return_value="Cfg"))
@@ -264,7 +264,7 @@ class UnitTest(unittest.TestCase):
 
         self.assertFalse(mysql_rep_admin.data_out(self.data, self.args))
 
-    @mock.patch("mysql_rep_admin.dict_out",
+    @mock.patch("mysql_rep_admin.gen_libs.dict_out",
                 mock.Mock(return_value=(False, None)))
     @mock.patch("mysql_rep_admin.gen_libs.load_module",
                 mock.Mock(return_value="Cfg"))
@@ -284,7 +284,7 @@ class UnitTest(unittest.TestCase):
 
         self.assertFalse(mysql_rep_admin.data_out(self.data, self.args))
 
-    @mock.patch("mysql_rep_admin.dict_out",
+    @mock.patch("mysql_rep_admin.gen_libs.dict_out",
                 mock.Mock(return_value=(False, None)))
     @mock.patch("mysql_rep_admin.gen_libs.load_module",
                 mock.Mock(return_value="Cfg"))
@@ -304,7 +304,7 @@ class UnitTest(unittest.TestCase):
 
         self.assertFalse(mysql_rep_admin.data_out(self.data, self.args))
 
-    @mock.patch("mysql_rep_admin.dict_out",
+    @mock.patch("mysql_rep_admin.gen_libs.dict_out",
                 mock.Mock(return_value=(False, None)))
     @mock.patch("mysql_rep_admin.gen_class.setup_mail")
     def test_mail_subj(self, mock_mail):
@@ -323,7 +323,7 @@ class UnitTest(unittest.TestCase):
 
         self.assertFalse(mysql_rep_admin.data_out(self.data, self.args))
 
-    @mock.patch("mysql_rep_admin.dict_out",
+    @mock.patch("mysql_rep_admin.gen_libs.dict_out",
                 mock.Mock(return_value=(False, None)))
     @mock.patch("mysql_rep_admin.gen_class.setup_mail")
     def test_mail_mailx(self, mock_mail):
@@ -342,7 +342,7 @@ class UnitTest(unittest.TestCase):
 
         self.assertFalse(mysql_rep_admin.data_out(self.data, self.args))
 
-    @mock.patch("mysql_rep_admin.dict_out",
+    @mock.patch("mysql_rep_admin.gen_libs.dict_out",
                 mock.Mock(return_value=(False, None)))
     @mock.patch("mysql_rep_admin.gen_class.setup_mail")
     def test_mail(self, mock_mail):
@@ -361,7 +361,7 @@ class UnitTest(unittest.TestCase):
 
         self.assertFalse(mysql_rep_admin.data_out(self.data, self.args))
 
-    @mock.patch("mysql_rep_admin.dict_out",
+    @mock.patch("mysql_rep_admin.gen_libs.dict_out",
                 mock.Mock(return_value=(True, "Error Message")))
     def test_std_out_errors(self):
 
@@ -376,7 +376,7 @@ class UnitTest(unittest.TestCase):
         with gen_libs.no_std_out():
             self.assertFalse(mysql_rep_admin.data_out(self.data, self.args))
 
-    @mock.patch("mysql_rep_admin.dict_out",
+    @mock.patch("mysql_rep_admin.gen_libs.dict_out",
                 mock.Mock(return_value=(False, None)))
     def test_std_out(self):
 
