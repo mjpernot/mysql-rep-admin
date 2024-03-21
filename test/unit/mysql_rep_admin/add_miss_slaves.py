@@ -79,7 +79,7 @@ class UnitTest(unittest.TestCase):
         self.master = MasterRep()
         self.data = {
             "CheckSlaveTime": {
-                "Slaves": [{"Slave_UUID": "1",}, {"Slave_UUID": "2",}]}}
+                "Slaves": [{"Slave_UUID": "1"}, {"Slave_UUID": "2"}]}}
         self.data2 = {
             "CheckSlaveTime": {
                 "Slaves": [{"Slave_UUID": "1"}, {"Slave_UUID": "2"},

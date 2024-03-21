@@ -151,7 +151,6 @@ class UnitTest(unittest.TestCase):
 
         """
 
-
         slave = SlaveRep(read_pos=4567)
         slave.connected = False
 

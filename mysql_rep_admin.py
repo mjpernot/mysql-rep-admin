@@ -277,7 +277,6 @@ from __future__ import absolute_import
 import sys
 import time
 import datetime
-import json
 
 # Local
 try:
@@ -660,7 +659,7 @@ def _process_time_lag(slv, time_lag):
 
     """
 
-    if  time_lag is "null" or time_lag > 0:
+    if  time_lag == "null" or time_lag > 0:
         time.sleep(5)
 
         if slv.conn:
