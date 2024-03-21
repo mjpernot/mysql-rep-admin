@@ -167,7 +167,6 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.maxDiff = None
         self.master = MasterRep()
         self.slave2 = SlaveRep(mst_file="Master_Log2", read_pos=5678)
         self.slave = SlaveRep()
