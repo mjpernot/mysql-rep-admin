@@ -158,11 +158,7 @@ class UnitTest(unittest.TestCase):
 
         self.master = MasterRep()
         self.slave = SlaveRep()
-        self.results = {
-            "CheckSlaveTime": {
-                "Slaves": [
-                    {'LagTime': 'DOWN', 'Slave_UUID': '1',
-                     'Name': 'Slave_Name'}]}}
+        self.results = {"CheckSlaveTime": {"Slaves": list()}}
         self.results2 = {
             "CheckSlaveTime": {
                 "Slaves": [
@@ -171,6 +167,11 @@ class UnitTest(unittest.TestCase):
             "CheckSlaveTime": {
                 "Slaves": [
                     {'LagTime': 1, 'Slave_UUID': '1', 'Name': 'Slave_Name'}]}}
+        self.results4 = {
+            "CheckSlaveTime": {
+                "Slaves": [
+                    {'LagTime': 'DOWN', 'Slave_UUID': '1',
+                     'Name': 'Slave_Name'}]}}
 
     @mock.patch("mysql_rep_admin.add_miss_slaves", mock.Mock(return_value=[]))
     def test_down_slv(self):
@@ -183,11 +184,11 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.slave.isconnected = False
+        self.slave.connected = False
 
         self.assertEqual(
             mysql_rep_admin.chk_slv_time(
-                master=self.master, slaves=[self.slave]), self.results)
+                master=self.master, slaves=[self.slave]), self.results4)
 
     @mock.patch("mysql_rep_admin.add_miss_slaves", mock.Mock(return_value=[]))
     def test_no_slv(self):

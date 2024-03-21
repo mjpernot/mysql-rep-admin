@@ -671,9 +671,15 @@ def chk_slv_other(**kwargs):
 
     if slaves:
         for slv in slaves:
-            skip, tmp_tbl, retry = slv.get_others()
-            data["CheckSlaveOther"]["Slaves"].append(
-                _chk_other(skip, tmp_tbl, retry, slv.get_name(), slv.version))
+            if slv.is_connected():
+                skip, tmp_tbl, retry = slv.get_others()
+                data["CheckSlaveOther"]["Slaves"].append(
+                    _chk_other(
+                        skip, tmp_tbl, retry, slv.get_name(), slv.version))
+
+            else:
+                data["CheckSlaveOther"]["Slaves"].append(
+                    {"Name": slv.get_name(), "Status": "DOWN"})
 
     else:
         print("chk_slv_other:  Warning:  No Slave instance detected.")
