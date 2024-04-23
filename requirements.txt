@@ -4,5 +4,5 @@ email==4.0.3
 mysql-connector-python==8.0.22
 protobuf==3.19.1
 psutil==5.4.3
-pymongo==3.8.0
+pymongo==3.12.3
 simplejson==2.0.9
