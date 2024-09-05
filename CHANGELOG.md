@@ -9,7 +9,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - Updated mongo-libs to v4.3.1
 
 ### Changed
-- chk_slv_err:  Refactored function.
+- chk_slv_err, chk_mst_log:  Refactored functions.
 - main: Removed parsing from gen_class.ArgParser call and called arg_parse2 as part of "if" statement.
 
 

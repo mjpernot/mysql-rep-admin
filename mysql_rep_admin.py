@@ -453,37 +453,39 @@ def chk_mst_log(**kwargs):
     slaves = list(kwargs.get("slaves", list()))
     data = {"CheckMasterLog": {"MasterLog": {}, "SlaveLogs": []}}
 
-    if master and slaves:
-        fname, log_pos = master.get_log_info()
-        data["CheckMasterLog"]["MasterLog"]["Master"] = {
-            "Name": master.name, "Log": fname, "Position": log_pos}
-        data["CheckMasterLog"]["MasterLog"]["Slaves"] = list()
+    if not master and not slaves:
+        print("chk_mst_log:  Warning:  Missing Master and Slave instances.")
+        return data
 
-        for slv in slaves:
-            if slv.is_connected():
-                mst_file, _, read_pos, _ = slv.get_log_info()
-                tdata = {"Name": slv.get_name(), "Status": "OK"}
-
-                # Master's log file or position doesn't match slave's log info.
-                if fname != mst_file or log_pos != read_pos:
-                    tdata["Status"] = \
-                        "Warning:  Slave lagging in reading master log"
-                    tdata["Info"] = {"Log": mst_file, "Position": read_pos}
-
-            else:
-                tdata = {"Name": slv.get_name(), "Status": "DOWN"}
-
-            data["CheckMasterLog"]["MasterLog"]["Slaves"].append(tdata)
-            data["CheckMasterLog"]["SlaveLogs"].append(chk_slv(slv))
-
-    elif slaves:
+    if not master and slaves:
         print("chk_mst_log: Warning:  Missing Master instance.")
 
         for slv in slaves:
             data["CheckMasterLog"]["SlaveLogs"].append(chk_slv(slv))
 
-    else:
-        print("chk_mst_log:  Warning:  Missing Master and Slave instances.")
+        return data
+
+    fname, log_pos = master.get_log_info()
+    data["CheckMasterLog"]["MasterLog"]["Master"] = {
+        "Name": master.name, "Log": fname, "Position": log_pos}
+    data["CheckMasterLog"]["MasterLog"]["Slaves"] = list()
+
+    for slv in slaves:
+        if slv.is_connected():
+            mst_file, _, read_pos, _ = slv.get_log_info()
+            tdata = {"Name": slv.get_name(), "Status": "OK"}
+
+            # Master's log file or position doesn't match slave's log info.
+            if fname != mst_file or log_pos != read_pos:
+                tdata["Status"] = \
+                    "Warning:  Slave lagging in reading master log"
+                tdata["Info"] = {"Log": mst_file, "Position": read_pos}
+
+        else:
+            tdata = {"Name": slv.get_name(), "Status": "DOWN"}
+
+        data["CheckMasterLog"]["MasterLog"]["Slaves"].append(tdata)
+        data["CheckMasterLog"]["SlaveLogs"].append(chk_slv(slv))
 
     return data
 
