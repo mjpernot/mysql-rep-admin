@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
+## [4.0.7] - 2024-09-04
+- Updated pymongo to v4.6.3 for Python 3.
+- Updated mongo-libs to v4.3.1
+
+### Changed
+- chk_slv_err, chk_mst_log:  Refactored functions.
+- main: Removed parsing from gen_class.ArgParser call and called arg_parse2 as part of "if" statement.
+
+
 ## [4.0.6] - 2024-04-23
 - Updated mongo-lib to v4.3.0
 - Added TLS capability for Mongo
