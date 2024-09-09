@@ -453,37 +453,39 @@ def chk_mst_log(**kwargs):
     slaves = list(kwargs.get("slaves", list()))
     data = {"CheckMasterLog": {"MasterLog": {}, "SlaveLogs": []}}
 
-    if master and slaves:
-        fname, log_pos = master.get_log_info()
-        data["CheckMasterLog"]["MasterLog"]["Master"] = {
-            "Name": master.name, "Log": fname, "Position": log_pos}
-        data["CheckMasterLog"]["MasterLog"]["Slaves"] = list()
+    if not master and not slaves:
+        print("chk_mst_log:  Warning:  Missing Master and Slave instances.")
+        return data
 
-        for slv in slaves:
-            if slv.is_connected():
-                mst_file, _, read_pos, _ = slv.get_log_info()
-                tdata = {"Name": slv.get_name(), "Status": "OK"}
-
-                # Master's log file or position doesn't match slave's log info.
-                if fname != mst_file or log_pos != read_pos:
-                    tdata["Status"] = \
-                        "Warning:  Slave lagging in reading master log"
-                    tdata["Info"] = {"Log": mst_file, "Position": read_pos}
-
-            else:
-                tdata = {"Name": slv.get_name(), "Status": "DOWN"}
-
-            data["CheckMasterLog"]["MasterLog"]["Slaves"].append(tdata)
-            data["CheckMasterLog"]["SlaveLogs"].append(chk_slv(slv))
-
-    elif slaves:
+    if not master and slaves:
         print("chk_mst_log: Warning:  Missing Master instance.")
 
         for slv in slaves:
             data["CheckMasterLog"]["SlaveLogs"].append(chk_slv(slv))
 
-    else:
-        print("chk_mst_log:  Warning:  Missing Master and Slave instances.")
+        return data
+
+    fname, log_pos = master.get_log_info()
+    data["CheckMasterLog"]["MasterLog"]["Master"] = {
+        "Name": master.name, "Log": fname, "Position": log_pos}
+    data["CheckMasterLog"]["MasterLog"]["Slaves"] = list()
+
+    for slv in slaves:
+        if slv.is_connected():
+            mst_file, _, read_pos, _ = slv.get_log_info()
+            tdata = {"Name": slv.get_name(), "Status": "OK"}
+
+            # Master's log file or position doesn't match slave's log info.
+            if fname != mst_file or log_pos != read_pos:
+                tdata["Status"] = \
+                    "Warning:  Slave lagging in reading master log"
+                tdata["Info"] = {"Log": mst_file, "Position": read_pos}
+
+        else:
+            tdata = {"Name": slv.get_name(), "Status": "DOWN"}
+
+        data["CheckMasterLog"]["MasterLog"]["Slaves"].append(tdata)
+        data["CheckMasterLog"]["SlaveLogs"].append(chk_slv(slv))
 
     return data
 
@@ -549,39 +551,39 @@ def chk_slv_err(**kwargs):
     slaves = list(kwargs.get("slaves", list()))
     data = {"CheckSlaveError": {"Slaves": []}}
 
-    if slaves:
-        for slv in slaves:
-            if slv.is_connected():
-                tdata = {"Name": slv.get_name(), "Connection": "Up",
-                         "IO": {"Status": "Good"}, "SQL": {"Status": "Good"}}
-
-                # Pre-MySQL 5.6 versions, will be NULL for these two entries
-                iost, sql, io_msg, sql_msg, io_time, sql_time = \
-                    slv.get_err_stat()
-
-                # IO error
-                if iost:
-                    tdata["IO"]["Error"] = iost
-                    tdata["IO"]["Message"] = io_msg
-                    tdata["IO"]["Timestamp"] = io_time
-                    tdata["IO"]["Status"] = "Bad"
-
-                # SQL error
-                if sql:
-                    tdata["SQL"]["Error"] = sql
-                    tdata["SQL"]["Message"] = sql_msg
-                    tdata["SQL"]["Timestamp"] = sql_time
-                    tdata["SQL"]["Status"] = "Bad"
-
-            else:
-                tdata = {"Name": slv.get_name(), "Connection": "DOWN",
-                         "IO": {"Status": "Unknown"},
-                         "SQL": {"Status": "Unknown"}}
-
-            data["CheckSlaveError"]["Slaves"].append(tdata)
-
-    else:
+    if not slaves:
         print("chk_slv_err:  Warning:  No Slave instance detected.")
+        return data
+
+    for slv in slaves:
+        if slv.is_connected():
+            tdata = {"Name": slv.get_name(), "Connection": "Up",
+                     "IO": {"Status": "Good"}, "SQL": {"Status": "Good"}}
+
+            # Pre-MySQL 5.6 versions, will be NULL for these two entries
+            iost, sql, io_msg, sql_msg, io_time, sql_time = \
+                slv.get_err_stat()
+
+            # IO error
+            if iost:
+                tdata["IO"]["Error"] = iost
+                tdata["IO"]["Message"] = io_msg
+                tdata["IO"]["Timestamp"] = io_time
+                tdata["IO"]["Status"] = "Bad"
+
+            # SQL error
+            if sql:
+                tdata["SQL"]["Error"] = sql
+                tdata["SQL"]["Message"] = sql_msg
+                tdata["SQL"]["Timestamp"] = sql_time
+                tdata["SQL"]["Status"] = "Bad"
+
+        else:
+            tdata = {"Name": slv.get_name(), "Connection": "DOWN",
+                     "IO": {"Status": "Unknown"},
+                     "SQL": {"Status": "Unknown"}}
+
+        data["CheckSlaveError"]["Slaves"].append(tdata)
 
     return data
 
@@ -667,7 +669,7 @@ def _process_time_lag(slv, time_lag):
 
     """
 
-    if  time_lag == "null" or time_lag > 0:
+    if time_lag == "null" or time_lag > 0:
         time.sleep(5)
 
         if slv.conn:
@@ -974,9 +976,10 @@ def main():
     # Process argument list from command line.
     args = gen_class.ArgParser(
         sys.argv, opt_val=opt_val_list, multi_val=opt_multi_list,
-        opt_def=opt_def_dict, do_parse=True)
+        opt_def=opt_def_dict)
 
-    if not gen_libs.help_func(args, __version__, help_message)                \
+    if args.arg_parse2()                                                      \
+       and not gen_libs.help_func(args, __version__, help_message)            \
        and args.arg_req_or_lst(opt_or=opt_or_dict_list)                       \
        and args.arg_require(opt_req=opt_req_list)                             \
        and args.arg_cond_req(opt_con_req=opt_con_req_list)                    \
