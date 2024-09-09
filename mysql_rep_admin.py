@@ -669,7 +669,7 @@ def _process_time_lag(slv, time_lag):
 
     """
 
-    if  time_lag == "null" or time_lag > 0:
+    if time_lag == "null" or time_lag > 0:
         time.sleep(5)
 
         if slv.conn:
