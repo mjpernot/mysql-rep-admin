@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
+## [4.0.8] - 2024-09-27
+- Updated pymongo==4.1.1 for Python 3.6
+- Updated mongo-lib to v4.3.2
+- Updated python-lib to v3.0.5
+- Updated mysql-lib to v5.3.7
+
+
 ## [4.0.7] - 2024-09-04
 - Updated pymongo to v4.6.3 for Python 3.
 - Updated mongo-libs to v4.3.1
