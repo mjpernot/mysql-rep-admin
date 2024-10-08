@@ -232,15 +232,23 @@
             repset_hosts = "HOST1:PORT, HOST2:PORT, [...]"
             db_auth = "AUTHENTICATION_DATABASE"
 
-            Note:  If using SSL connections then set one or more of the
-                following entries.  This will automatically enable SSL
-                connections. Below are the configuration settings for SSL
-                connections.  See configuration file for details on each entry:
+            If Mongo is set to use TLS or SSL connections, then one or more of
+                the following entries will need to be completed to connect
+                using TLS or SSL protocols.
+                Note:  Read the configuration file to determine which entries
+                    will need to be set.
 
-            ssl_client_ca = None
-            ssl_client_key = None
-            ssl_client_cert = None
-            ssl_client_phrase = None
+                SSL:
+                    auth_type = None
+                    ssl_client_ca = None
+                    ssl_client_key = None
+                    ssl_client_cert = None
+                    ssl_client_phrase = None
+                TLS:
+                    auth_type = None
+                    tls_ca_certs = None
+                    tls_certkey = None
+                    tls_certkey_phrase = None
 
             Note:  FIPS Environment for Mongo.
               If operating in a FIPS 104-2 environment, this package will
@@ -277,7 +285,6 @@ from __future__ import absolute_import
 import sys
 import time
 import datetime
-import json
 
 # Local
 try:
@@ -367,13 +374,19 @@ def rpt_slv_log(**kwargs):
 
     if slaves:
         for slv in slaves:
-            mst_file, relay_file, read_pos, exec_pos = slv.get_log_info()
-            tdata = {"Slave": slv.get_name(), "MasterFile": mst_file,
-                     "MasterPosition": read_pos, "RelayFile": relay_file,
-                     "ExecPosition": exec_pos}
+            if slv.is_connected():
+                mst_file, relay_file, read_pos, exec_pos = slv.get_log_info()
+                tdata = {"Slave": slv.get_name(), "MasterFile": mst_file,
+                         "MasterPosition": read_pos, "RelayFile": relay_file,
+                         "ExecPosition": exec_pos}
 
-            if slv.gtid_mode:
-                tdata["RetrievedGTID"] = slv.retrieved_gtid
+                if slv.gtid_mode:
+                    tdata["RetrievedGTID"] = slv.retrieved_gtid
+
+            else:
+                tdata = {"Slave": slv.get_name(), "MasterFile": "Unknown",
+                         "MasterPosition": "Unknown", "RelayFile": "Unknown",
+                         "ExecPosition": "Unknown"}
 
             data["SlaveLogs"].append(tdata)
 
@@ -399,17 +412,23 @@ def chk_slv(slave):
     """
 
     mst_file, relay_file, read_pos, exec_pos = slave.get_log_info()
-    data = {"Name": slave.get_name(), "Status": "OK"}
 
-    # Slave's master info doesn't match slave's relay info.
-    if mst_file != relay_file or read_pos != exec_pos:
-        data["Status"] = "Warning:  Slave might be lagging in execution of log"
-        data["Info"] = {"ReadLog": mst_file, "ReadPosition": read_pos,
-                        "ExecLog": relay_file, "ExecPosition": exec_pos}
+    if slave.is_connected():
+        data = {"Name": slave.get_name(), "Status": "OK"}
 
-        if slave.gtid_mode:
-            data["Info"]["RetrievedGTID"] = slave.retrieved_gtid
-            data["Info"]["ExecutedGTID"] = slave.exe_gtid
+        # Slave's master info doesn't match slave's relay info.
+        if mst_file != relay_file or read_pos != exec_pos:
+            data["Status"] = \
+                "Warning:  Slave might be lagging in execution of log"
+            data["Info"] = {"ReadLog": mst_file, "ReadPosition": read_pos,
+                            "ExecLog": relay_file, "ExecPosition": exec_pos}
+
+            if slave.gtid_mode:
+                data["Info"]["RetrievedGTID"] = slave.retrieved_gtid
+                data["Info"]["ExecutedGTID"] = slave.exe_gtid
+
+    else:
+        data = {"Name": slave.get_name(), "Status": "DOWN"}
 
     return data
 
@@ -434,13 +453,25 @@ def chk_mst_log(**kwargs):
     slaves = list(kwargs.get("slaves", list()))
     data = {"CheckMasterLog": {"MasterLog": {}, "SlaveLogs": []}}
 
-    if master and slaves:
-        fname, log_pos = master.get_log_info()
-        data["CheckMasterLog"]["MasterLog"]["Master"] = {
-            "Name": master.name, "Log": fname, "Position": log_pos}
-        data["CheckMasterLog"]["MasterLog"]["Slaves"] = list()
+    if not master and not slaves:
+        print("chk_mst_log:  Warning:  Missing Master and Slave instances.")
+        return data
+
+    if not master and slaves:
+        print("chk_mst_log: Warning:  Missing Master instance.")
 
         for slv in slaves:
+            data["CheckMasterLog"]["SlaveLogs"].append(chk_slv(slv))
+
+        return data
+
+    fname, log_pos = master.get_log_info()
+    data["CheckMasterLog"]["MasterLog"]["Master"] = {
+        "Name": master.name, "Log": fname, "Position": log_pos}
+    data["CheckMasterLog"]["MasterLog"]["Slaves"] = list()
+
+    for slv in slaves:
+        if slv.is_connected():
             mst_file, _, read_pos, _ = slv.get_log_info()
             tdata = {"Name": slv.get_name(), "Status": "OK"}
 
@@ -450,17 +481,11 @@ def chk_mst_log(**kwargs):
                     "Warning:  Slave lagging in reading master log"
                 tdata["Info"] = {"Log": mst_file, "Position": read_pos}
 
-            data["CheckMasterLog"]["MasterLog"]["Slaves"].append(tdata)
-            data["CheckMasterLog"]["SlaveLogs"].append(chk_slv(slv))
+        else:
+            tdata = {"Name": slv.get_name(), "Status": "DOWN"}
 
-    elif slaves:
-        print("chk_mst_log: Warning:  Missing Master instance.")
-
-        for slv in slaves:
-            data["CheckMasterLog"]["SlaveLogs"].append(chk_slv(slv))
-
-    else:
-        print("chk_mst_log:  Warning:  Missing Master and Slave instances.")
+        data["CheckMasterLog"]["MasterLog"]["Slaves"].append(tdata)
+        data["CheckMasterLog"]["SlaveLogs"].append(chk_slv(slv))
 
     return data
 
@@ -526,17 +551,18 @@ def chk_slv_err(**kwargs):
     slaves = list(kwargs.get("slaves", list()))
     data = {"CheckSlaveError": {"Slaves": []}}
 
-    if slaves:
-        for slv in slaves:
+    if not slaves:
+        print("chk_slv_err:  Warning:  No Slave instance detected.")
+        return data
+
+    for slv in slaves:
+        if slv.is_connected():
             tdata = {"Name": slv.get_name(), "Connection": "Up",
                      "IO": {"Status": "Good"}, "SQL": {"Status": "Good"}}
 
-            # For pre-MySQL 5.6 versions, will be NULL for these two entries.
-            iost, sql, io_msg, sql_msg, io_time, sql_time = slv.get_err_stat()
-
-            # Connection status
-            if not slv.conn:
-                tdata["Connection"] = "Down"
+            # Pre-MySQL 5.6 versions, will be NULL for these two entries
+            iost, sql, io_msg, sql_msg, io_time, sql_time = \
+                slv.get_err_stat()
 
             # IO error
             if iost:
@@ -552,10 +578,12 @@ def chk_slv_err(**kwargs):
                 tdata["SQL"]["Timestamp"] = sql_time
                 tdata["SQL"]["Status"] = "Bad"
 
-            data["CheckSlaveError"]["Slaves"].append(tdata)
+        else:
+            tdata = {"Name": slv.get_name(), "Connection": "DOWN",
+                     "IO": {"Status": "Unknown"},
+                     "SQL": {"Status": "Unknown"}}
 
-    else:
-        print("chk_slv_err:  Warning:  No Slave instance detected.")
+        data["CheckSlaveError"]["Slaves"].append(tdata)
 
     return data
 
@@ -578,15 +606,15 @@ def add_miss_slaves(master, data):
     slv_list = list()
     miss_slv = list()
 
-    for slv in master.show_slv_hosts():
-        all_list.append(slv["Host"])
+    for slv in master.slaves:
+        all_list.append(slv["Replica_UUID"])
 
     for slv in data["CheckSlaveTime"]["Slaves"]:
-        slv_list.append(slv["Name"])
+        slv_list.append(slv["Slave_UUID"])
 
-    # Add slaves from the slave list that are not in the master's slave list.
-    for name in [val for val in all_list if val not in slv_list]:
-        miss_slv.append({"Name": name, "LagTime": None})
+    # Add slaves from the master slave list that are not in the slave list.
+    for uuid in [val for val in all_list if val not in slv_list]:
+        miss_slv.append({"Slave_UUID": uuid, "LagTime": "UNK"})
 
     return miss_slv
 
@@ -611,9 +639,16 @@ def chk_slv_time(**kwargs):
 
     if slaves:
         for slv in slaves:
-            data["CheckSlaveTime"]["Slaves"].append(
-                {"Name": slv.get_name(),
-                 "LagTime": _process_time_lag(slv, slv.get_time())})
+            if slv.is_connected():
+                data["CheckSlaveTime"]["Slaves"].append(
+                    {"Name": slv.get_name(),
+                     "Slave_UUID": slv.slave_uuid,
+                     "LagTime": _process_time_lag(slv, slv.get_time())})
+            else:
+                data["CheckSlaveTime"]["Slaves"].append(
+                    {"Name": slv.get_name(),
+                     "Slave_UUID": "Unknown",
+                     "LagTime": "DOWN"})
 
     data["CheckSlaveTime"]["Slaves"] = \
         data["CheckSlaveTime"]["Slaves"] + add_miss_slaves(master, data)
@@ -634,7 +669,7 @@ def _process_time_lag(slv, time_lag):
 
     """
 
-    if time_lag is None or time_lag > 0:
+    if time_lag == "null" or time_lag > 0:
         time.sleep(5)
 
         if slv.conn:
@@ -664,9 +699,15 @@ def chk_slv_other(**kwargs):
 
     if slaves:
         for slv in slaves:
-            skip, tmp_tbl, retry = slv.get_others()
-            data["CheckSlaveOther"]["Slaves"].append(
-                _chk_other(skip, tmp_tbl, retry, slv.get_name(), slv.version))
+            if slv.is_connected():
+                skip, tmp_tbl, retry = slv.get_others()
+                data["CheckSlaveOther"]["Slaves"].append(
+                    _chk_other(
+                        skip, tmp_tbl, retry, slv.get_name(), slv.version))
+
+            else:
+                data["CheckSlaveOther"]["Slaves"].append(
+                    {"Name": slv.get_name(), "Status": "DOWN"})
 
     else:
         print("chk_slv_other:  Warning:  No Slave instance detected.")
@@ -709,52 +750,6 @@ def _chk_other(skip, tmp_tbl, retry, name, sql_ver):
     return data
 
 
-def dict_out(data, **kwargs):
-
-    """Function:  dict_out
-
-    Description:  Print dictionary to a file, standard out, and/or an email
-        instance either in expanded or flatten JSON format.
-
-    Arguments:
-        (input) data -> Dictionary document
-        (input) kwargs:
-            expand -> True|False - Expand JSON format
-            mail -> Mail instance
-            ofile -> Name of output file name
-            mode -> w|a => Write or append mode for file
-            no_std -> True|False - Do not print to standard out
-        (output) err_flag -> True|False - If error has occurred
-        (output) err_msg -> Error message
-
-    """
-
-    err_flag = False
-    err_msg = None
-    mail = kwargs.get("mail", None)
-    indent = 4 if kwargs.get("expand", False) else None
-    mode = kwargs.get("mode", "w")
-    ofile = kwargs.get("ofile", None)
-    no_std = kwargs.get("no_std", False)
-
-    if isinstance(data, dict):
-        if ofile:
-            gen_libs.print_data(
-                json.dumps(data, indent=indent), ofile=ofile, mode=mode)
-
-        if not no_std:
-            gen_libs.print_data(json.dumps(data, indent=indent))
-
-        if mail:
-            mail.add_2_msg(json.dumps(data, indent=indent))
-
-    else:
-        err_flag = True
-        err_msg = "Error: Is not a dictionary: %s" % (data)
-
-    return err_flag, err_msg
-
-
 def data_out(data, args, **kwargs):
 
     """Function:  data_out
@@ -777,7 +772,7 @@ def data_out(data, args, **kwargs):
         mail = gen_class.setup_mail(
             args.get_val("-t"), subj=args.get_val("-u", def_val=def_subj))
 
-    status = dict_out(
+    status = gen_libs.dict_out(
         data, ofile=args.get_val("-o", def_val=None),
         mode="a" if args.get_val("-a", def_val=False) else "w",
         expand=args.get_val("-e", def_val=False),
@@ -955,7 +950,6 @@ def main():
 
     """
 
-    cmdline = gen_libs.get_inst(sys)
     dir_perms_chk = {"-d": 5, "-p": 5}
     file_crt_list = ["-o"]
     file_perm = {"-o": 6}
@@ -981,10 +975,11 @@ def main():
 
     # Process argument list from command line.
     args = gen_class.ArgParser(
-        cmdline.argv, opt_val=opt_val_list, multi_val=opt_multi_list,
-        opt_def=opt_def_dict, do_parse=True)
+        sys.argv, opt_val=opt_val_list, multi_val=opt_multi_list,
+        opt_def=opt_def_dict)
 
-    if not gen_libs.help_func(args, __version__, help_message)                \
+    if args.arg_parse2()                                                      \
+       and not gen_libs.help_func(args, __version__, help_message)            \
        and args.arg_req_or_lst(opt_or=opt_or_dict_list)                       \
        and args.arg_require(opt_req=opt_req_list)                             \
        and args.arg_cond_req(opt_con_req=opt_con_req_list)                    \
@@ -994,7 +989,7 @@ def main():
 
         try:
             proglock = gen_class.ProgramLock(
-                cmdline.argv, args.get_val("-y", def_val=""))
+                sys.argv, args.get_val("-y", def_val=""))
             run_program(args, func_dict, slv_key=slv_key)
             del proglock
 

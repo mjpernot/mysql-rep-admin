@@ -4,6 +4,63 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
+## [4.0.8] - 2024-09-27
+- Updated pymongo==4.1.1 for Python 3.6
+- Updated mongo-lib to v4.3.2
+- Updated python-lib to v3.0.5
+- Updated mysql-lib to v5.3.7
+
+
+## [4.0.7] - 2024-09-04
+- Updated pymongo to v4.6.3 for Python 3.
+- Updated mongo-libs to v4.3.1
+
+### Changed
+- chk_slv_err, chk_mst_log:  Refactored functions.
+- main: Removed parsing from gen_class.ArgParser call and called arg_parse2 as part of "if" statement.
+
+
+## [4.0.6] - 2024-04-23
+- Updated mongo-lib to v4.3.0
+- Added TLS capability for Mongo
+- Set pymongo to 3.12.3 for Python 2 and Python 3.
+
+### Changed
+- Set pymongo to 3.12.3 for Python 2 and Python 3.
+- config/mongo.py.TEMPLATE: Added TLS entries.
+- Documentation updates.
+
+
+## [4.0.5] - 2024-03-11
+- Updated mysql-lib to v5.3.5
+
+### Fixed
+- chk_slv_time, chk_slv_other, chk_mst_log, chk_slv, chk_slv_err: Check to see if slave is down and update slave list.
+
+### Changed
+- rpt_slv_log:  Replaced down slaves nulls with Unknown value.
+- add_miss_slaves: Replaced using Name of the slave with the slaves UUID.
+- chk_slv_time:  Added slave_uuid to each slave dictionary in JSON object.
+- \_process_time_lag:  Replaced check for None with check for "null".
+- data_out: Replaced call to dict_out with call to gen_libs.dict_out.
+
+### Removed
+- dict_out:  Replace by gen_libs.dict_out
+
+
+## [4.0.4] - 2024-02-26
+- Updated to work in Red Hat 8
+- Updated mysql-lib to v5.3.4
+- Updated mongo-lib to v4.2.9
+- Updated python-lib to v3.0.3
+
+### Changed
+- main:  Removed the gen_libs.get_inst call.
+- Set simplejson to 3.12.0 for Python 3.
+- Set chardet to 3.0.4 for Python 2.
+- Documentation updates.
+
+
 ## [4.0.3] - 2023-05-25
 ### Fixed
 - data_out: Fixed incorrectly setting the email subject line.

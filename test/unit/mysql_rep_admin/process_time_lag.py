@@ -108,12 +108,12 @@ class UnitTest(unittest.TestCase):
         """
 
         self.slave = SlaveRep()
-        self.slave2 = SlaveRep(lag_time=None)
+        self.slave2 = SlaveRep(lag_time="null")
         self.slave3 = SlaveRep(lag_time=0)
-        self.slave4 = SlaveRep(lag_time=None, conn=None)
+        self.slave4 = SlaveRep(lag_time="null", conn=None)
         self.time_lag0 = 0
         self.time_lag1 = 1
-        self.time_lag2 = None
+        self.time_lag2 = "null"
 
     @mock.patch("time.sleep", mock.Mock(return_value=True))
     def test_mysql_down_std(self):
