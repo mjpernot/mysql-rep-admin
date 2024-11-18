@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
+## [4.0.10] - 2024-11-18
+- Updated python-lib to v3.0.8
+- Updated mongo-lib to v4.3.4
+- Updated mysql-lib to v5.3.9
+
+### Fixed
+- Set chardet==3.0.4 for Python 3.
+
+
 ## [4.0.9] - 2024-11-08
 - Updated chardet==4.0.0 for Python 3
 - Updated distro==1.9.0 for Python 3
