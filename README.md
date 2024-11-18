@@ -33,6 +33,7 @@
     - Redhat 8 (Running Python 3.6):
       -> python3-pip
       -> python3-devel
+      -> gcc
 
   * FIPS Environment:  If operating in a FIPS 104-2 environment, this package will require at least a minimum of pymongo==3.8.0 or better.  It will also require a manual change to the auth.py module in the pymongo package.  See below for changes to auth.py.
     - Locate the auth.py file python installed packages on the system in the pymongo package directory.
