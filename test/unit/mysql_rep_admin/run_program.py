@@ -41,7 +41,10 @@ def rpt_slv_log(                                        # pylint:disable=R0913
 
     status = True
 
-    if master and slaves and form and ofile and db_tbl and class_cfg:
+    if master and slaves and form:
+        status = True
+
+    if ofile and db_tbl and class_cfg:
         status = True
 
     return status
