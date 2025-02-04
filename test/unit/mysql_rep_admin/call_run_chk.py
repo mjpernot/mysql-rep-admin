@@ -110,7 +110,7 @@ class ArgParser():
 
         """
 
-        self.args_array = {"-A": True, "-D": True, "-m": "mongo", "-d": "cfg"}
+        self.args_array = {"-A": True, "-D": True}
 
     def arg_exist(self, arg):
 
