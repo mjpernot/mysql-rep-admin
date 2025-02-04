@@ -22,9 +22,9 @@ import mock
 
 # Local
 sys.path.append(os.getcwd())
-import mysql_rep_admin
-import lib.gen_libs as gen_libs
-import version
+import mysql_rep_admin                          # pylint:disable=E0401,C0413
+import lib.gen_libs as gen_libs             # pylint:disable=E0401,C0413,R0402
+import version                                  # pylint:disable=E0401,C0413
 
 __version__ = version.__version__
 
@@ -39,10 +39,10 @@ def linecnt(fname):
 
     """
 
-    return sum(1 for _ in open(fname))
+    return sum(1 for _ in open(fname, encoding="UTF-8"))
 
 
-class ArgParser(object):
+class ArgParser():
 
     """Class:  ArgParser
 
@@ -77,7 +77,7 @@ class ArgParser(object):
 
         """
 
-        return True if arg in self.args_array else False
+        return arg in self.args_array
 
     def get_val(self, skey, def_val=None):
 
@@ -92,7 +92,7 @@ class ArgParser(object):
         return self.args_array.get(skey, def_val)
 
 
-class MailTest(object):
+class MailTest():
 
     """Class:  MailTest
 
@@ -174,10 +174,6 @@ class UnitTest(unittest.TestCase):
     Methods:
         setUp
         test_append
-        test_mongo_error
-        test_mongo3
-        test_mongo2
-        test_mongo
         test_mail_subj
         test_mail_mailx
         test_mail
@@ -220,87 +216,6 @@ class UnitTest(unittest.TestCase):
         """
 
         self.args.args_array = self.args_array6
-
-        self.assertFalse(mysql_rep_admin.data_out(self.data, self.args))
-
-    @mock.patch("mysql_rep_admin.gen_libs.dict_out",
-                mock.Mock(return_value=(False, None)))
-    @mock.patch("mysql_rep_admin.gen_libs.load_module",
-                mock.Mock(return_value="Cfg"))
-    @mock.patch("mysql_rep_admin.mongo_libs.ins_doc",
-                mock.Mock(return_value=(False, "Error Message2")))
-    def test_mongo_error(self):
-
-        """Function:  test_mongo_error
-
-        Description:  Test with mongo option with an error.
-
-        Arguments:
-
-        """
-
-        self.args.args_array = self.args_array3
-
-        with gen_libs.no_std_out():
-            self.assertFalse(mysql_rep_admin.data_out(self.data, self.args))
-
-    @mock.patch("mysql_rep_admin.gen_libs.dict_out",
-                mock.Mock(return_value=(False, None)))
-    @mock.patch("mysql_rep_admin.gen_libs.load_module",
-                mock.Mock(return_value="Cfg"))
-    @mock.patch("mysql_rep_admin.mongo_libs.ins_doc",
-                mock.Mock(return_value=(True, None)))
-    def test_mongo3(self):
-
-        """Function:  test_mongo3
-
-        Description:  Test with mongo option - missing one option.
-
-        Arguments:
-
-        """
-
-        self.args.args_array = self.args_array5
-
-        self.assertFalse(mysql_rep_admin.data_out(self.data, self.args))
-
-    @mock.patch("mysql_rep_admin.gen_libs.dict_out",
-                mock.Mock(return_value=(False, None)))
-    @mock.patch("mysql_rep_admin.gen_libs.load_module",
-                mock.Mock(return_value="Cfg"))
-    @mock.patch("mysql_rep_admin.mongo_libs.ins_doc",
-                mock.Mock(return_value=(True, None)))
-    def test_mongo2(self):
-
-        """Function:  test_mongo2
-
-        Description:  Test with mongo option - missing one option.
-
-        Arguments:
-
-        """
-
-        self.args.args_array = self.args_array4
-
-        self.assertFalse(mysql_rep_admin.data_out(self.data, self.args))
-
-    @mock.patch("mysql_rep_admin.gen_libs.dict_out",
-                mock.Mock(return_value=(False, None)))
-    @mock.patch("mysql_rep_admin.gen_libs.load_module",
-                mock.Mock(return_value="Cfg"))
-    @mock.patch("mysql_rep_admin.mongo_libs.ins_doc",
-                mock.Mock(return_value=(True, None)))
-    def test_mongo(self):
-
-        """Function:  test_mongo
-
-        Description:  Test with mongo option.
-
-        Arguments:
-
-        """
-
-        self.args.args_array = self.args_array3
 
         self.assertFalse(mysql_rep_admin.data_out(self.data, self.args))
 

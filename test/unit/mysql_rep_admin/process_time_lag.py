@@ -21,13 +21,13 @@ import mock
 
 # Local
 sys.path.append(os.getcwd())
-import mysql_rep_admin
-import version
+import mysql_rep_admin                          # pylint:disable=E0401,C0413
+import version                                  # pylint:disable=E0401,C0413
 
 __version__ = version.__version__
 
 
-class SlaveRep(object):
+class SlaveRep():
 
     """Class:  SlaveRep
 
@@ -127,7 +127,7 @@ class UnitTest(unittest.TestCase):
         """
 
         self.assertEqual(
-            mysql_rep_admin._process_time_lag(self.slave4, self.time_lag2),
+            mysql_rep_admin.process_time_lag(self.slave4, self.time_lag2),
             self.time_lag2)
 
     @mock.patch("time.sleep", mock.Mock(return_value=True))
@@ -142,7 +142,7 @@ class UnitTest(unittest.TestCase):
         """
 
         self.assertEqual(
-            mysql_rep_admin._process_time_lag(self.slave4, self.time_lag2),
+            mysql_rep_admin.process_time_lag(self.slave4, self.time_lag2),
             self.time_lag2)
 
     @mock.patch("time.sleep", mock.Mock(return_value=True))
@@ -157,7 +157,7 @@ class UnitTest(unittest.TestCase):
         """
 
         self.assertEqual(
-            mysql_rep_admin._process_time_lag(self.slave3, self.time_lag1),
+            mysql_rep_admin.process_time_lag(self.slave3, self.time_lag1),
             self.time_lag0)
 
     @mock.patch("time.sleep", mock.Mock(return_value=True))
@@ -172,7 +172,7 @@ class UnitTest(unittest.TestCase):
         """
 
         self.assertEqual(
-            mysql_rep_admin._process_time_lag(self.slave, self.time_lag1),
+            mysql_rep_admin.process_time_lag(self.slave, self.time_lag1),
             self.time_lag1)
 
     @mock.patch("time.sleep", mock.Mock(return_value=True))
@@ -187,7 +187,7 @@ class UnitTest(unittest.TestCase):
         """
 
         self.assertEqual(
-            mysql_rep_admin._process_time_lag(self.slave, self.time_lag0),
+            mysql_rep_admin.process_time_lag(self.slave, self.time_lag0),
             self.time_lag0)
 
     @mock.patch("time.sleep", mock.Mock(return_value=True))
@@ -202,7 +202,7 @@ class UnitTest(unittest.TestCase):
         """
 
         self.assertEqual(
-            mysql_rep_admin._process_time_lag(self.slave2, self.time_lag2),
+            mysql_rep_admin.process_time_lag(self.slave2, self.time_lag2),
             self.time_lag2)
 
     @mock.patch("time.sleep", mock.Mock(return_value=True))
@@ -217,7 +217,7 @@ class UnitTest(unittest.TestCase):
         """
 
         self.assertEqual(
-            mysql_rep_admin._process_time_lag(self.slave, self.time_lag1),
+            mysql_rep_admin.process_time_lag(self.slave, self.time_lag1),
             self.time_lag1)
 
     def test_no_lag(self):
@@ -231,7 +231,7 @@ class UnitTest(unittest.TestCase):
         """
 
         self.assertEqual(
-            mysql_rep_admin._process_time_lag(self.slave, self.time_lag0),
+            mysql_rep_admin.process_time_lag(self.slave, self.time_lag0),
             self.time_lag0)
 
 

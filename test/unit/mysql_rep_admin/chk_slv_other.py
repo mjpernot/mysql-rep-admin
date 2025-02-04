@@ -20,14 +20,14 @@ import unittest
 
 # Local
 sys.path.append(os.getcwd())
-import lib.gen_libs as gen_libs
-import mysql_rep_admin
-import version
+import mysql_rep_admin                          # pylint:disable=E0401,C0413
+import lib.gen_libs as gen_libs             # pylint:disable=E0401,C0413,R0402
+import version                                  # pylint:disable=E0401,C0413
 
 __version__ = version.__version__
 
 
-class MasterRep(object):
+class MasterRep():                                      # pylint:disable=R0903
 
     """Class:  MasterRep
 
@@ -51,7 +51,7 @@ class MasterRep(object):
         self.name = "Master_Name"
 
 
-class SlaveRep(object):
+class SlaveRep():
 
     """Class:  SlaveRep
 
@@ -75,14 +75,8 @@ class SlaveRep(object):
 
         """
 
-        if sys.version_info < (3, 0):
-            self.tmp_tbl = unicode(tmp_tbl)
-            self.retry = unicode(retry)
-
-        else:
-            self.tmp_tbl = str(tmp_tbl)
-            self.retry = str(retry)
-
+        self.tmp_tbl = str(tmp_tbl)
+        self.retry = str(retry)
         self.name = "Slave_Name"
         self.skip = skip
         self.version = (5, 6, 31)

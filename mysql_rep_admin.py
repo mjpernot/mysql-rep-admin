@@ -16,28 +16,24 @@
     Usage:
         mysql_rep_admin.py
             {-B -c mysql_cfg -d path [-z] [-e] [-o /path/file [-a]]
-                 [-i [db:coll] -m mongo_cfg]
                  [-t ToEmail [ToEmail2 ...] [-u SubjectLine] [-w]] |
              -C -c mysql_cfg -s [/path/]slave.txt -d path [-z] [-e]
-                 [-o /path/file [-a]] [-i [db:coll] -m mongo_cfg]
+                 [-o /path/file [-a]]
                  [-t ToEmail [ToEmail2 ...] [-u SubjectLine] [-w]] |
              -D -c mysql_cfg -s [/path/]slave.txt -d path [-z] [-e]
-                 [-o /path/file [-a]] [-i [db:coll] -m mongo_cfg]
+                 [-o /path/file [-a]]
                  [-t ToEmail [ToEmail2 ...] [-u SubjectLine] [-w]] |
              -E -s [path/]slave.txt -d path [-z] [-e] [-o /path/file [-a]]
-                 [-i [db:coll] -m mongo_cfg]
                  [-t ToEmail [ToEmail2 ...] [-u SubjectLine] [-w]] |
              -O -s [/path/]slave.txt -d path [-z] [-e] [-o /path/file [-a]]
-                 [-i [db:coll] -m mongo_cfg]
                  [-t ToEmail [ToEmail2 ...] [-u SubjectLine] [-w]] |
              -S -s [/path/]slave.txt -d path [-z] [-e] [-o /path/file [-a]]
-                 [-i [db:coll] -m mongo_cfg]
                  [-t ToEmail [ToEmail2 ...] [-u SubjectLine] [-w]] |
              -T -c mysql_cfg -s [/path]/slave.txt -d path [-z] [-e] [-x]
-                 [-o /path/file [-a]] [-i [db:coll] -m mongo_cfg]
+                 [-o /path/file [-a]]
                  [-t ToEmail [ToEmail2 ...] [-u SubjectLine] [-w]] |
              -A -c mysql_cfg -s [/path/]slave.txt -d path [-z] [-e]
-                 [-o /path/file [-a]] [-i [db:coll] -m mongo_cfg]
+                 [-o /path/file [-a]]
                  [-t ToEmail [ToEmail2 ...] [-u SubjectLine] [-w]]}
             [-y flavor_id]
             [-p path]
@@ -93,13 +89,6 @@
             -e => Expand the JSON data structure.
             -o /path/file => Directory path and file name for output.
                 -a => Append output to file.
-            -i [database:collection] => Insert results of command into Mongo
-                    database. List the name of database and collection.
-                    Default: sysmon:mysql_rep_lag
-                -m mongo_cfg => File is the Mongo configuration file for
-                    inserting results into a Mongo database.  This is loaded as
-                    a python module, do not include the .py extension with the
-                    name.
             -t to_addresses => Enables emailing capability.  Sends output to
                 one or more email addresses.
                 -u subject_line => Subject line of email.
@@ -204,67 +193,6 @@
         NOTE 1:  Ignore the Replication user information entries.  They are
             not required for this program.
 
-
-        Mongo configuration file format (config/mongo.py.TEMPLATE).  The
-            configuration file format for the Mongo connection used for
-            inserting data into a database.
-            There are two ways to connect:  single or replica set.
-
-            Single database connection:
-
-            # Single Configuration file for Mongo Database Server.
-            user = "USER"
-            japd = "PSWORD"
-            host = "HOST_IP"
-            name = "HOSTNAME"
-            port = 27017
-            conf_file = None
-            auth = True
-            auth_db = "admin"
-            auth_mech = "SCRAM-SHA-1"
-            use_arg = True
-            use_uri = False
-
-            Replica Set connection:  Same format as above, but with these
-                additional entries at the end of the configuration file:
-
-            repset = "REPLICA_SET_NAME"
-            repset_hosts = "HOST1:PORT, HOST2:PORT, [...]"
-            db_auth = "AUTHENTICATION_DATABASE"
-
-            If Mongo is set to use TLS or SSL connections, then one or more of
-                the following entries will need to be completed to connect
-                using TLS or SSL protocols.
-                Note:  Read the configuration file to determine which entries
-                    will need to be set.
-
-                SSL:
-                    auth_type = None
-                    ssl_client_ca = None
-                    ssl_client_key = None
-                    ssl_client_cert = None
-                    ssl_client_phrase = None
-                TLS:
-                    auth_type = None
-                    tls_ca_certs = None
-                    tls_certkey = None
-                    tls_certkey_phrase = None
-
-            Note:  FIPS Environment for Mongo.
-              If operating in a FIPS 104-2 environment, this package will
-              require at least a minimum of pymongo==3.8.0 or better.  It will
-              also require a manual change to the auth.py module in the pymongo
-              package.  See below for changes to auth.py.
-
-            - Locate the auth.py file python installed packages on the system
-                in the pymongo package directory.
-            - Edit the file and locate the "_password_digest" function.
-            - In the "_password_digest" function there is an line that should
-                match: "md5hash = hashlib.md5()".  Change it to
-                "md5hash = hashlib.md5(usedforsecurity=False)".
-            - Lastly, it will require the Mongo configuration file entry
-                auth_mech to be set to: SCRAM-SHA-1 or SCRAM-SHA-256.
-
     Known Bugs:
         Bug: The -T option may produce extra entries in the slaves list if the
             master's show slave hosts names do not match up with the host names
@@ -278,8 +206,6 @@
 """
 
 # Libraries and Global Variables
-from __future__ import print_function
-from __future__ import absolute_import
 
 # Standard
 import sys
@@ -293,16 +219,14 @@ try:
     from .lib import machine
     from .mysql_lib import mysql_class
     from .mysql_lib import mysql_libs
-    from .mongo_lib import mongo_libs
     from . import version
 
 except (ValueError, ImportError) as err:
-    import lib.gen_libs as gen_libs
-    import lib.gen_class as gen_class
-    import lib.machine as machine
-    import mysql_lib.mysql_class as mysql_class
-    import mysql_lib.mysql_libs as mysql_libs
-    import mongo_lib.mongo_libs as mongo_libs
+    import lib.gen_libs as gen_libs                     # pylint:disable=R0402
+    import lib.gen_class as gen_class                   # pylint:disable=R0402
+    import lib.machine as machine                       # pylint:disable=R0402
+    import mysql_lib.mysql_class as mysql_class         # pylint:disable=R0402
+    import mysql_lib.mysql_libs as mysql_libs           # pylint:disable=R0402
     import version
 
 __version__ = version.__version__
@@ -369,7 +293,7 @@ def rpt_slv_log(**kwargs):
 
     """
 
-    slaves = list(kwargs.get("slaves", list()))
+    slaves = list(kwargs.get("slaves", []))
     data = {"SlaveLogs": []}
 
     if slaves:
@@ -450,7 +374,7 @@ def chk_mst_log(**kwargs):
     """
 
     master = kwargs.get("master", None)
-    slaves = list(kwargs.get("slaves", list()))
+    slaves = list(kwargs.get("slaves", []))
     data = {"CheckMasterLog": {"MasterLog": {}, "SlaveLogs": []}}
 
     if not master and not slaves:
@@ -468,7 +392,7 @@ def chk_mst_log(**kwargs):
     fname, log_pos = master.get_log_info()
     data["CheckMasterLog"]["MasterLog"]["Master"] = {
         "Name": master.name, "Log": fname, "Position": log_pos}
-    data["CheckMasterLog"]["MasterLog"]["Slaves"] = list()
+    data["CheckMasterLog"]["MasterLog"]["Slaves"] = []
 
     for slv in slaves:
         if slv.is_connected():
@@ -504,7 +428,7 @@ def chk_slv_thr(**kwargs):
 
     """
 
-    slaves = list(kwargs.get("slaves", list()))
+    slaves = list(kwargs.get("slaves", []))
     data = {"CheckSlaveThread": {"Slaves": []}}
 
     if slaves:
@@ -548,7 +472,7 @@ def chk_slv_err(**kwargs):
 
     """
 
-    slaves = list(kwargs.get("slaves", list()))
+    slaves = list(kwargs.get("slaves", []))
     data = {"CheckSlaveError": {"Slaves": []}}
 
     if not slaves:
@@ -602,9 +526,9 @@ def add_miss_slaves(master, data):
     """
 
     data = dict(data)
-    all_list = list()
-    slv_list = list()
-    miss_slv = list()
+    all_list = []
+    slv_list = []
+    miss_slv = []
 
     for slv in master.slaves:
         all_list.append(slv["Replica_UUID"])
@@ -634,7 +558,7 @@ def chk_slv_time(**kwargs):
     """
 
     master = kwargs.get("master", None)
-    slaves = list(kwargs.get("slaves", list()))
+    slaves = list(kwargs.get("slaves", []))
     data = {"CheckSlaveTime": {"Slaves": []}}
 
     if slaves:
@@ -643,7 +567,7 @@ def chk_slv_time(**kwargs):
                 data["CheckSlaveTime"]["Slaves"].append(
                     {"Name": slv.get_name(),
                      "Slave_UUID": slv.slave_uuid,
-                     "LagTime": _process_time_lag(slv, slv.get_time())})
+                     "LagTime": process_time_lag(slv, slv.get_time())})
             else:
                 data["CheckSlaveTime"]["Slaves"].append(
                     {"Name": slv.get_name(),
@@ -656,9 +580,9 @@ def chk_slv_time(**kwargs):
     return data
 
 
-def _process_time_lag(slv, time_lag):
+def process_time_lag(slv, time_lag):
 
-    """Function:  _process_time_lag
+    """Function:  process_time_lag
 
     Description:  Check to see if the time lag still exists.
 
@@ -694,15 +618,15 @@ def chk_slv_other(**kwargs):
 
     """
 
-    slaves = list(kwargs.get("slaves", list()))
-    data = {"CheckSlaveOther": {"Slaves": list()}}
+    slaves = list(kwargs.get("slaves", []))
+    data = {"CheckSlaveOther": {"Slaves": []}}
 
     if slaves:
         for slv in slaves:
             if slv.is_connected():
                 skip, tmp_tbl, retry = slv.get_others()
                 data["CheckSlaveOther"]["Slaves"].append(
-                    _chk_other(
+                    chk_other(
                         skip, tmp_tbl, retry, slv.get_name(), slv.version))
 
             else:
@@ -715,12 +639,11 @@ def chk_slv_other(**kwargs):
     return data
 
 
-def _chk_other(skip, tmp_tbl, retry, name, sql_ver):
+def chk_other(skip, tmp_tbl, retry, name, sql_ver):
 
-    """Function:  _chk_other
+    """Function:  chk_other
 
-    Description:  Private function for chk_slv_other().  Print any possible
-        problems found.
+    Description:  Print any possible problems found.
 
     Arguments:
         (input) skip -> Skip count
@@ -779,15 +702,7 @@ def data_out(data, args, **kwargs):
         no_std=args.get_val("-z", def_val=False), mail=mail)
 
     if status[0]:
-        print("data_out 1:  Error detected: %s" % (status[1]))
-
-    elif args.arg_exist("-i") and args.arg_exist("-m"):
-        cfg = gen_libs.load_module(args.get_val("-m"), args.get_val("-d"))
-        dbs, tbl = args.get_val("-i").split(":")
-        status2 = mongo_libs.ins_doc(cfg, dbs, tbl, data)
-
-        if not status2[0]:
-            print("data_out 2:  Error Detected:  %s" % (status2[1]))
+        print(f"data_out 1:  Error detected: {status[1]}")
 
     if mail and not status[0]:
         mail.send_mail(use_mailx=args.get_val("-w", def_val=False))
@@ -843,8 +758,8 @@ def call_run_chk(args, func_dict, master, slaves):
     slaves = list(slaves)
     data = {"Application": "MySQLReplication",
             "Master": master.name,
-            "AsOf": datetime.datetime.strftime(datetime.datetime.now(),
-                                               "%Y-%m-%d %H:%M:%S"),
+            "AsOf": datetime.datetime.strftime(
+                datetime.datetime.now(), "%Y-%m-%d %H:%M:%S"),
             "Checks": []}
 
     if args.arg_exist("-A"):
@@ -901,8 +816,8 @@ def run_program(args, func_dict, **kwargs):
         master.connect(silent=True)
 
     if master and master.conn_msg:
-        print("run_program:  Error encountered on server(%s): %s" %
-              (master.name, master.conn_msg))
+        print(f"run_program:  Error encountered on server {master.name}:"
+              f" {master.conn_msg}")
 
     else:
         slaves = []
@@ -937,7 +852,6 @@ def main():
         file_perm -> file check options with their perms in octal
         func_dict -> dictionary list for the function calls or other options
         opt_con_req_list -> contains the options that require other options
-        opt_def_dict -> contains options with their default values
         opt_multi_list -> list of options that will have multiple values
         opt_or_dict_list -> contains list of options that are OR and required
         opt_req_list -> contains the options that are required for the program
@@ -958,14 +872,13 @@ def main():
         "-D": rpt_slv_log, "-C": chk_mst_log, "-S": chk_slv_thr,
         "-E": chk_slv_err, "-T": chk_slv_time, "-O": chk_slv_other}
     opt_con_req_list = {
-        "-i": ["-m"], "-u": ["-t"], "-w": ["-t"], "-A": ["-s"], "-B": ["-c"],
+        "-u": ["-t"], "-w": ["-t"], "-A": ["-s"], "-B": ["-c"],
         "-C": ["-c", "-s"], "-D": ["-s"], "-E": ["-s"], "-O": ["-s"],
         "-T": ["-c", "-s"], "-x": ["-T"]}
-    opt_def_dict = {"-i": "sysmon:mysql_rep_lag"}
     opt_multi_list = ["-u", "-t"]
     opt_or_dict_list = {"-c": ["-s"]}
     opt_req_list = ["-c", "-d"]
-    opt_val_list = ["-d", "-c", "-p", "-s", "-o", "-i", "-m", "-u", "-t", "-y"]
+    opt_val_list = ["-d", "-c", "-p", "-s", "-o", "-u", "-t", "-y"]
     opt_xor_val = {"-x": ["-A", "-B", "-C", "-S", "-E", "-D", "-O"]}
     slv_key = {"sid": "int", "port": "int", "cfg_file": "None",
                "ssl_client_ca": "None", "ssl_ca_path": "None",
@@ -975,8 +888,7 @@ def main():
 
     # Process argument list from command line.
     args = gen_class.ArgParser(
-        sys.argv, opt_val=opt_val_list, multi_val=opt_multi_list,
-        opt_def=opt_def_dict)
+        sys.argv, opt_val=opt_val_list, multi_val=opt_multi_list)
 
     if args.arg_parse2()                                                      \
        and not gen_libs.help_func(args, __version__, help_message)            \
@@ -994,8 +906,8 @@ def main():
             del proglock
 
         except gen_class.SingleInstanceException:
-            print("WARNING:  lock in place for mysql_rep_admin with id of: %s"
-                  % (args.get_val("-y", def_val="")))
+            print(f'WARNING:  lock in place for mysql_rep_admin with id of:'
+                  f' {args.get_val("-y", def_val="")}')
 
 
 if __name__ == "__main__":
