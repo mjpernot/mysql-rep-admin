@@ -22,8 +22,8 @@ import mock
 
 # Local
 sys.path.append(os.getcwd())
-import mysql_rep_admin
-import version
+import mysql_rep_admin                          # pylint:disable=E0401,C0413
+import version                                  # pylint:disable=E0401,C0413
 
 __version__ = version.__version__
 
@@ -85,7 +85,7 @@ def rpt_slv_log(master, slaves, **kwargs):
     return {"slave_log": status}
 
 
-class ArgParser(object):
+class ArgParser():
 
     """Class:  ArgParser
 
@@ -122,7 +122,7 @@ class ArgParser(object):
 
         """
 
-        return True if arg in self.args_array else False
+        return arg in self.args_array
 
     def get_args(self):
 
@@ -161,7 +161,7 @@ class ArgParser(object):
         return self.args_array.get(skey, def_val)
 
 
-class MasterRep(object):
+class MasterRep():                                      # pylint:disable=R0903
 
     """Class:  MasterRep
 
@@ -185,7 +185,7 @@ class MasterRep(object):
         self.name = "Master_Name"
 
 
-class SlaveRep(object):
+class SlaveRep():                                       # pylint:disable=R0903
 
     """Class:  SlaveRep
 

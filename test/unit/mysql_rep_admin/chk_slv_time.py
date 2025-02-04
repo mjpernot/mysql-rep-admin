@@ -21,13 +21,13 @@ import mock
 
 # Local
 sys.path.append(os.getcwd())
-import mysql_rep_admin
-import version
+import mysql_rep_admin                          # pylint:disable=E0401,C0413
+import version                                  # pylint:disable=E0401,C0413
 
 __version__ = version.__version__
 
 
-class MasterRep(object):
+class MasterRep():                                      # pylint:disable=R0903
 
     """Class:  MasterRep
 
@@ -51,7 +51,7 @@ class MasterRep(object):
         self.name = "Master_Name"
 
 
-class SlaveRep(object):
+class SlaveRep():
 
     """Class:  SlaveRep
 
@@ -158,7 +158,7 @@ class UnitTest(unittest.TestCase):
 
         self.master = MasterRep()
         self.slave = SlaveRep()
-        self.results = {"CheckSlaveTime": {"Slaves": list()}}
+        self.results = {"CheckSlaveTime": {"Slaves": []}}
         self.results2 = {
             "CheckSlaveTime": {
                 "Slaves": [

@@ -4,6 +4,34 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
+## [5.0.0] - 2025-02-04
+Breaking changes
+
+- Removed support for Python 2.7.
+- Removed Mongo insert option.
+- Updated mysql-lib v5.4.0
+- Updated python-lib v4.0.0
+
+### Added
+- process_time_lag: Check to see if the time lag still exists
+- chk_other: Print any possible problems found.
+
+### Changed
+- chk_slv_other: Replaced \_chk_other call with chk_other call.
+- chk_slv_time: Replaced \_process_time_lag call with process_time_lag call.
+- data_out: Removed Mongo code.
+- Replaced list() with [].
+- Converted strings to f-strings.
+- Documentation changes.
+
+### Deprecated
+- Support for MySQL 5.6/5.7
+
+### Removed
+- \_chk_other function.
+- \_process_time_lag function.
+
+
 ## [4.0.10] - 2024-11-18
 - Updated python-lib to v3.0.8
 - Updated mongo-lib to v4.3.4

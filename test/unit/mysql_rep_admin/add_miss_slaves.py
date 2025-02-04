@@ -20,13 +20,13 @@ import unittest
 
 # Local
 sys.path.append(os.getcwd())
-import mysql_rep_admin
-import version
+import mysql_rep_admin                          # pylint:disable=E0401,C0413
+import version                                  # pylint:disable=E0401,C0413
 
 __version__ = version.__version__
 
 
-class MasterRep(object):
+class MasterRep():                                      # pylint:disable=R0903
 
     """Class:  MasterRep
 
@@ -97,7 +97,7 @@ class UnitTest(unittest.TestCase):
         """
 
         self.assertEqual(
-            mysql_rep_admin.add_miss_slaves(self.master, self.data2), list())
+            mysql_rep_admin.add_miss_slaves(self.master, self.data2), [])
 
     def test_one_slv_miss(self):
 
