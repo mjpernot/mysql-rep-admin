@@ -20,8 +20,8 @@ import unittest
 
 # Local
 sys.path.append(os.getcwd())
-import mysql_rep_admin
-import version
+import mysql_rep_admin                          # pylint:disable=E0401,C0413
+import version                                  # pylint:disable=E0401,C0413
 
 __version__ = version.__version__
 
@@ -55,18 +55,10 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        if sys.version_info < (3, 0):
-            self.tmp_tbl0 = unicode(0)
-            self.tmp_tbl6 = unicode(6)
-            self.retry0 = unicode(0)
-            self.retry1 = unicode(1)
-
-        else:
-            self.tmp_tbl0 = str(0)
-            self.tmp_tbl6 = str(6)
-            self.retry0 = str(0)
-            self.retry1 = str(1)
-
+        self.tmp_tbl0 = str(0)
+        self.tmp_tbl6 = str(6)
+        self.retry0 = str(0)
+        self.retry1 = str(1)
         self.skip0 = 0
         self.skip1 = 1
         self.skip2 = None
@@ -104,7 +96,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.assertEqual(mysql_rep_admin._chk_other(
+        self.assertEqual(mysql_rep_admin.chk_other(
             self.skip0, self.tmp_tbl0, self.retry3, self.name,
             self.version2), self.results4a)
 
@@ -118,7 +110,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.assertEqual(mysql_rep_admin._chk_other(
+        self.assertEqual(mysql_rep_admin.chk_other(
             self.skip0, self.tmp_tbl0, self.retry1, self.name,
             self.version), self.results4)
 
@@ -132,7 +124,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.assertEqual(mysql_rep_admin._chk_other(
+        self.assertEqual(mysql_rep_admin.chk_other(
             self.skip0, self.tmp_tbl2, self.retry0, self.name,
             self.version), self.results6)
 
@@ -146,7 +138,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.assertEqual(mysql_rep_admin._chk_other(
+        self.assertEqual(mysql_rep_admin.chk_other(
             self.skip2, self.tmp_tbl0, self.retry0, self.name,
             self.version), self.results5)
 
@@ -160,7 +152,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.assertEqual(mysql_rep_admin._chk_other(
+        self.assertEqual(mysql_rep_admin.chk_other(
             self.skip0, self.tmp_tbl0, self.retry1, self.name,
             self.version), self.results4)
 
@@ -174,7 +166,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.assertEqual(mysql_rep_admin._chk_other(
+        self.assertEqual(mysql_rep_admin.chk_other(
             self.skip0, self.tmp_tbl6, self.retry0, self.name,
             self.version), self.results3)
 
@@ -189,7 +181,7 @@ class UnitTest(unittest.TestCase):
         """
 
         self.assertEqual(
-            mysql_rep_admin._chk_other(
+            mysql_rep_admin.chk_other(
                 self.skip1, self.tmp_tbl0, self.retry0, self.name,
                 self.version), self.results2)
 
@@ -204,7 +196,7 @@ class UnitTest(unittest.TestCase):
         """
 
         self.assertEqual(
-            mysql_rep_admin._chk_other(
+            mysql_rep_admin.chk_other(
                 self.skip0, self.tmp_tbl0, self.retry0, self.name,
                 self.version), self.results)
 

@@ -21,38 +21,36 @@ import mock
 
 # Local
 sys.path.append(os.getcwd())
-import mysql_rep_admin
-import lib.gen_libs as gen_libs
-import version
+import mysql_rep_admin                          # pylint:disable=E0401,C0413
+import lib.gen_libs as gen_libs             # pylint:disable=E0401,C0413,R0402
+import version                                  # pylint:disable=E0401,C0413
 
 __version__ = version.__version__
 
 
-def rpt_slv_log(master, slaves, form, ofile, db_tbl, class_cfg):
+def rpt_slv_log(                                        # pylint:disable=R0913
+        master, slaves, form, ofile, db_tbl, class_cfg):
 
     """Method:  rpt_slv_log
 
     Description:  Function stub holder for mysql_rep_admin.rpt_slv_log.
 
     Arguments:
-        master -> Stub holder
-        slaves -> Stub holder
-        form -> Stub holder
-        ofile -> Stub holder
-        db_tbl -> Stub holder
-        class_cfg -> Stub holder
 
     """
 
     status = True
 
-    if master and slaves and form and ofile and db_tbl and class_cfg:
+    if master and slaves and form:
+        status = True
+
+    if ofile and db_tbl and class_cfg:
         status = True
 
     return status
 
 
-class ArgParser(object):
+class ArgParser():
 
     """Class:  ArgParser
 
@@ -88,7 +86,7 @@ class ArgParser(object):
 
         """
 
-        return True if arg in self.args_array else False
+        return arg in self.args_array
 
     def get_val(self, skey, def_val=None):
 
@@ -103,7 +101,7 @@ class ArgParser(object):
         return self.args_array.get(skey, def_val)
 
 
-class SlaveRep(object):
+class SlaveRep():                                       # pylint:disable=R0903
 
     """Class:  SlaveRep
 
@@ -114,8 +112,9 @@ class SlaveRep(object):
 
     """
 
-    def __init__(self, name=None, sid=None, user=None, japd=None,
-                 serv_os=None, **kwargs):
+    def __init__(                                       # pylint:disable=R0913
+            self, name=None, sid=None, user=None, japd=None, serv_os=None,
+            **kwargs):
 
         """Method:  __init__
 
@@ -145,7 +144,7 @@ class SlaveRep(object):
         self.conn = "Connection Handler"
 
 
-class MasterRep(object):
+class MasterRep():                                      # pylint:disable=R0903
 
     """Class:  MasterRep
 
@@ -157,8 +156,9 @@ class MasterRep(object):
 
     """
 
-    def __init__(self, name=None, sid=None, user=None, japd=None,
-                 serv_os=None, **kwargs):
+    def __init__(                                       # pylint:disable=R0913
+            self, name=None, sid=None, user=None, japd=None, serv_os=None,
+            **kwargs):
 
         """Method:  __init__
 
@@ -206,7 +206,7 @@ class MasterRep(object):
         return status
 
 
-class MstCfg(object):
+class MstCfg():                                         # pylint:disable=R0903
 
     """Class:  MstCfg
 
@@ -319,8 +319,8 @@ class UnitTest(unittest.TestCase):
     @mock.patch("mysql_rep_admin.mysql_class.MasterRep")
     @mock.patch("mysql_rep_admin.gen_libs.create_cfg_array")
     @mock.patch("mysql_rep_admin.gen_libs.load_module")
-    def test_master_conn_good(self, mock_cfg, mock_array, mock_rep, mock_slv,
-                              mock_transpose):
+    def test_master_conn_good(                          # pylint:disable=R0913
+            self, mock_cfg, mock_array, mock_rep, mock_slv, mock_transpose):
 
         """Function:  test_master_connect_good
 
@@ -347,8 +347,8 @@ class UnitTest(unittest.TestCase):
     @mock.patch("mysql_rep_admin.mysql_class.MasterRep")
     @mock.patch("mysql_rep_admin.gen_libs.create_cfg_array")
     @mock.patch("mysql_rep_admin.gen_libs.load_module")
-    def test_master_down(self, mock_cfg, mock_array, mock_rep, mock_slv,
-                         mock_transpose):
+    def test_master_down(                               # pylint:disable=R0913
+            self, mock_cfg, mock_array, mock_rep, mock_slv, mock_transpose):
 
         """Function:  test_master_down
 
@@ -376,8 +376,8 @@ class UnitTest(unittest.TestCase):
     @mock.patch("mysql_rep_admin.mysql_class.MasterRep")
     @mock.patch("mysql_rep_admin.gen_libs.create_cfg_array")
     @mock.patch("mysql_rep_admin.gen_libs.load_module")
-    def test_all_slaves_down(self, mock_cfg, mock_array, mock_rep, mock_slv,
-                             mock_transpose):
+    def test_all_slaves_down(                           # pylint:disable=R0913
+            self, mock_cfg, mock_array, mock_rep, mock_slv, mock_transpose):
 
         """Function:  test_all_slaves_down
 
@@ -406,8 +406,8 @@ class UnitTest(unittest.TestCase):
     @mock.patch("mysql_rep_admin.mysql_class.MasterRep")
     @mock.patch("mysql_rep_admin.gen_libs.create_cfg_array")
     @mock.patch("mysql_rep_admin.gen_libs.load_module")
-    def test_one_slave_down(self, mock_cfg, mock_array, mock_rep, mock_slv,
-                            mock_transpose):
+    def test_one_slave_down(                            # pylint:disable=R0913
+            self, mock_cfg, mock_array, mock_rep, mock_slv, mock_transpose):
 
         """Function:  test_one_slave_down
 
@@ -484,8 +484,8 @@ class UnitTest(unittest.TestCase):
     @mock.patch("mysql_rep_admin.mysql_class.MasterRep")
     @mock.patch("mysql_rep_admin.gen_libs.create_cfg_array")
     @mock.patch("mysql_rep_admin.gen_libs.load_module")
-    def test_single_func(self, mock_cfg, mock_array, mock_rep, mock_slv,
-                         mock_transpose):
+    def test_single_func(                               # pylint:disable=R0913
+            self, mock_cfg, mock_array, mock_rep, mock_slv, mock_transpose):
 
         """Function:  test_single_func
 
