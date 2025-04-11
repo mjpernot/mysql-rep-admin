@@ -44,30 +44,78 @@
         -B => Display the master binlog filename and position.
             -c mysql_cfg => Master config file.
             -d path => Directory path to the config file.
+            -z => Suppress standard out.
+            -e => Expand the JSON data structure.
+            -o /path/file => Directory path and file name for output.
+                -a => Append output to file.
+            -t to_addresses => Enables emailing capability.  Sends output to
+                one or more email addresses.
+                -u subject_line => Subject line of email.
+                -w => Override the default mail command and use mailx.
 
         -C => Compare master binlog position to the slaves' and return any
                 differences detected if not the same positions.
             -c mysql_cfg => Master config file.
             -s [path/]slave.txt => Slave config file.
             -d path => Directory path to the config files.
+            -z => Suppress standard out.
+            -e => Expand the JSON data structure.
+            -o /path/file => Directory path and file name for output.
+                -a => Append output to file.
+            -t to_addresses => Enables emailing capability.  Sends output to
+                one or more email addresses.
+                -u subject_line => Subject line of email.
+                -w => Override the default mail command and use mailx.
 
         -D => Display the slave(s) binlog filename and position.
             -c mysql_cfg => Master config file.
             -s [/path/]slave.txt => Slave config file.
             -d path => Directory path to the config files.
+            -z => Suppress standard out.
+            -e => Expand the JSON data structure.
+            -o /path/file => Directory path and file name for output.
+                -a => Append output to file.
+            -t to_addresses => Enables emailing capability.  Sends output to
+                one or more email addresses.
+                -u subject_line => Subject line of email.
+                -w => Override the default mail command and use mailx.
 
         -E => Check for any replication errors on the slave(s).
             -s [path/]slave.txt => Slave config file.
             -d path => Directory path to the config files.
+            -z => Suppress standard out.
+            -e => Expand the JSON data structure.
+            -o /path/file => Directory path and file name for output.
+                -a => Append output to file.
+            -t to_addresses => Enables emailing capability.  Sends output to
+                one or more email addresses.
+                -u subject_line => Subject line of email.
+                -w => Override the default mail command and use mailx.
 
         -O => Other slave replication checks and return any errors detected.
             -s [path/]slave.txt => Slave config file.
             -d path => Directory path to the config files.
+            -z => Suppress standard out.
+            -e => Expand the JSON data structure.
+            -o /path/file => Directory path and file name for output.
+                -a => Append output to file.
+            -t to_addresses => Enables emailing capability.  Sends output to
+                one or more email addresses.
+                -u subject_line => Subject line of email.
+                -w => Override the default mail command and use mailx.
 
         -S => Check the slave(s) IO and SQL threads and return any errors or
                 warnings detected.
             -s [path/]slave.txt => Slave config file.
             -d path => Directory path to the config files.
+            -z => Suppress standard out.
+            -e => Expand the JSON data structure.
+            -o /path/file => Directory path and file name for output.
+                -a => Append output to file.
+            -t to_addresses => Enables emailing capability.  Sends output to
+                one or more email addresses.
+                -u subject_line => Subject line of email.
+                -w => Override the default mail command and use mailx.
 
         -T => Check time lag for the slave(s) and return any differences
                 detected.
@@ -78,13 +126,19 @@
                 used, then none of the other options are allowed.
                 Note:  Usually used for email purposes to only email out if a
                     time lag is detected.
+            -z => Suppress standard out.
+            -e => Expand the JSON data structure.
+            -o /path/file => Directory path and file name for output.
+                -a => Append output to file.
+            -t to_addresses => Enables emailing capability.  Sends output to
+                one or more email addresses.
+                -u subject_line => Subject line of email.
+                -w => Override the default mail command and use mailx.
 
         -A => Runs multiple checks which include the options:  -C, -S, -T, -E
             -c mysql_cfg => Master config file.
             -s [path/]slave.txt => Slave config file.
             -d path => Directory path to the config files.
-
-        Options available to the major options above:
             -z => Suppress standard out.
             -e => Expand the JSON data structure.
             -o /path/file => Directory path and file name for output.
@@ -211,6 +265,12 @@
 import sys
 import time
 import datetime
+import socket
+
+try:
+    import simplejson as json
+except ImportError:
+    import json
 
 # Local
 try:
@@ -340,7 +400,7 @@ def chk_slv(slave):
     if slave.is_connected():
         data = {"Name": slave.get_name(), "Status": "OK"}
 
-        # Slave's master info doesn't match slave's relay info.
+        # Slave's master info doesn't match slave's relay info
         if mst_file != relay_file or read_pos != exec_pos:
             data["Status"] = \
                 "Warning:  Slave might be lagging in execution of log"
@@ -399,7 +459,7 @@ def chk_mst_log(**kwargs):
             mst_file, _, read_pos, _ = slv.get_log_info()
             tdata = {"Name": slv.get_name(), "Status": "OK"}
 
-            # Master's log file or position doesn't match slave's log info.
+            # Master's log file or position doesn't match slave's log info
             if fname != mst_file or log_pos != read_pos:
                 tdata["Status"] = \
                     "Warning:  Slave lagging in reading master log"
@@ -437,16 +497,16 @@ def chk_slv_thr(**kwargs):
                      "SQLThread": "Up"}
             thr, io_thr, sql_thr, run = slv.get_thr_stat()
 
-            # Slave IO and run state.
+            # Slave IO and run state
             if not thr or not gen_libs.is_true(run):
                 tdata["IOThread"] = "Down"
                 tdata["SQLThread"] = "Down"
 
-            # Slave IO thread.
+            # Slave IO thread
             elif not gen_libs.is_true(io_thr):
                 tdata["IOThread"] = "Down"
 
-            # Slave SQL thread.
+            # Slave SQL thread
             elif not gen_libs.is_true(sql_thr):
                 tdata["SQLThread"] = "Down"
 
@@ -536,7 +596,7 @@ def add_miss_slaves(master, data):
     for slv in data["CheckSlaveTime"]["Slaves"]:
         slv_list.append(slv["Slave_UUID"])
 
-    # Add slaves from the master slave list that are not in the slave list.
+    # Add slaves from the master slave list that are not in the slave list
     for uuid in [val for val in all_list if val not in slv_list]:
         miss_slv.append({"Slave_UUID": uuid, "LagTime": "UNK"})
 
@@ -673,6 +733,39 @@ def chk_other(skip, tmp_tbl, retry, name, sql_ver):
     return data
 
 
+def create_filename(args, dtg=None, dname=None):
+
+    """Function:  create_filename
+
+    Description:  Creates a filename for the attachment to an email.
+
+    Arguments:
+        (input) args -> ArgParser class instance
+        (input) dtg -> TimeFormat instance
+        (input) dname -> Default filename if not detected in args instance
+        (output) -> File name for the email attachment
+
+    """
+
+    join_list = []
+    def_name = dname if dname else args.get_val("-u")
+    fname = args.get_val("-f") if args.arg_exist("-f") else def_name
+    join_list.append(fname)
+
+    if args.arg_exist("-n"):
+        join_list.append(socket.gethostname())
+
+    if args.arg_exist("-g"):
+        join_list.append(dtg.get_time("dtg"))
+
+    if args.arg_exist("-m"):
+        join_list.append(dtg.msec)
+
+    join_list.append("json")
+
+    return ".".join(join_list)
+
+
 def data_out(data, args, **kwargs):
 
     """Function:  data_out
@@ -684,28 +777,45 @@ def data_out(data, args, **kwargs):
         (input) args -> ArgParser class instance
         (input) kwargs:
             def_subj -> Default subject line for email
+            dtg -> TimeFormat instance
 
     """
 
     data = dict(data)
     def_subj = kwargs.get("def_subj", "MySQLRepAdminCheck")
-    mail = None
-
-    if args.get_val("-t", def_val=False):
-        mail = gen_class.setup_mail(
-            args.get_val("-t"), subj=args.get_val("-u", def_val=def_subj))
+#    mail = None
+#
+#    if args.get_val("-t", def_val=False):
+#        mail = gen_class.setup_mail(
+#            args.get_val("-t"), subj=args.get_val("-u", def_val=def_subj))
 
     status = gen_libs.dict_out(
         data, ofile=args.get_val("-o", def_val=None),
-        mode="a" if args.get_val("-a", def_val=False) else "w",
-        expand=args.get_val("-e", def_val=False),
-        no_std=args.get_val("-z", def_val=False), mail=mail)
+        mode="a" if args.arg_exist("-a") else "w",
+        expand=args.arg_exist("-e"), no_std=args.arg_exist("-z"))
+#        mode="a" if args.arg_val("-a", def_val=False) else "w",
+#        no_std=args.get_val("-z", def_val=False), mail=mail)
 
     if status[0]:
         print(f"data_out 1:  Error detected: {status[1]}")
 
-    if mail and not status[0]:
-        mail.send_mail(use_mailx=args.get_val("-w", def_val=False))
+    if args.arg_exist("-t") and args.arg_exist("-r") and not status[0]:
+        mail = gen_class.Mail2(
+            args.get_val("-u", def_val=def_subj), args.get_val("-t"))
+        fname = create_filename(
+            args, dtg=kwargs.get("dtg", None),
+            dname=args.get_val("-u", def_val=def_subj))
+        mail.add_attachment(fname, "json", data)
+        mail.send_email()
+
+    elif args.arg_exist("-t") and not status[0]:
+        mail = gen_class.setup_mail(
+            args.get_val("-t"), subj=args.get_val("-u", def_val=def_subj))
+        indent = 4 if args.arg_exist("-e") else None
+        mail.add_2_msg(json.dumps(data, indent=indent))
+        mail.send_mail(use_mailx=args.arg_exist("-w"))
+#    if mail and not status[0]:
+#        mail.send_mail(use_mailx=args.get_val("-w", def_val=False))
 
 
 def is_time_lag(data):
@@ -756,11 +866,17 @@ def call_run_chk(args, func_dict, master, slaves):
 
     func_dict = dict(func_dict)
     slaves = list(slaves)
+    dtg = gen_class.TimeFormat()
+    dtg.create_time()
     data = {"Application": "MySQLReplication",
             "Master": master.name,
-            "AsOf": datetime.datetime.strftime(
-                datetime.datetime.now(), "%Y-%m-%d %H:%M:%S"),
+            "AsOf": dtg.get_time("zulu"),
             "Checks": []}
+#    data = {"Application": "MySQLReplication",
+#            "Master": master.name,
+#            "AsOf": datetime.datetime.strftime(
+#                datetime.datetime.now(), "%Y-%m-%d %H:%M:%S"),
+#            "Checks": []}
 
     if args.arg_exist("-A"):
         for opt in func_dict["-A"]:
@@ -786,7 +902,8 @@ def call_run_chk(args, func_dict, master, slaves):
         data = None
 
     if data:
-        data_out(data, args)
+        data_out(data, args, dtg=dtg)
+#        data_out(data, args)
 
 
 def run_program(args, func_dict, **kwargs):
@@ -886,7 +1003,7 @@ def main():
                "ssl_client_flag": "int", "ssl_disabled": "bool",
                "ssl_verify_id": "bool", "ssl_verify_cert": "bool"}
 
-    # Process argument list from command line.
+    # Process argument list from command line
     args = gen_class.ArgParser(
         sys.argv, opt_val=opt_val_list, multi_val=opt_multi_list)
 
