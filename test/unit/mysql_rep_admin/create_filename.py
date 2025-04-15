@@ -86,6 +86,22 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp
+        test_subj_all
+        test_filename_all
+        test_subj_host_msecs
+        test_filename_host_msecs
+        test_subj_host_dtg
+        test_filename_host_dtg
+        test_subj_dtg_msecs
+        test_filename_dtg_msecs
+        test_subj_msecs
+        test_filename_msecs
+        test_subj_dtg
+        test_filename_dtg
+        test_subj_hostname
+        test_filename_hostname
+        test_subj
+        test_filename_subj
         test_filename
 
     """
@@ -129,7 +145,7 @@ class UnitTest(unittest.TestCase):
         self.args_array10a = {
             "-u": "SubjectLine", "-g": True, "-n": True, "-m": True}
 
-        dtg = self.dtg.get_time("zulu")
+        dtg = self.dtg.get_time("dtg")
         msecs = self.dtg.msecs
         self.results1 = "FileName.json"
         self.results2 = "FileName.json"
@@ -148,7 +164,295 @@ class UnitTest(unittest.TestCase):
         self.results9a = "SubjectLine.Hostname." + msecs + ".json"
         self.results10 = "FileName.Hostname." + dtg + "." + msecs + ".json"
         self.results10a = "SubjectLine.Hostname." + dtg + "." + msecs + ".json"
-        
+
+    @mock.patch("mysql_rep_admin.socket.gethostname",
+                mock.Mock(return_value="Hostname"))
+    def test_subj_all(self):
+
+        """Function:  test_subj_all
+
+        Description:  Test with subject and hostname and dtg and microseconds.
+
+        Arguments:
+
+        """
+
+        self.args.args_array = self.args_array10a
+
+        self.assertEqual(
+            mysql_rep_admin.create_filename(
+                self.args, dtg=self.dtg), self.results10a)
+
+    @mock.patch("mysql_rep_admin.socket.gethostname",
+                mock.Mock(return_value="Hostname"))
+    def test_filename_all(self):
+
+        """Function:  test_filename_all
+
+        Description:  Test with subject and hostname and dtg and microseconds.
+
+        Arguments:
+
+        """
+
+        self.args.args_array = self.args_array10
+
+        self.assertEqual(
+            mysql_rep_admin.create_filename(
+                self.args, dtg=self.dtg), self.results10)
+
+    @mock.patch("mysql_rep_admin.socket.gethostname",
+                mock.Mock(return_value="Hostname"))
+    def test_subj_host_msecs(self):
+
+        """Function:  test_subj_host_msecs
+
+        Description:  Test with subject and hostname and microseconds.
+
+        Arguments:
+
+        """
+
+        self.args.args_array = self.args_array9a
+
+        self.assertEqual(
+            mysql_rep_admin.create_filename(
+                self.args, dtg=self.dtg), self.results9a)
+
+    @mock.patch("mysql_rep_admin.socket.gethostname",
+                mock.Mock(return_value="Hostname"))
+    def test_filename_host_msecs(self):
+
+        """Function:  test_filename_host_msecs
+
+        Description:  Test with filename and hostname and microseconds.
+
+        Arguments:
+
+        """
+
+        self.args.args_array = self.args_array9
+
+        self.assertEqual(
+            mysql_rep_admin.create_filename(
+                self.args, dtg=self.dtg), self.results9)
+
+    @mock.patch("mysql_rep_admin.socket.gethostname",
+                mock.Mock(return_value="Hostname"))
+    def test_subj_host_dtg(self):
+
+        """Function:  test_subj_host_dtg
+
+        Description:  Test with subject and hostname and dtg.
+
+        Arguments:
+
+        """
+
+        self.args.args_array = self.args_array8a
+
+        self.assertEqual(
+            mysql_rep_admin.create_filename(
+                self.args, dtg=self.dtg), self.results8a)
+
+    @mock.patch("mysql_rep_admin.socket.gethostname",
+                mock.Mock(return_value="Hostname"))
+    def test_filename_host_dtg(self):
+
+        """Function:  test_filename_host_dtg
+
+        Description:  Test with filename and hostname and dtg.
+
+        Arguments:
+
+        """
+
+        self.args.args_array = self.args_array8
+
+        self.assertEqual(
+            mysql_rep_admin.create_filename(
+                self.args, dtg=self.dtg), self.results8)
+
+    @mock.patch("mysql_rep_admin.socket.gethostname",
+                mock.Mock(return_value="Hostname"))
+    def test_subj_dtg_msecs(self):
+
+        """Function:  test_subj_dtg_msecs
+
+        Description:  Test with subject and dtg and microseconds.
+
+        Arguments:
+
+        """
+
+        self.args.args_array = self.args_array7a
+
+        self.assertEqual(
+            mysql_rep_admin.create_filename(
+                self.args, dtg=self.dtg), self.results7a)
+
+    @mock.patch("mysql_rep_admin.socket.gethostname",
+                mock.Mock(return_value="Hostname"))
+    def test_filename_dtg_msecs(self):
+
+        """Function:  test_filename_dtg_msecs
+
+        Description:  Test with filename and dtg and microseconds.
+
+        Arguments:
+
+        """
+
+        self.args.args_array = self.args_array7
+
+        self.assertEqual(
+            mysql_rep_admin.create_filename(
+                self.args, dtg=self.dtg), self.results7)
+
+    @mock.patch("mysql_rep_admin.socket.gethostname",
+                mock.Mock(return_value="Hostname"))
+    def test_subj_msecs(self):
+
+        """Function:  test_subj_msecs
+
+        Description:  Test with subject and microseconds.
+
+        Arguments:
+
+        """
+
+        self.args.args_array = self.args_array6a
+
+        self.assertEqual(
+            mysql_rep_admin.create_filename(
+                self.args, dtg=self.dtg), self.results6a)
+
+    @mock.patch("mysql_rep_admin.socket.gethostname",
+                mock.Mock(return_value="Hostname"))
+    def test_filename_msecs(self):
+
+        """Function:  test_filename_msecs
+
+        Description:  Test with filename and microseconds.
+
+        Arguments:
+
+        """
+
+        self.args.args_array = self.args_array6
+
+        self.assertEqual(
+            mysql_rep_admin.create_filename(
+                self.args, dtg=self.dtg), self.results6)
+
+    @mock.patch("mysql_rep_admin.socket.gethostname",
+                mock.Mock(return_value="Hostname"))
+    def test_subj_dtg(self):
+
+        """Function:  test_subj_dtg
+
+        Description:  Test with subject and DTG.
+
+        Arguments:
+
+        """
+
+        self.args.args_array = self.args_array5a
+
+        self.assertEqual(
+            mysql_rep_admin.create_filename(
+                self.args, dtg=self.dtg), self.results5a)
+
+    @mock.patch("mysql_rep_admin.socket.gethostname",
+                mock.Mock(return_value="Hostname"))
+    def test_filename_dtg(self):
+
+        """Function:  test_filename_dtg
+
+        Description:  Test with filename and DTG.
+
+        Arguments:
+
+        """
+
+        self.args.args_array = self.args_array5
+
+        self.assertEqual(
+            mysql_rep_admin.create_filename(
+                self.args, dtg=self.dtg), self.results5)
+
+    @mock.patch("mysql_rep_admin.socket.gethostname",
+                mock.Mock(return_value="Hostname"))
+    def test_subj_hostname(self):
+
+        """Function:  test_subj_hostname
+
+        Description:  Test with subject and hostname.
+
+        Arguments:
+
+        """
+
+        self.args.args_array = self.args_array4a
+
+        self.assertEqual(
+            mysql_rep_admin.create_filename(
+                self.args, dtg=self.dtg), self.results4a)
+
+    @mock.patch("mysql_rep_admin.socket.gethostname",
+                mock.Mock(return_value="Hostname"))
+    def test_filename_hostname(self):
+
+        """Function:  test_filename_hostname
+
+        Description:  Test with filename and hostname.
+
+        Arguments:
+
+        """
+
+        self.args.args_array = self.args_array4
+
+        self.assertEqual(
+            mysql_rep_admin.create_filename(
+                self.args, dtg=self.dtg), self.results4)
+
+    @mock.patch("mysql_rep_admin.socket.gethostname",
+                mock.Mock(return_value="Hostname"))
+    def test_subj(self):
+
+        """Function:  test_subj
+
+        Description:  Test with subject option only.
+
+        Arguments:
+
+        """
+
+        self.args.args_array = self.args_array3
+
+        self.assertEqual(
+            mysql_rep_admin.create_filename(
+                self.args, dtg=self.dtg), self.results3)
+
+    @mock.patch("mysql_rep_admin.socket.gethostname",
+                mock.Mock(return_value="Hostname"))
+    def test_filename_subj(self):
+
+        """Function:  test_filename_subj
+
+        Description:  Test with filename and subj passed.
+
+        Arguments:
+
+        """
+
+        self.args.args_array = self.args_array2
+
+        self.assertEqual(
+            mysql_rep_admin.create_filename(
+                self.args, dtg=self.dtg), self.results2)
+
     @mock.patch("mysql_rep_admin.socket.gethostname",
                 mock.Mock(return_value="Hostname"))
     def test_filename(self):
@@ -170,4 +474,3 @@ class UnitTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-

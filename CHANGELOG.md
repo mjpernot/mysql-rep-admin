@@ -5,6 +5,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 
 ## [5.1.0] - 2025-04-11
+- Added ability to send data in an email as attachment.
 - Updated python-lib v4.0.1
 - Updated mysql-lib v5.5.0
 
@@ -15,6 +16,9 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - call_run_chk: Added gen_class.TimeFormat instance and pass instance to data_out function.
 - data_out: Set up check to email output as an attachment using gen_class.Mail2 class, called create_filename to get filename for attachment and replaced args.get_val with args.arg_exist.
 - Documentation changes.
+
+### Removed
+- Support for MySQL 5.6/5.7
 
 
 ## [5.0.0] - 2025-02-04

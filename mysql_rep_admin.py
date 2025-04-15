@@ -16,25 +16,33 @@
     Usage:
         mysql_rep_admin.py
             {-B -c mysql_cfg -d path [-z] [-e] [-o /path/file [-a]]
-                 [-t ToEmail [ToEmail2 ...] [-u SubjectLine] [-w]] |
+                 [-t ToEmail [ToEmail2 ...] [-u SubjectLine] [-w]
+                 [-r [-f FileName] [-n] [-g] [-m]]] |
              -C -c mysql_cfg -s [/path/]slave.txt -d path [-z] [-e]
                  [-o /path/file [-a]]
-                 [-t ToEmail [ToEmail2 ...] [-u SubjectLine] [-w]] |
+                 [-t ToEmail [ToEmail2 ...] [-u SubjectLine] [-w]
+                 [-r [-f FileName] [-n] [-g] [-m]]] |
              -D -c mysql_cfg -s [/path/]slave.txt -d path [-z] [-e]
                  [-o /path/file [-a]]
-                 [-t ToEmail [ToEmail2 ...] [-u SubjectLine] [-w]] |
+                 [-t ToEmail [ToEmail2 ...] [-u SubjectLine] [-w]
+                 [-r [-f FileName] [-n] [-g] [-m]]] |
              -E -s [path/]slave.txt -d path [-z] [-e] [-o /path/file [-a]]
-                 [-t ToEmail [ToEmail2 ...] [-u SubjectLine] [-w]] |
+                 [-t ToEmail [ToEmail2 ...] [-u SubjectLine] [-w]
+                 [-r [-f FileName] [-n] [-g] [-m]]] |
              -O -s [/path/]slave.txt -d path [-z] [-e] [-o /path/file [-a]]
-                 [-t ToEmail [ToEmail2 ...] [-u SubjectLine] [-w]] |
+                 [-t ToEmail [ToEmail2 ...] [-u SubjectLine] [-w]
+                 [-r [-f FileName] [-n] [-g] [-m]]] |
              -S -s [/path/]slave.txt -d path [-z] [-e] [-o /path/file [-a]]
-                 [-t ToEmail [ToEmail2 ...] [-u SubjectLine] [-w]] |
+                 [-t ToEmail [ToEmail2 ...] [-u SubjectLine] [-w]
+                 [-r [-f FileName] [-n] [-g] [-m]]] |
              -T -c mysql_cfg -s [/path]/slave.txt -d path [-z] [-e] [-x]
                  [-o /path/file [-a]]
-                 [-t ToEmail [ToEmail2 ...] [-u SubjectLine] [-w]] |
+                 [-t ToEmail [ToEmail2 ...] [-u SubjectLine] [-w]
+                 [-r [-f FileName] [-n] [-g] [-m]]] |
              -A -c mysql_cfg -s [/path/]slave.txt -d path [-z] [-e]
                  [-o /path/file [-a]]
-                 [-t ToEmail [ToEmail2 ...] [-u SubjectLine] [-w]]}
+                 [-t ToEmail [ToEmail2 ...] [-u SubjectLine] [-w]
+                 [-r [-f FileName] [-n] [-g] [-m]]]}
             [-y flavor_id]
             [-p path]
             [-v | -h]
@@ -52,6 +60,12 @@
                 one or more email addresses.
                 -u subject_line => Subject line of email.
                 -w => Override the default mail command and use mailx.
+                -r => Attach data to email as attachment.
+                    -f {file_name} => Name of file attachment.
+                        Default: Use SubjectLine of email.
+                    -n => Add hostname to file attachment name.
+                    -g => Add datetime to file attachment name.
+                    -m => Add microseconds to file attachment name.
 
         -C => Compare master binlog position to the slaves' and return any
                 differences detected if not the same positions.
@@ -66,6 +80,12 @@
                 one or more email addresses.
                 -u subject_line => Subject line of email.
                 -w => Override the default mail command and use mailx.
+                -r => Attach data to email as attachment.
+                    -f {file_name} => Name of file attachment.
+                        Default: Use SubjectLine of email.
+                    -n => Add hostname to file attachment name.
+                    -g => Add datetime to file attachment name.
+                    -m => Add microseconds to file attachment name.
 
         -D => Display the slave(s) binlog filename and position.
             -c mysql_cfg => Master config file.
@@ -79,6 +99,12 @@
                 one or more email addresses.
                 -u subject_line => Subject line of email.
                 -w => Override the default mail command and use mailx.
+                -r => Attach data to email as attachment.
+                    -f {file_name} => Name of file attachment.
+                        Default: Use SubjectLine of email.
+                    -n => Add hostname to file attachment name.
+                    -g => Add datetime to file attachment name.
+                    -m => Add microseconds to file attachment name.
 
         -E => Check for any replication errors on the slave(s).
             -s [path/]slave.txt => Slave config file.
@@ -91,6 +117,12 @@
                 one or more email addresses.
                 -u subject_line => Subject line of email.
                 -w => Override the default mail command and use mailx.
+                -r => Attach data to email as attachment.
+                    -f {file_name} => Name of file attachment.
+                        Default: Use SubjectLine of email.
+                    -n => Add hostname to file attachment name.
+                    -g => Add datetime to file attachment name.
+                    -m => Add microseconds to file attachment name.
 
         -O => Other slave replication checks and return any errors detected.
             -s [path/]slave.txt => Slave config file.
@@ -103,6 +135,12 @@
                 one or more email addresses.
                 -u subject_line => Subject line of email.
                 -w => Override the default mail command and use mailx.
+                -r => Attach data to email as attachment.
+                    -f {file_name} => Name of file attachment.
+                        Default: Use SubjectLine of email.
+                    -n => Add hostname to file attachment name.
+                    -g => Add datetime to file attachment name.
+                    -m => Add microseconds to file attachment name.
 
         -S => Check the slave(s) IO and SQL threads and return any errors or
                 warnings detected.
@@ -116,6 +154,12 @@
                 one or more email addresses.
                 -u subject_line => Subject line of email.
                 -w => Override the default mail command and use mailx.
+                -r => Attach data to email as attachment.
+                    -f {file_name} => Name of file attachment.
+                        Default: Use SubjectLine of email.
+                    -n => Add hostname to file attachment name.
+                    -g => Add datetime to file attachment name.
+                    -m => Add microseconds to file attachment name.
 
         -T => Check time lag for the slave(s) and return any differences
                 detected.
@@ -134,6 +178,12 @@
                 one or more email addresses.
                 -u subject_line => Subject line of email.
                 -w => Override the default mail command and use mailx.
+                -r => Attach data to email as attachment.
+                    -f {file_name} => Name of file attachment.
+                        Default: Use SubjectLine of email.
+                    -n => Add hostname to file attachment name.
+                    -g => Add datetime to file attachment name.
+                    -m => Add microseconds to file attachment name.
 
         -A => Runs multiple checks which include the options:  -C, -S, -T, -E
             -c mysql_cfg => Master config file.
@@ -147,6 +197,12 @@
                 one or more email addresses.
                 -u subject_line => Subject line of email.
                 -w => Override the default mail command and use mailx.
+                -r => Attach data to email as attachment.
+                    -f {file_name} => Name of file attachment.
+                        Default: Use SubjectLine of email.
+                    -n => Add hostname to file attachment name.
+                    -g => Add datetime to file attachment name.
+                    -m => Add microseconds to file attachment name.
 
         General options:
         -p dir_path => Directory path to the mysql binary programs, if needed.
@@ -154,7 +210,9 @@
         -v => Display version of this program.
         -h => Help and usage message.
 
-        NOTE:  -v or -h overrides the other options.
+        NOTE 1: -v or -h overrides the other options.
+        NOTE 2: -r option: SMTP has a 998 character per line limit.
+        NOTE 3: -g option: Uses the DateTime format of %Y%m%d_%H%M%S.
 
     Notes:
         Master configuration file format (config/mysql_cfg.py.TEMPLATE):
@@ -264,7 +322,6 @@
 # Standard
 import sys
 import time
-import datetime
 import socket
 
 try:
@@ -759,7 +816,7 @@ def create_filename(args, dtg=None, dname=None):
         join_list.append(dtg.get_time("dtg"))
 
     if args.arg_exist("-m"):
-        join_list.append(dtg.msec)
+        join_list.append(dtg.msecs)
 
     join_list.append("json")
 
@@ -783,18 +840,11 @@ def data_out(data, args, **kwargs):
 
     data = dict(data)
     def_subj = kwargs.get("def_subj", "MySQLRepAdminCheck")
-#    mail = None
-#
-#    if args.get_val("-t", def_val=False):
-#        mail = gen_class.setup_mail(
-#            args.get_val("-t"), subj=args.get_val("-u", def_val=def_subj))
 
     status = gen_libs.dict_out(
         data, ofile=args.get_val("-o", def_val=None),
         mode="a" if args.arg_exist("-a") else "w",
         expand=args.arg_exist("-e"), no_std=args.arg_exist("-z"))
-#        mode="a" if args.arg_val("-a", def_val=False) else "w",
-#        no_std=args.get_val("-z", def_val=False), mail=mail)
 
     if status[0]:
         print(f"data_out 1:  Error detected: {status[1]}")
@@ -814,8 +864,6 @@ def data_out(data, args, **kwargs):
         indent = 4 if args.arg_exist("-e") else None
         mail.add_2_msg(json.dumps(data, indent=indent))
         mail.send_mail(use_mailx=args.arg_exist("-w"))
-#    if mail and not status[0]:
-#        mail.send_mail(use_mailx=args.get_val("-w", def_val=False))
 
 
 def is_time_lag(data):
@@ -872,11 +920,6 @@ def call_run_chk(args, func_dict, master, slaves):
             "Master": master.name,
             "AsOf": dtg.get_time("zulu"),
             "Checks": []}
-#    data = {"Application": "MySQLReplication",
-#            "Master": master.name,
-#            "AsOf": datetime.datetime.strftime(
-#                datetime.datetime.now(), "%Y-%m-%d %H:%M:%S"),
-#            "Checks": []}
 
     if args.arg_exist("-A"):
         for opt in func_dict["-A"]:
@@ -903,7 +946,6 @@ def call_run_chk(args, func_dict, master, slaves):
 
     if data:
         data_out(data, args, dtg=dtg)
-#        data_out(data, args)
 
 
 def run_program(args, func_dict, **kwargs):
@@ -991,7 +1033,8 @@ def main():
     opt_con_req_list = {
         "-u": ["-t"], "-w": ["-t"], "-A": ["-s"], "-B": ["-c"],
         "-C": ["-c", "-s"], "-D": ["-s"], "-E": ["-s"], "-O": ["-s"],
-        "-T": ["-c", "-s"], "-x": ["-T"]}
+        "-T": ["-c", "-s"], "-x": ["-T"], "-f": ["-r"], "-n": ["-r"],
+        "-g": ["-r"], "-m": ["-r"]}
     opt_multi_list = ["-u", "-t"]
     opt_or_dict_list = {"-c": ["-s"]}
     opt_req_list = ["-c", "-d"]
