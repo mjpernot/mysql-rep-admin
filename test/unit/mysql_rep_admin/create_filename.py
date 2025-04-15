@@ -147,23 +147,28 @@ class UnitTest(unittest.TestCase):
 
         dtg = self.dtg.get_time("dtg")
         msecs = self.dtg.msecs
+        json = ".json"
+        fname = "FileName."
+        subj = "SubjectLine."
+        fname_host = "FileName.Hostname."
+        subj_host = "SubjectLine.Hostname."
         self.results1 = "FileName.json"
         self.results2 = "FileName.json"
         self.results3 = "SubjectLine.json"
         self.results4 = "FileName.Hostname.json"
         self.results4a = "SubjectLine.Hostname.json"
-        self.results5 = "FileName." + dtg + ".json"
-        self.results5a = "SubjectLine." + dtg + ".json"
-        self.results6 = "FileName." + msecs + ".json"
-        self.results6a = "SubjectLine." + msecs + ".json"
-        self.results7 = "FileName." + dtg + "." + msecs + ".json"
-        self.results7a = "SubjectLine." + dtg + "." + msecs + ".json"
-        self.results8 = "FileName.Hostname." + dtg + ".json"
-        self.results8a = "SubjectLine.Hostname." + dtg + ".json"
-        self.results9 = "FileName.Hostname." + msecs + ".json"
-        self.results9a = "SubjectLine.Hostname." + msecs + ".json"
-        self.results10 = "FileName.Hostname." + dtg + "." + msecs + ".json"
-        self.results10a = "SubjectLine.Hostname." + dtg + "." + msecs + ".json"
+        self.results5 = fname + dtg + json
+        self.results5a = subj + dtg + json
+        self.results6 = fname + msecs + json
+        self.results6a = subj + msecs + json
+        self.results7 = fname + dtg + "." + msecs + json
+        self.results7a = subj + dtg + "." + msecs + json
+        self.results8 = fname_host + dtg + json
+        self.results8a = subj_host + dtg + json
+        self.results9 = fname_host + msecs + json
+        self.results9a = subj_host + msecs + json
+        self.results10 = fname_host + dtg + "." + msecs + json
+        self.results10a = subj_host + dtg + "." + msecs + json
 
     @mock.patch("mysql_rep_admin.socket.gethostname",
                 mock.Mock(return_value="Hostname"))
