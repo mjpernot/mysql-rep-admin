@@ -66,7 +66,7 @@ Create MySQL configuration file and make the appropriate change to the environme
     - host = "HOST_IP"
     - name = "HOST_NAME"
     - sid = SERVER_ID
-    - extra_def_file = "**PYTHON_PROJECT**/config/mysql.cfg"
+    - extra_def_file = "PYTHON_PROJECT/config/mysql.cfg"
     - cfg_file = "MYSQL_DIRECTORY/mysqld.cnf"
 
   * Change these entries only if required:
@@ -89,8 +89,8 @@ Create MySQL configuration file and make the appropriate change to the environme
 
 ```
 cp config/mysql_cfg.py.TEMPLATE config/mysql_cfg.py
-vim config/mysql_cfg.py
 chmod 600 config/mysql_cfg.py
+vim config/mysql_cfg.py
 ```
 
 Create MySQL definition file and make the appropriate change to the environment.
@@ -101,8 +101,8 @@ Create MySQL definition file and make the appropriate change to the environment.
 
 ```
 cp config/mysql.cfg.TEMPLATE config/mysql.cfg
-vim config/mysql.cfg
 chmod 600 config/mysql.cfg
+vim config/mysql.cfg
 ```
 
 Create Slave definition file and make the appropriate change for a slave connection.
@@ -112,7 +112,7 @@ Create Slave definition file and make the appropriate change for a slave connect
     - host = HOST_IP
     - name = HOSTNAME
     - sid = SERVER_ID
-    - extra_def_file = **PYTHON_PROJECT**/config/mysql.cfg
+    - extra_def_file = PYTHON_PROJECT/config/mysql.cfg
 
   * Change these entries only if required:
     - cfg_file = None
@@ -134,8 +134,8 @@ Create Slave definition file and make the appropriate change for a slave connect
 
 ```
 cp config/slave.txt.TEMPLATE config/slave.txt
-vim config/slave.txt
 chmod 600 config/slave.txt
+vim config/slave.txt
 ```
 
 ### Database Configuration
