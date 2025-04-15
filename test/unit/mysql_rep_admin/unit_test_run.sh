@@ -15,6 +15,7 @@ echo "Unit testing..."
 /usr/bin/python ./test/unit/mysql_rep_admin/chk_slv_other.py
 /usr/bin/python ./test/unit/mysql_rep_admin/chk_slv_thr.py
 /usr/bin/python ./test/unit/mysql_rep_admin/chk_slv_time.py
+/usr/bin/python ./test/unit/mysql_rep_admin/create_filename.py
 /usr/bin/python ./test/unit/mysql_rep_admin/data_out.py
 /usr/bin/python ./test/unit/mysql_rep_admin/help_message.py
 /usr/bin/python ./test/unit/mysql_rep_admin/is_time_lag.py

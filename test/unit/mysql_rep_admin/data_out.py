@@ -92,11 +92,84 @@ class ArgParser():
         return self.args_array.get(skey, def_val)
 
 
-class MailTest():
+class Mail2():
 
-    """Class:  MailTest
+    """Class:  Mail2
 
-    Description:  Class which is a representation of an email.
+    Description:  Class which is a representation of the gen_class.Mail2 class.
+
+    Methods:
+        __init__
+        add_attachment
+        send_email
+
+    """
+
+    def __init__(self, subject, toaddrs, fromaddr=None):
+
+        """Method:  __init__
+
+        Description:  Initialization of an instance of the Mail2 class.
+
+        Arguments:
+
+        """
+
+        # Dictionary of file types/extensions and their associated MIME types
+        self.ftypes = {
+            "plain": "plain", "text": "plain", "sh": "x-sh", "x-sh": "x-sh",
+            "tar": "x-tar", "x-tar": "x-tar", "pdf": "pdf", "json": "json",
+            "gz": "gzip", "gzip": "gzip"}
+        self.subj = " ".join(subject) if isinstance(subject, list) else subject
+        self.toaddrs = ",".join(
+            toaddrs) if isinstance(toaddrs, list) else toaddrs
+        self.fromaddr = fromaddr if fromaddr else "UserName" + "@" + "HostName"
+
+        self.msg = {}
+        self.msg["From"] = self.fromaddr
+        self.msg["To"] = self.toaddrs
+        self.msg["Subject"] = self.subj
+        self.fname = None
+        self.data = None
+        self.host = None
+
+    def add_attachment(self, fname, ftype, data):
+
+        """Method:  add_attachment
+
+        Description:  Converts the file data into base64 format and attaches
+            the data and filename to the email.
+
+        Arguments:
+
+        """
+
+        ftype = self.ftypes[ftype] if ftype in self.ftypes else None
+
+        if ftype:
+            self.fname = fname
+            self.data = data
+
+    def send_email(self, host="localhost"):
+
+        """Method:  send_email
+
+        Description:  Converts the mail content to a string and mails out the
+            message using SMTP.sendmail.
+
+        Arguments:
+
+        """
+
+        if host:
+            self.host = host
+
+
+class Mail():
+
+    """Class:  Mail
+
+    Description:  Class which is a representation of the gen_class.Mail class.
 
     Methods:
         __init__
@@ -173,6 +246,7 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp
+        test_mail2
         test_append
         test_mail_subj
         test_mail_mailx
@@ -193,12 +267,53 @@ class UnitTest(unittest.TestCase):
         """
 
         self.args = ArgParser()
-        self.mail = MailTest("toaddr")
+        self.mail = Mail("toaddr")
+        self.mail2 = Mail2("subject", "toaddr")
         self.data = {"Status": "ok"}
         self.args_array1 = {"-t": "toaddr"}
         self.args_array2 = {"-t": "toaddr", "-u": "SubjectLine"}
+        self.args_array3 = {"-t": "toaddr", "-r": True}
+        self.args_array4 = {"-t": "toaddr", "-u": "SubjectLine", "-r": True}
         self.args_array6 = {"-a": True}
         self.args_array7 = {"-t": "toaddr", "-w": True}
+
+    @mock.patch("mysql_rep_admin.gen_libs.dict_out",
+                mock.Mock(return_value=(False, None)))
+    @mock.patch("mysql_rep_admin.gen_class.Mail2")
+    def test_mail2_subj(self, mock_mail):
+
+        """Function:  test_mail2_subj
+
+        Description:  Test with Mail2 attachment option and subject line.
+
+        Arguments:
+
+        """
+
+        self.args.args_array = self.args_array4
+
+        mock_mail.return_value = self.mail2
+
+        self.assertFalse(mysql_rep_admin.data_out(self.data, self.args))
+
+    @mock.patch("mysql_rep_admin.gen_libs.dict_out",
+                mock.Mock(return_value=(False, None)))
+    @mock.patch("mysql_rep_admin.gen_class.Mail2")
+    def test_mail2(self, mock_mail):
+
+        """Function:  test_mail2
+
+        Description:  Test with Mail2 attachment option.
+
+        Arguments:
+
+        """
+
+        self.args.args_array = self.args_array3
+
+        mock_mail.return_value = self.mail2
+
+        self.assertFalse(mysql_rep_admin.data_out(self.data, self.args))
 
     @mock.patch("mysql_rep_admin.gen_libs.dict_out",
                 mock.Mock(return_value=(False, None)))
