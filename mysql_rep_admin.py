@@ -17,32 +17,32 @@
         mysql_rep_admin.py
             {-B -c mysql_cfg -d path [-z] [-e] [-o /path/file [-a]]
                  [-t ToEmail [ToEmail2 ...] [-u SubjectLine] [-w]
-                 [-r [-f FileName] [-n] [-g] [-m]]] |
+                 [-r -f FileName [-n] [-g] [-m]]] |
              -C -c mysql_cfg -s [/path/]slave.txt -d path [-z] [-e]
                  [-o /path/file [-a]]
                  [-t ToEmail [ToEmail2 ...] [-u SubjectLine] [-w]
-                 [-r [-f FileName] [-n] [-g] [-m]]] |
+                 [-r -f FileName [-n] [-g] [-m]]] |
              -D -c mysql_cfg -s [/path/]slave.txt -d path [-z] [-e]
                  [-o /path/file [-a]]
                  [-t ToEmail [ToEmail2 ...] [-u SubjectLine] [-w]
-                 [-r [-f FileName] [-n] [-g] [-m]]] |
+                 [-r -f FileName [-n] [-g] [-m]]] |
              -E -s [path/]slave.txt -d path [-z] [-e] [-o /path/file [-a]]
                  [-t ToEmail [ToEmail2 ...] [-u SubjectLine] [-w]
-                 [-r [-f FileName] [-n] [-g] [-m]]] |
+                 [-r -f FileName [-n] [-g] [-m]]] |
              -O -s [/path/]slave.txt -d path [-z] [-e] [-o /path/file [-a]]
                  [-t ToEmail [ToEmail2 ...] [-u SubjectLine] [-w]
-                 [-r [-f FileName] [-n] [-g] [-m]]] |
+                 [-r -f FileName [-n] [-g] [-m]]] |
              -S -s [/path/]slave.txt -d path [-z] [-e] [-o /path/file [-a]]
                  [-t ToEmail [ToEmail2 ...] [-u SubjectLine] [-w]
-                 [-r [-f FileName] [-n] [-g] [-m]]] |
+                 [-r -f FileName [-n] [-g] [-m]]] |
              -T -c mysql_cfg -s [/path]/slave.txt -d path [-z] [-e] [-x]
                  [-o /path/file [-a]]
                  [-t ToEmail [ToEmail2 ...] [-u SubjectLine] [-w]
-                 [-r [-f FileName] [-n] [-g] [-m]]] |
+                 [-r -f FileName [-n] [-g] [-m]]] |
              -A -c mysql_cfg -s [/path/]slave.txt -d path [-z] [-e]
                  [-o /path/file [-a]]
                  [-t ToEmail [ToEmail2 ...] [-u SubjectLine] [-w]
-                 [-r [-f FileName] [-n] [-g] [-m]]]}
+                 [-r -f FileName [-n] [-g] [-m]]]}
             [-y flavor_id]
             [-p path]
             [-v | -h]
@@ -61,8 +61,7 @@
                 -u subject_line => Subject line of email.
                 -w => Override the default mail command and use mailx.
                 -r => Attach data to email as attachment.
-                    -f {file_name} => Name of file attachment.
-                        Default: Use SubjectLine of email.
+                    -f file_name => Name of file attachment.
                     -n => Add hostname to file attachment name.
                     -g => Add datetime to file attachment name.
                     -m => Add microseconds to file attachment name.
@@ -81,8 +80,7 @@
                 -u subject_line => Subject line of email.
                 -w => Override the default mail command and use mailx.
                 -r => Attach data to email as attachment.
-                    -f {file_name} => Name of file attachment.
-                        Default: Use SubjectLine of email.
+                    -f file_name => Name of file attachment.
                     -n => Add hostname to file attachment name.
                     -g => Add datetime to file attachment name.
                     -m => Add microseconds to file attachment name.
@@ -100,8 +98,7 @@
                 -u subject_line => Subject line of email.
                 -w => Override the default mail command and use mailx.
                 -r => Attach data to email as attachment.
-                    -f {file_name} => Name of file attachment.
-                        Default: Use SubjectLine of email.
+                    -f file_name => Name of file attachment.
                     -n => Add hostname to file attachment name.
                     -g => Add datetime to file attachment name.
                     -m => Add microseconds to file attachment name.
@@ -118,8 +115,7 @@
                 -u subject_line => Subject line of email.
                 -w => Override the default mail command and use mailx.
                 -r => Attach data to email as attachment.
-                    -f {file_name} => Name of file attachment.
-                        Default: Use SubjectLine of email.
+                    -f file_name => Name of file attachment.
                     -n => Add hostname to file attachment name.
                     -g => Add datetime to file attachment name.
                     -m => Add microseconds to file attachment name.
@@ -136,8 +132,7 @@
                 -u subject_line => Subject line of email.
                 -w => Override the default mail command and use mailx.
                 -r => Attach data to email as attachment.
-                    -f {file_name} => Name of file attachment.
-                        Default: Use SubjectLine of email.
+                    -f file_name => Name of file attachment.
                     -n => Add hostname to file attachment name.
                     -g => Add datetime to file attachment name.
                     -m => Add microseconds to file attachment name.
@@ -155,8 +150,7 @@
                 -u subject_line => Subject line of email.
                 -w => Override the default mail command and use mailx.
                 -r => Attach data to email as attachment.
-                    -f {file_name} => Name of file attachment.
-                        Default: Use SubjectLine of email.
+                    -f file_name => Name of file attachment.
                     -n => Add hostname to file attachment name.
                     -g => Add datetime to file attachment name.
                     -m => Add microseconds to file attachment name.
@@ -179,8 +173,7 @@
                 -u subject_line => Subject line of email.
                 -w => Override the default mail command and use mailx.
                 -r => Attach data to email as attachment.
-                    -f {file_name} => Name of file attachment.
-                        Default: Use SubjectLine of email.
+                    -f file_name => Name of file attachment.
                     -n => Add hostname to file attachment name.
                     -g => Add datetime to file attachment name.
                     -m => Add microseconds to file attachment name.
@@ -198,8 +191,7 @@
                 -u subject_line => Subject line of email.
                 -w => Override the default mail command and use mailx.
                 -r => Attach data to email as attachment.
-                    -f {file_name} => Name of file attachment.
-                        Default: Use SubjectLine of email.
+                    -f file_name => Name of file attachment.
                     -n => Add hostname to file attachment name.
                     -g => Add datetime to file attachment name.
                     -m => Add microseconds to file attachment name.
@@ -790,7 +782,7 @@ def chk_other(skip, tmp_tbl, retry, name, sql_ver):
     return data
 
 
-def create_filename(args, dtg=None, dname=None):
+def create_filename(args, dtg=None):
 
     """Function:  create_filename
 
@@ -799,15 +791,11 @@ def create_filename(args, dtg=None, dname=None):
     Arguments:
         (input) args -> ArgParser class instance
         (input) dtg -> TimeFormat instance
-        (input) dname -> Default filename if not detected in args instance
         (output) -> File name for the email attachment
 
     """
 
-    join_list = []
-    def_name = dname if dname else args.get_val("-u")
-    fname = args.get_val("-f") if args.arg_exist("-f") else def_name
-    join_list.append(fname)
+    join_list = [args.get_val("-f")]
 
     if args.arg_exist("-n"):
         join_list.append(socket.gethostname())
@@ -852,9 +840,7 @@ def data_out(data, args, **kwargs):
     if args.arg_exist("-t") and args.arg_exist("-r") and not status[0]:
         mail = gen_class.Mail2(
             args.get_val("-u", def_val=def_subj), args.get_val("-t"))
-        fname = create_filename(
-            args, dtg=kwargs.get("dtg", None),
-            dname=args.get_val("-u", def_val=def_subj))
+        fname = create_filename(args, dtg=kwargs.get("dtg", None))
         mail.add_attachment(fname, "json", data)
         mail.send_email()
 
@@ -1033,12 +1019,12 @@ def main():
     opt_con_req_list = {
         "-u": ["-t"], "-w": ["-t"], "-A": ["-s"], "-B": ["-c"],
         "-C": ["-c", "-s"], "-D": ["-s"], "-E": ["-s"], "-O": ["-s"],
-        "-T": ["-c", "-s"], "-x": ["-T"], "-f": ["-r"], "-n": ["-r"],
+        "-T": ["-c", "-s"], "-x": ["-T"], "-r": ["-f"], "-n": ["-r"],
         "-g": ["-r"], "-m": ["-r"]}
     opt_multi_list = ["-u", "-t"]
     opt_or_dict_list = {"-c": ["-s"]}
     opt_req_list = ["-c", "-d"]
-    opt_val_list = ["-d", "-c", "-p", "-s", "-o", "-u", "-t", "-y"]
+    opt_val_list = ["-d", "-c", "-p", "-s", "-o", "-u", "-t", "-y", "-f"]
     opt_xor_val = {"-x": ["-A", "-B", "-C", "-S", "-E", "-D", "-O"]}
     slv_key = {"sid": "int", "port": "int", "cfg_file": "None",
                "ssl_client_ca": "None", "ssl_ca_path": "None",
