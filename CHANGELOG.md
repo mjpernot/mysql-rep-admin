@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
+## [5.1.1] - 2025-05-09
+
+### Fixed
+- create_filename: Removed subject line from being the default filename for the email attachment.
+- main: Added "-f" to opt_val_list to ensure a value is passed in with the argument and made "-f" a required argument if "-r" option is passed.
+
+### Changes
+- data_out: Removed passing in subject line to create_filename function.
+
+
+### Changed
+- Documentation changes.
+
+
 ## [5.1.0] - 2025-04-11
 - Added ability to send data in an email as attachment.
 - Updated python-lib v4.0.1
