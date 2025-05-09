@@ -272,8 +272,9 @@ class UnitTest(unittest.TestCase):
         self.data = {"Status": "ok"}
         self.args_array1 = {"-t": "toaddr"}
         self.args_array2 = {"-t": "toaddr", "-u": "SubjectLine"}
-        self.args_array3 = {"-t": "toaddr", "-r": True}
-        self.args_array4 = {"-t": "toaddr", "-u": "SubjectLine", "-r": True}
+        self.args_array3 = {"-t": "toaddr", "-r": True, "-f": "FileName"}
+        self.args_array4 = {
+            "-t": "toaddr", "-u": "SubjectLine", "-r": True, "-f": "FileName"}
         self.args_array6 = {"-a": True}
         self.args_array7 = {"-t": "toaddr", "-w": True}
 
